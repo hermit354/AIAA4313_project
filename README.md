@@ -1,3 +1,23 @@
+# AIAA4313 Project Version
+
+这是我们课程项目使用的改造版仓库，基于原始 [`interviewstreet/hiring-agent`](https://github.com/interviewstreet/hiring-agent)。
+
+本项目当前关注：
+
+- LLM 招聘 Agent 的 resume / GitHub 输入注入攻击；
+- ranking / scoring 被外部候选人可控文本影响的问题；
+- `llama3.1:8b` baseline、prompt hardening、balanced schema、GitHub sanitizer 等攻防配置；
+- 课程 demo / report 可复现实验。
+
+组员请优先阅读中文项目说明：[PROJECT_OVERVIEW_CN.md](PROJECT_OVERVIEW_CN.md)。
+
+然后再根据需要阅读具体实验报告：
+
+- [LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md](test_data/github_fixture_samples/LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md)
+- [LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md](test_data/software_developer_sample_20_ablation/LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md)
+
+---
+
 # Hiring Agent
 
 <p align="center"><strong>Resume-to-Score pipeline</strong> that extracts structured data from PDFs, enriches with GitHub signals, and outputs a fair, explainable evaluation.</p>
