@@ -213,12 +213,23 @@ def find_profile(profiles, network):
 
 def main(pdf_path):
     # Create cache filename based on PDF path
+    extraction_schema_mode = os.environ.get("EXTRACTION_SCHEMA_MODE", "balanced").lower()
+    schema_suffix = (
+        "" if extraction_schema_mode == "original" else f"_{extraction_schema_mode}"
+    )
+    model_suffix = "" if DEFAULT_MODEL == "gemma3:4b" else f"_{DEFAULT_MODEL}"
+    model_suffix = (
+        model_suffix.replace(":", "_")
+        .replace("/", "_")
+        .replace("-", "_")
+        .replace(".", "_")
+    )
     cache_filename = (
-        f"cache/resumecache_{os.path.basename(pdf_path).replace('.pdf', '')}.json"
+        f"cache/resumecache_{os.path.basename(pdf_path).replace('.pdf', '')}{schema_suffix}{model_suffix}.json"
     )
-    github_cache_filename = (
-        f"cache/githubcache_{os.path.basename(pdf_path).replace('.pdf', '')}.json"
-    )
+    fixture_dir = os.environ.get("GITHUB_FIXTURE_DIR")
+    fixture_suffix = f"_{Path(fixture_dir).name}" if fixture_dir else ""
+    github_cache_filename = f"cache/githubcache_{os.path.basename(pdf_path).replace('.pdf', '')}{fixture_suffix}{model_suffix}.json"
 
     resume_data = None
     cache_loaded = False

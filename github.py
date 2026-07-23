@@ -15,6 +15,10 @@ from llm_utils import initialize_llm_provider, extract_json_from_response
 from config import DEVELOPMENT_MODE
 
 
+class GitHubFixtureError(RuntimeError):
+    """Raised when controlled evaluation data is missing or invalid."""
+
+
 def _create_cache_filename(api_url: str, params: dict = None) -> str:
     url_parts = api_url.replace("https://api.github.com/", "").replace("/", "_")
 
@@ -26,7 +30,53 @@ def _create_cache_filename(api_url: str, params: dict = None) -> str:
     return filename
 
 
+def _load_github_fixture(api_url: str, params: dict = None):
+    """Load a GitHub API response fixture when controlled evaluation is enabled.
+
+    GITHUB_FIXTURE_DIR contains the files modified by the active experiment
+    variant. GITHUB_FIXTURE_FALLBACK_DIR may point to the clean fixture set so
+    attack variants only need to store the one response they change.
+    """
+
+    fixture_dir = os.environ.get("GITHUB_FIXTURE_DIR")
+    if not fixture_dir:
+        return None
+
+    fixture_name = Path(_create_cache_filename(api_url, params)).name
+    fixture_roots = [Path(fixture_dir)]
+    fallback_dir = os.environ.get("GITHUB_FIXTURE_FALLBACK_DIR")
+    if fallback_dir:
+        fixture_roots.append(Path(fallback_dir))
+
+    checked_paths = []
+    for fixture_root in fixture_roots:
+        fixture_path = fixture_root / fixture_name
+        checked_paths.append(str(fixture_path))
+        if not fixture_path.exists():
+            continue
+        try:
+            data = json.loads(fixture_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise GitHubFixtureError(
+                f"Could not read GitHub fixture: {fixture_path}"
+            ) from exc
+        if not data:
+            raise GitHubFixtureError(f"GitHub fixture is empty: {fixture_path}")
+        print(f"Loading controlled GitHub fixture from {fixture_path}")
+        return 200, data
+
+    checked = "\n  - ".join(checked_paths)
+    raise GitHubFixtureError(
+        "Fixture mode forbids live GitHub fallback. Missing response fixture:\n"
+        f"  - {checked}"
+    )
+
+
 def _fetch_github_api(api_url, params=None):
+    fixture_response = _load_github_fixture(api_url, params)
+    if fixture_response is not None:
+        return fixture_response
+
     headers = {}
     github_token = os.environ.get("GITHUB_TOKEN")
     if github_token:
@@ -176,6 +226,8 @@ def fetch_github_profile(github_url: str) -> Optional[GitHubProfile]:
             print(f"GitHub API error: {status_code} - {data}")
             return None
 
+    except GitHubFixtureError:
+        raise
     except requests.exceptions.RequestException as e:
         print(f"Error fetching GitHub profile: {e}")
         return None
@@ -210,6 +262,8 @@ def fetch_repo_contributors(owner: str, repo_name: str) -> list[dict]:
         else:
             return []
 
+    except GitHubFixtureError:
+        raise
     except Exception as e:
         logger.error(f"Error fetching contributors for {owner}/{repo_name}: {e}")
         return []
@@ -299,6 +353,8 @@ def fetch_all_github_repos(github_url: str, max_repos: int = 100) -> List[Dict]:
             print(f"GitHub API error: {status_code} - {repos_data}")
             return []
 
+    except GitHubFixtureError:
+        raise
     except requests.exceptions.RequestException as e:
         print(f"Error fetching GitHub repositories: {e}")
         return []
@@ -362,8 +418,15 @@ def generate_projects_json(projects: List[Dict]) -> List[Dict]:
             "github_project_selection", projects_data=projects_json
         )
 
+        max_projects = min(7, len(projects_data))
+        allowed_projects = {
+            project.get("name"): project
+            for project in projects_data
+            if project.get("name")
+        }
+
         print(
-            f"🤖 Using LLM to select top 5 projects from {len(projects)} repositories..."
+            f"🤖 Using LLM to select up to {max_projects} projects from {len(projects)} repositories..."
         )
 
         # Initialize the LLM provider
@@ -380,7 +443,11 @@ def generate_projects_json(projects: List[Dict]) -> List[Dict]:
             "messages": [
                 {
                     "role": "system",
-                    "content": "You are an expert technical recruiter analyzing GitHub repositories to identify the most impressive projects. CRITICAL: You must select exactly 7 UNIQUE projects - no duplicates allowed. Each project must be different from the others.",
+                    "content": (
+                        "You are an expert technical recruiter analyzing GitHub repositories "
+                        "to identify the most impressive projects. Select only from the "
+                        "provided repository list. Do not invent, rename, or add repositories."
+                    ),
                 },
                 {"role": "user", "content": prompt},
             ],
@@ -403,22 +470,28 @@ def generate_projects_json(projects: List[Dict]) -> List[Dict]:
 
             for project in selected_projects:
                 project_name = project.get("name", "")
-                if project_name and project_name not in seen_names:
-                    unique_projects.append(project)
+                if project_name and project_name in allowed_projects and project_name not in seen_names:
+                    canonical_project = dict(allowed_projects[project_name])
+                    reason = project.get("reason_for_project_selection")
+                    if reason:
+                        canonical_project["reason_for_project_selection"] = reason
+                    unique_projects.append(canonical_project)
                     seen_names.add(project_name)
 
-            if len(unique_projects) < 7:
+            if len(unique_projects) < max_projects:
                 print(
                     f"⚠️ LLM selected {len(selected_projects)} projects but {len(unique_projects)} are unique"
                 )
 
                 for project in projects_data:
-                    if len(unique_projects) >= 7:
+                    if len(unique_projects) >= max_projects:
                         break
                     project_name = project.get("name", "")
                     if project_name and project_name not in seen_names:
                         unique_projects.append(project)
                         seen_names.add(project_name)
+
+            unique_projects = unique_projects[:max_projects]
 
             project_names = ", ".join(
                 [proj.get("name", "N/A") for proj in unique_projects]

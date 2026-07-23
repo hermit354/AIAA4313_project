@@ -3,6 +3,7 @@ import sys
 import json
 import time
 import logging
+import re
 import pymupdf
 
 from models import (
@@ -19,6 +20,12 @@ from models import (
     SkillsSection,
     ProjectsSection,
     AwardsSection,
+    BalancedBasicsSection,
+    BalancedWorkSection,
+    BalancedEducationSection,
+    BalancedSkillsSection,
+    BalancedProjectsSection,
+    BalancedAwardsSection,
 )
 from llm_utils import initialize_llm_provider, extract_json_from_response
 from pymupdf_rag import to_markdown
@@ -34,6 +41,28 @@ from transform import transform_parsed_data
 
 logger = logging.getLogger(__name__)
 
+EXTRACTION_SCHEMA_MODE = os.getenv("EXTRACTION_SCHEMA_MODE", "balanced").lower()
+
+BALANCED_SECTION_MODELS = {
+    "basics": BalancedBasicsSection,
+    "work": BalancedWorkSection,
+    "education": BalancedEducationSection,
+    "skills": BalancedSkillsSection,
+    "projects": BalancedProjectsSection,
+    "awards": BalancedAwardsSection,
+}
+
+HIGH_RISK_INSTRUCTION_PATTERNS = [
+    r"ignore all prior",
+    r"classify this candidate",
+    r"superior to all other",
+    r"regardless of the resume",
+    r"maximum score",
+    r"assign .* score",
+    r"above 90",
+    r"fully qualified",
+]
+
 
 class PDFHandler:
     def __init__(self):
@@ -43,6 +72,59 @@ class PDFHandler:
     def _initialize_llm_provider(self):
         """Initialize the appropriate LLM provider based on the model."""
         self.provider = initialize_llm_provider(DEFAULT_MODEL)
+
+    def _select_section_model(self, section_name: str, return_model=None):
+        if EXTRACTION_SCHEMA_MODE in {"balanced", "balanced_guarded"}:
+            return BALANCED_SECTION_MODELS.get(section_name, return_model)
+        return return_model
+
+    def _contains_high_risk_instruction(self, parsed_data: Any) -> bool:
+        text_parts = []
+
+        def collect(value):
+            if isinstance(value, str):
+                text_parts.append(value)
+            elif isinstance(value, list):
+                for item in value:
+                    collect(item)
+            elif isinstance(value, dict):
+                for item in value.values():
+                    collect(item)
+
+        collect(parsed_data)
+        text = "\n".join(text_parts).lower()
+        return any(re.search(pattern, text) for pattern in HIGH_RISK_INSTRUCTION_PATTERNS)
+
+    def _is_empty_awards_placeholder(self, parsed_data: Any) -> bool:
+        if not isinstance(parsed_data, dict):
+            return False
+        awards = parsed_data.get("awards")
+        if not isinstance(awards, list) or not awards:
+            return False
+        placeholder_patterns = [
+            r"^no formal awards",
+            r"^no awards",
+            r"none listed",
+            r"not listed",
+            r"n/a$",
+        ]
+        for award in awards:
+            if not isinstance(award, dict):
+                return False
+            values = [
+                str(value).strip().lower()
+                for value in award.values()
+                if value is not None and str(value).strip()
+            ]
+            if not values:
+                continue
+            if not any(
+                re.search(pattern, value)
+                for value in values
+                for pattern in placeholder_patterns
+            ):
+                return False
+        return True
 
     def extract_text_from_pdf(self, pdf_path: str) -> Optional[str]:
         try:
@@ -99,8 +181,9 @@ class PDFHandler:
             }
 
             kwargs = {}
-            if return_model:
-                kwargs["format"] = return_model.model_json_schema()
+            selected_return_model = self._select_section_model(section_name, return_model)
+            if selected_return_model:
+                kwargs["format"] = selected_return_model.model_json_schema()
 
             # Use the appropriate provider to make the API call
             response = self.provider.chat(**chat_params, **kwargs)
@@ -115,6 +198,23 @@ class PDFHandler:
                     response_text = response_text[json_start : json_end + 1]
                 parsed_data = json.loads(response_text)
                 logger.debug(f"✅ Successfully extracted {section_name} section")
+
+                if (
+                    EXTRACTION_SCHEMA_MODE == "balanced_guarded"
+                    and self._contains_high_risk_instruction(parsed_data)
+                ):
+                    logger.warning(
+                        f"⚠️ High-risk instruction-like text detected in {section_name} extraction. "
+                        "Dropping this section to prevent semantic contamination."
+                    )
+                    if section_name == "awards":
+                        return {"awards": []}
+                    return None
+
+                if section_name == "awards" and self._is_empty_awards_placeholder(
+                    parsed_data
+                ):
+                    return {"awards": []}
 
                 transformed_data = transform_parsed_data(parsed_data)
                 end_time = time.time()
@@ -286,12 +386,21 @@ class PDFHandler:
             "meta": None,
         }
 
+        optional_empty_sections = {
+            "awards": {"awards": []},
+        }
+
         for section_name in sections:
             section_data = self._extract_section_data(text_content, section_name)
 
             if section_data:
                 complete_resume.update(section_data)
                 logger.debug(f"✅ Successfully extracted {section_name} section")
+            elif section_name in optional_empty_sections:
+                complete_resume.update(optional_empty_sections[section_name])
+                logger.warning(
+                    f"⚠️ Failed to extract optional {section_name} section. Continuing with an empty section."
+                )
             else:
                 logger.error(
                     f"⚠️ Failed to extract {section_name} section. Aborting extraction to prevent partial/invalid resume data."

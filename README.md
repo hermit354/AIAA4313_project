@@ -111,7 +111,7 @@ $ pip install -r requirements.txt
 Pull the model you want to use. For example:
 
 ```bash
-$ ollama pull gemma3:4b
+$ ollama pull llama3.1:8b
 ```
 
 If you want different results, you can pull other models such as:
@@ -139,7 +139,7 @@ $ cp .env.example .env
 | Variable         | Values                                      | Description                                                            |
 | ---------------- | ------------------------------------------- | ---------------------------------------------------------------------- |
 | `LLM_PROVIDER`   | `ollama` or `gemini`                        | Chooses provider. Defaults to Ollama.                                  |
-| `DEFAULT_MODEL`  | for example `gemma3:4b` or `gemini-2.5-pro` | Model name passed to the provider.                                     |
+| `DEFAULT_MODEL`  | for example `llama3.1:8b`, `gemma3:4b`, or `gemini-2.5-pro` | Model name passed to the provider.                                     |
 | `GEMINI_API_KEY` | string                                      | Required when `LLM_PROVIDER=gemini`.                                   |
 | `GITHUB_TOKEN`   | optional                                    | Inherits from your shell environment, improves GitHub API rate limits. |
 
@@ -256,7 +256,7 @@ What happens:
 ### Ollama
 
 - Set `LLM_PROVIDER=ollama`
-- Set `DEFAULT_MODEL` to any pulled model, for example `gemma3:4b`
+- Set `DEFAULT_MODEL` to any pulled model, for example `llama3.1:8b`
 - The provider wrapper in `models.OllamaProvider` calls `ollama.chat`
 
 ### Gemini

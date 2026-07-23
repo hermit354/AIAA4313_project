@@ -1,3 +1,4 @@
+import os
 from typing import List, Optional, Dict, Tuple, Any, Protocol, runtime_checkable
 from pydantic import BaseModel, Field, field_validator
 from enum import Enum
@@ -198,6 +199,50 @@ class AwardsSection(BaseModel):
     awards: Optional[List[Award]] = None
 
 
+class BalancedBasicsSection(BaseModel):
+    """Basics section with required top-level key for structured extraction."""
+
+    basics: Basics
+
+
+class BalancedWorkSection(BaseModel):
+    """Work section with required top-level key.
+
+    The list may be empty so the schema does not force the model to invent a
+    work entry when it cannot find one.
+    """
+
+    work: List[Work]
+
+
+class BalancedEducationSection(BaseModel):
+    """Education section with required top-level key."""
+
+    education: List[Education]
+
+
+class BalancedSkillsSection(BaseModel):
+    """Skills section with required top-level key."""
+
+    skills: List[Skill]
+
+
+class BalancedProjectsSection(BaseModel):
+    """Projects section with required top-level key."""
+
+    projects: List[Project]
+
+
+class BalancedAwardsSection(BaseModel):
+    """Awards section with required top-level key.
+
+    Awards are still allowed to be an empty list because many resumes do not
+    contain awards.
+    """
+
+    awards: List[Award]
+
+
 class JSONResume(BaseModel):
     """Complete JSON Resume format model."""
 
@@ -306,6 +351,12 @@ class OllamaProvider:
 
         if "format" in kwargs:
             chat_params["format"] = kwargs["format"]
+
+        ollama_think = os.getenv("OLLAMA_THINK", "").lower()
+        if ollama_think in {"true", "false"}:
+            chat_params["think"] = ollama_think == "true"
+        elif "think" in kwargs:
+            chat_params["think"] = kwargs["think"]
 
         return self.client.chat(**chat_params)
 
