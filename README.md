@@ -1,3 +1,39 @@
+## AIAA4313 Project Version
+
+这是我们课程项目使用的改造版仓库，基于原始 [interviewstreet/hiring-agent](https://github.com/interviewstreet/hiring-agent)。
+
+本项目当前关注：
+
+- LLM 招聘 Agent 的 resume / GitHub 输入注入攻击；
+- ranking / scoring 被外部候选人可控文本影响的问题；
+- `llama3.1:8b` baseline、prompt hardening、balanced schema、GitHub sanitizer 等攻防配置；
+- 课程 Demo 与报告的可复现实验。
+
+组员请优先阅读中文项目说明：[PROJECT_OVERVIEW_CN.md](PROJECT_OVERVIEW_CN.md)。
+
+然后再根据需要阅读具体实验报告：
+
+- [LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md](test_data/github_fixture_samples/LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md)
+- [LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md](test_data/software_developer_sample_20_ablation/LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md)
+
+### Web Demo 快速入口
+
+本地 Web Demo 位于 [`web_demo/`](web_demo/)，用于上传 PDF、切换 Ollama/API 模型、执行 Rerun、保存 Evaluation Run，并比较不同实验结果。
+
+新成员请先阅读 [Web Demo 队友快速接入手册](web_demo/README.md)，其中包含：
+
+- Windows 和 macOS/Linux 启动命令；
+- 切换 `llama3.1:8b`、Gemma、Qwen 等 Ollama 模型的方法；
+- 配置阿里云百炼 DashScope 或其他 OpenAI-compatible API 的方法；
+- 如何把自己的 Prompt、Sanitizer 或评分实验适配到 Web Demo；
+- 哪些数据和 API Key 不能提交到 GitHub。
+
+Web Demo 默认使用本地 SQLite 和本地文件存储，每位组员可以独立运行自己的模型和实验，不会互相覆盖数据。
+
+---
+
+以下为原项目repo的README：
+
 # Hiring Agent
 
 <p align="center"><strong>Resume-to-Score pipeline</strong> that extracts structured data from PDFs, enriches with GitHub signals, and outputs a fair, explainable evaluation.</p>
@@ -38,37 +74,6 @@
 
 Hiring Agent parses a resume PDF to Markdown, extracts sectioned JSON using a local or hosted LLM, augments the data with GitHub profile and repository signals, then produces an objective evaluation with category scores, evidence, bonus points, and deductions. You can run fully local with Ollama or use Google Gemini.
 
-## AIAA4313 Project Version
-
-这是我们课程项目使用的改造版仓库，基于原始 [interviewstreet/hiring-agent](https://github.com/interviewstreet/hiring-agent)。
-
-本项目当前关注：
-
-- LLM 招聘 Agent 的 resume / GitHub 输入注入攻击；
-- ranking / scoring 被外部候选人可控文本影响的问题；
-- `llama3.1:8b` baseline、prompt hardening、balanced schema、GitHub sanitizer 等攻防配置；
-- 课程 Demo 与报告的可复现实验。
-
-组员请优先阅读中文项目说明：[PROJECT_OVERVIEW_CN.md](PROJECT_OVERVIEW_CN.md)。
-
-然后再根据需要阅读具体实验报告：
-
-- [LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md](test_data/github_fixture_samples/LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md)
-- [LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md](test_data/software_developer_sample_20_ablation/LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md)
-
-### Web Demo 快速入口
-
-本地 Web Demo 位于 [`web_demo/`](web_demo/)，用于上传 PDF、切换 Ollama/API 模型、执行 Rerun、保存 Evaluation Run，并比较不同实验结果。
-
-新成员请先阅读 [Web Demo 队友快速接入手册](web_demo/README.md)，其中包含：
-
-- Windows 和 macOS/Linux 启动命令；
-- 切换 `llama3.1:8b`、Gemma、Qwen 等 Ollama 模型的方法；
-- 配置阿里云百炼 DashScope 或其他 OpenAI-compatible API 的方法；
-- 如何把自己的 Prompt、Sanitizer 或评分实验适配到 Web Demo；
-- 哪些数据和 API Key 不能提交到 GitHub。
-
-Web Demo 默认使用本地 SQLite 和本地文件存储，每位组员可以独立运行自己的模型和实验，不会互相覆盖数据。
 
 ---
 
