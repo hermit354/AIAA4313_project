@@ -24,11 +24,24 @@ def db():
   except sqlite3.OperationalError:pass
  try:c.execute('alter table users add column is_demo integer')
  except sqlite3.OperationalError:pass
+ # The initial prototype inserted applications positionally before
+ # ``stored_path`` existed. Repair those records without touching valid data.
+ for legacy in c.execute("select id,sha256,created from applications where stored_path is null and sha256 like '%.pdf'").fetchall():
+  source=Path(legacy['sha256'])
+  if source.is_file():
+   created=legacy['created']
+   if not isinstance(created,(int,float)):
+    run=c.execute('select created from evaluation_runs where application_id=? order by created limit 1',(legacy['id'],)).fetchone()
+    created=float(run['created']) if run else stamp()
+   c.execute('update applications set stored_path=?,sha256=?,created=? where id=?',(str(source),hashlib.sha256(source.read_bytes()).hexdigest(),created,legacy['id']))
  c.execute("update evaluation_runs set status='FAILED_STALE',error='Recovered at server startup' where status='RUNNING'");c.commit();return c
 def rowdict(r): return dict(r) if r else None
 def stamp(): return time.time()
 def provider_for(model_id):
  return next((m['provider'].lower() for m in provider_registry() if m['id']==model_id),'ollama')
+def queue_stages(c,rid):
+ for name in ['PDF_TEXT_EXTRACTION','RESUME_SECTION_PARSE','EVALUATION','RANK_AND_PERSIST']:
+  c.execute('insert into stage_runs values(?,?,?,?,?,?,?)',(uuid.uuid4().hex,rid,name,'QUEUED',0,'Waiting for local worker',None))
 def seed(reset=False):
  c=db()
  if reset:
@@ -102,12 +115,12 @@ def models(u=Depends(staff)):
  c=db();r=c.execute("select value from app_settings where key='default_model'").fetchone();return {'default_model':r['value'] if r else 'gemma3:4b','models':provider_registry()}
 def enqueue(aid,rid,path,config):WORKER.submit(execute_run,aid,rid,path,config)
 def execute_run(aid,rid,path,config):
- c=db();c.execute("update evaluation_runs set status='RUNNING' where id=?",(rid,));c.commit()
+ c=db();c.execute("update evaluation_runs set status='RUNNING' where id=?",(rid,));c.execute("update stage_runs set status='RUNNING',note='Local worker started' where run_id=? and name='PDF_TEXT_EXTRACTION'",(rid,));c.commit()
  try:
   result=run_resume_pipeline(path,config);artifact=ARTIFACTS/(rid+'.json');artifact.write_text(json.dumps(result.to_json(),indent=2),encoding='utf-8')
   c.execute('update evaluation_runs set status=?,completed=?,score=? where id=?',(result.status,stamp(),result.score,rid));c.execute('update applications set status=?,score=?,base=?,bonus=?,deduction=?,resume_json=?,evidence_json=? where id=?',('UNDER_REVIEW',result.score,result.base,result.bonus,result.deduction,json.dumps(result.resume),json.dumps(result.evidence),aid))
-  for s in result.stages:c.execute('insert into stage_runs values(?,?,?,?,?,?,?)',(uuid.uuid4().hex,rid,s.name,s.status,s.duration_ms,s.note,str(artifact)))
- except Exception as exc:c.execute("update evaluation_runs set status='FAILED',completed=?,error=? where id=?",(stamp(),str(exc),rid));c.execute("update applications set status='FAILED' where id=?",(aid,))
+  for s in result.stages:c.execute('update stage_runs set status=?,duration_ms=?,note=?,artifact_path=? where run_id=? and name=?',(s.status,s.duration_ms,s.note,str(artifact),rid,s.name))
+ except Exception as exc:c.execute("update evaluation_runs set status='FAILED',completed=?,error=? where id=?",(stamp(),str(exc),rid));c.execute("update stage_runs set status='FAILED',note=? where run_id=? and status='RUNNING'",(str(exc),rid));c.execute("update applications set status='FAILED' where id=?",(aid,))
  c.commit();c.close()
 @app.post('/api/candidate/resume')
 async def upload(file:UploadFile=File(...),u=Depends(user)):
@@ -116,7 +129,7 @@ async def upload(file:UploadFile=File(...),u=Depends(user)):
  raw=await file.read()
  if not raw or len(raw)>10*1024*1024 or not raw.startswith(b'%PDF'):raise HTTPException(400,'Invalid, empty, or oversized PDF')
  sha=hashlib.sha256(raw).hexdigest();stored=UPLOADS/(uuid.uuid4().hex+'.pdf');stored.write_bytes(raw);aid='app-'+uuid.uuid4().hex[:10];rid='run-'+uuid.uuid4().hex[:10];c=db();model=(c.execute("select value from app_settings where key='default_model'").fetchone() or ['gemma3:4b'])[0];config=PipelineConfig(model_id=model)
- config=PipelineConfig(provider=provider_for(model),model_id=model);c.execute('insert into applications (id,email,filename,stored_path,sha256,status,created,score,base,bonus,deduction,resume_json,evidence_json,is_demo) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(aid,u['email'],file.filename,str(stored),sha,'PROCESSING',stamp(),None,None,None,None,None,None,0));c.execute('insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)',(rid,aid,config.provider,model,'QUEUED',stamp(),None,None,json.dumps(config.__dict__),config.fingerprint(),None,None));c.commit();c.close();enqueue(aid,rid,stored,config);return {'application_id':aid,'run_id':rid,'name':file.filename,'size':len(raw),'sha256':sha}
+ config=PipelineConfig(provider=provider_for(model),model_id=model);c.execute('insert into applications (id,email,filename,stored_path,sha256,status,created,score,base,bonus,deduction,resume_json,evidence_json,is_demo) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(aid,u['email'],file.filename,str(stored),sha,'PROCESSING',stamp(),None,None,None,None,None,None,0));c.execute('insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)',(rid,aid,config.provider,model,'QUEUED',stamp(),None,None,json.dumps(config.__dict__),config.fingerprint(),None,None));queue_stages(c,rid);c.commit();c.close();enqueue(aid,rid,stored,config);return {'application_id':aid,'run_id':rid,'name':file.filename,'size':len(raw),'sha256':sha}
 @app.post('/api/staff/applications/{aid}/rerun')
 def rerun(aid:str,x:RunRequest,u=Depends(staff)):
  c=db();a=c.execute('select * from applications where id=?',(aid,)).fetchone()
@@ -127,7 +140,7 @@ def rerun(aid:str,x:RunRequest,u=Depends(staff)):
   old=c.execute("select id from evaluation_runs where application_id=? and config_fingerprint=? and status='COMPLETED'",(aid,fp)).fetchone()
   if old:return {'id':old['id'],'status':'COMPLETED','reused':True}
  if not a['stored_path']:raise HTTPException(409,'Seed records have no source PDF; upload a PDF to run a real evaluation')
- rid='run-'+uuid.uuid4().hex[:10];c.execute('insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)',(rid,aid,config.provider,x.model,'QUEUED',stamp(),None,None,json.dumps(config.__dict__),fp,None,None));c.commit();c.close();enqueue(aid,rid,a['stored_path'],config);return {'id':rid,'status':'QUEUED','reused':False}
+ rid='run-'+uuid.uuid4().hex[:10];c.execute('insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)',(rid,aid,config.provider,x.model,'QUEUED',stamp(),None,None,json.dumps(config.__dict__),fp,None,None));queue_stages(c,rid);c.commit();c.close();enqueue(aid,rid,a['stored_path'],config);return {'id':rid,'status':'QUEUED','reused':False}
 @app.patch('/api/staff/settings/default-model')
 def model(x:Setting,u=Depends(staff)):
  if x.model_id not in [m['id'] for m in provider_registry()]:raise HTTPException(400,'Model is not allowlisted')

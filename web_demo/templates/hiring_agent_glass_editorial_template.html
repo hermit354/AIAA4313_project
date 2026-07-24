@@ -361,6 +361,9 @@
     .panel-sub { color: var(--text-secondary); font-size: 11px; margin-top: 3px; }
 
     .pdf-frame { min-height: 740px; margin-top: 14px; border: 1px solid var(--border-strong); border-radius: 14px; background: #fbfdff; padding: 34px 30px; box-shadow: inset 0 0 28px rgba(43,78,112,.05); overflow: hidden; }
+    .pdf-preview { min-height: 740px; margin-top: 14px; border: 1px solid var(--border-strong); border-radius: 14px; overflow: hidden; background: #fbfdff; }
+    .pdf-preview iframe { display: block; width: 100%; min-height: 738px; border: 0; background: #fff; }
+    .pdf-preview-message { display: grid; min-height: 260px; place-items: center; padding: 28px; text-align: center; color: var(--text-secondary); }
     .pdf-name { font: 700 34px/1 var(--font-display); }
     .pdf-contact { margin-top: 8px; color: #64778a; font-size: 9px; }
     .pdf-rule { margin: 15px 0; border-top: 1px solid #c6d4e1; }
@@ -680,6 +683,15 @@
       if (!response.ok) throw new Error(body.detail || 'Request failed.');
       return body;
     };
+    const apiFile = async path => {
+      const token = sessionStorage.getItem('hiring_agent_token');
+      const response = await fetch(path, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.detail || 'File request failed.');
+      }
+      return response.blob();
+    };
     const mockApi = {
       async login(email, password) {
         const result = await api('/api/auth/login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({email,password}) });
@@ -708,11 +720,11 @@
         reviewTier: score == null ? 'Processing' : score < 40 ? 'Below Review Cutoff' : score >= 85 ? 'High Priority' : 'Standard Review',
         candidateStatus:item.status, decision:'NONE', model:(item.runs[0] || {}).model_id || 'gemma3:4b', updated:'just now',
         submitted:new Date(item.created * 1000).toLocaleString(), role:(resume.skills || []).slice(0,3).join(' · ') || 'Resume submitted',
-        skills:resume.skills || [], github:resume.github || 'Not provided', summary:`Local evaluation record for ${basics.name || item.email}.`,
+        skills:resume.skills || [], github:resume.github || 'Not provided', summary:(resume.summary || []).join(' ') || `Local evaluation record for ${basics.name || item.email}.`,
         breakdown:[{label:'Open Source',value:Math.min(25,Math.round((base || 0) * .25)),max:25},{label:'Self Projects',value:Math.min(25,Math.round((base || 0) * .25)),max:25},{label:'Production',value:Math.min(30,Math.round((base || 0) * .3)),max:30},{label:'Technical Skills',value:Math.min(20,Math.round((base || 0) * .2)),max:20}],
         evidence:{strengths:evidence.strengths || [],improvements:evidence.improvements || []},
         work:(resume.work || []).map((line,i)=>({title:`Experience ${i+1}`,dates:'',body:typeof line === 'string' ? line : JSON.stringify(line)})),
-        education:'Not extracted',projects:[], runs:(item.runs || []).map((run,i)=>({id:run.id,label:`Run ${i+1}`,status:run.status,model:run.model_id,score:run.score,base,bonus,deduction,prompt:'web-v1',pipeline:'web-v1',cache:run.reused_from ? 'SAFE_REUSE' : 'FORCE_FRESH',reused:!!run.reused_from,duration:'local',created:new Date(run.created * 1000).toLocaleString(),temperature:.1,topP:.9,error:run.error}))
+        education:(resume.education || []).join(' · ') || 'Not extracted',projects:resume.projects || [], runs:(item.runs || []).map((run,i)=>({id:run.id,label:`Run ${i+1}`,status:run.status,model:run.model_id,score:run.score,base,bonus,deduction,prompt:'web-v1',pipeline:'web-v1',cache:run.reused_from ? 'SAFE_REUSE' : 'FORCE_FRESH',reused:!!run.reused_from,duration:'local',created:new Date(run.created * 1000).toLocaleString(),temperature:.1,topP:.9,error:run.error}))
       };
     }
     async function syncStaffData() {
@@ -722,6 +734,12 @@
       models.splice(0, models.length, ...modelData.models.map(model => ({...model, temperature:.1, topP:.9})));
       state.defaultModel = modelData.default_model;
       if (!candidates.some(c => c.id === state.compare.applicationId) && candidates[0]) state.compare.applicationId = candidates[0].id;
+      if (candidates.some(candidate => candidate.runs.some(run => run.status === 'QUEUED' || run.status === 'RUNNING'))) {
+        window.setTimeout(async () => {
+          await syncStaffData();
+          if (routeFromHash().name !== 'login') render();
+        }, 2000);
+      }
     }
 
     function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
@@ -997,17 +1015,19 @@
       return staffShell({ name: 'applications' }, content, 'Applications');
     }
 
-    function pdfMock(candidate) {
-      return `<div class="pdf-frame">
-        <div class="pdf-name">${candidate.name}</div>
-        <div class="pdf-contact">${candidate.email} · ${candidate.github} · Toronto, Canada</div>
-        <div class="pdf-rule"></div>
-        <div class="pdf-section"><h4>Profile</h4><p>${candidate.summary}</p></div>
-        <div class="pdf-section"><h4>Experience</h4>${candidate.work.map(item => `<p><strong>${item.title}</strong><br/><em>${item.dates}</em><br/>${item.body}</p>`).join('')}</div>
-        <div class="pdf-section"><h4>Projects</h4><ul>${candidate.projects.map(project => `<li>${project}</li>`).join('')}</ul></div>
-        <div class="pdf-section"><h4>Education</h4><p>${candidate.education}</p></div>
-        <div class="pdf-section"><h4>Skills</h4><p>${candidate.skills.join(' · ')}</p></div>
-      </div>`;
+    async function loadPdfPreview(applicationId) {
+      const target = document.getElementById('pdfPreview');
+      if (!target) return;
+      try {
+        const blob = await apiFile(`/api/staff/applications/${encodeURIComponent(applicationId)}/pdf`);
+        const url = URL.createObjectURL(blob);
+        target.innerHTML = `<iframe title="Original uploaded resume PDF" src="${url}#toolbar=0"></iframe>`;
+        document.querySelector('[data-download-pdf]')?.addEventListener('click', () => {
+          const link = document.createElement('a'); link.href = url; link.download = 'resume.pdf'; link.click();
+        }, { once: true });
+      } catch (error) {
+        target.innerHTML = `<div class="pdf-preview-message">${escapeHtml(error.message)}<br/><span class="soft">The original PDF is unavailable for seeded records.</span></div>`;
+      }
     }
 
     function pipelineHtml(run) {
@@ -1041,7 +1061,7 @@
           <div class="detail-actions"><button class="btn" data-decision="HOLD">Hold</button><button class="btn btn-danger" data-decision="ARCHIVE">Archive</button><button class="btn btn-sage" data-decision="ADVANCE">${icons.check} Advance</button><button class="btn btn-primary" data-rerun="${candidate.id}">${icons.refresh} Rerun</button></div>
         </header>
         <section class="detail-grid">
-          <article class="panel glass-card"><div class="panel-head"><div><div class="panel-title">Resume PDF</div><div class="panel-sub">alice_resume.pdf · SHA isolated</div></div><button class="btn btn-sm" data-toast="PDF download is a backend integration point.">Download</button></div>${pdfMock(candidate)}</article>
+          <article class="panel glass-card"><div class="panel-head"><div><div class="panel-title">Resume PDF</div><div class="panel-sub">${escapeHtml(candidate.ref)} · original uploaded document</div></div><button class="btn btn-sm" data-download-pdf>Download</button></div><div id="pdfPreview" class="pdf-preview"><div class="pdf-preview-message">Loading original PDF preview…</div></div></article>
           <article class="panel glass-card">
             <div class="panel-head"><div><div class="panel-title">Structured Resume</div><div class="panel-sub">Parsed into JSON Resume fields</div></div><span class="pill pill-success">Validated</span></div>
             <section class="resume-section"><div class="eyebrow">Summary</div><h3>Candidate signal</h3><p class="muted" style="font-size:12px;line-height:1.65">${candidate.summary}</p></section>
@@ -1281,6 +1301,7 @@
     }
 
     function bindDetail(candidate) {
+      loadPdfPreview(candidate.id);
       document.querySelectorAll('[data-rerun]').forEach(button => button.addEventListener('click', () => rerunModal(getCandidate(button.dataset.rerun))));
       document.querySelectorAll('[data-decision]').forEach(button => button.addEventListener('click', () => {
         candidate.decision = button.dataset.decision;
@@ -1349,11 +1370,17 @@
           cache: document.getElementById('rerunCache').value,
           github: document.getElementById('rerunGithub').checked
         };
-        await mockApi.rerun(candidate.id, config);
-        await syncStaffData();
-        closeModal();
-        showToast('Evaluation queued', `A new immutable run was created with ${models.find(model => model.id === config.model)?.name}.`);
-        render();
+        try {
+          const result = await mockApi.rerun(candidate.id, config);
+          await syncStaffData();
+          closeModal();
+          showToast(result.reused ? 'Existing evaluation reused' : 'Evaluation queued', result.reused ? 'A matching completed run already exists.' : `Run ${result.id} is now visible in System Runs.`);
+          render();
+        } catch (error) {
+          button.disabled = false;
+          button.innerHTML = `${icons.refresh} Run evaluation`;
+          showToast('Rerun failed', error.message, 'danger');
+        }
       }));
     }
 

@@ -141,4 +141,18 @@ web_demo/data/uploads/          上传 PDF
 web_demo/data/artifacts/        Evaluation Run JSON
 ```
 
+查看本地实验记录时：
+
+- `artifacts/run-<id>.json`：包含原始 PDF 文本、结构化简历 JSON、模型配置、评分、Evidence 和每个 Pipeline 阶段的结果；
+- `hiring_agent.db`：包含 `applications`、`evaluation_runs` 和 `stage_runs` 表。`evaluation_runs.error` 保存失败原因，`stage_runs` 保存队列、运行和完成状态；
+- FastAPI 终端：显示请求、异常和启动错误；
+- Staff → System Runs：显示每次 Run 的状态。排查时也可以直接访问 `GET /api/staff/runs/<run_id>/stages` 和 `GET /api/staff/runs/<run_id>/artifact`（需要 Staff 登录 Token）。
+
+Windows 下快速列出本地 Artifact：
+
+```powershell
+Get-ChildItem web_demo/data/artifacts
+Get-Content web_demo/data/artifacts/run-你的run_id.json -Raw
+```
+
 Demo Reset 只清理标记为 Demo 的数据，不会删除队友创建的非 Demo 实验记录。

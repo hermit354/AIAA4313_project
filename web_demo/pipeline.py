@@ -60,7 +60,27 @@ def _parse(text: str) -> dict[str, Any]:
     github=(re.search(r"(?:https?://)?github\.com/[\w-]+",text,re.I) or [None])[0]
     skills=[item for item in ["Python","Go","Java","JavaScript","TypeScript","FastAPI","Kubernetes","Docker","SQL","AWS","PyTorch","React","Spring","Kafka"] if re.search(r"\b"+re.escape(item)+r"\b",text,re.I)]
     name=lines[0][:80] if lines else "Uploaded candidate"
-    return {"basics":{"name":name,"email":email},"skills":skills,"github":github,"text_length":len(text),"work":lines[1:6]}
+    section_aliases={
+        'PROFILE':'summary','SUMMARY':'summary','ABOUT':'summary','OBJECTIVE':'summary',
+        'EXPERIENCE':'work','WORK EXPERIENCE':'work','PROFESSIONAL EXPERIENCE':'work','EMPLOYMENT':'work',
+        'EDUCATION':'education','ACADEMIC BACKGROUND':'education',
+        'PROJECTS':'projects','SELECTED PROJECTS':'projects','PUBLICATIONS':'projects',
+        'SKILLS':'skills_section','TECHNICAL SKILLS':'skills_section','RESEARCH INTERESTS':'summary'
+    }
+    sections={'summary':[], 'work':[], 'education':[], 'projects':[]}
+    active='summary'
+    for line in lines[1:]:
+        normalized=re.sub(r'[^A-Z ]','',line.upper()).strip()
+        if normalized in section_aliases:
+            active=section_aliases[normalized]
+            continue
+        if active in sections:
+            sections[active].append(line)
+    # PDFs without recognised headings still retain a concise summary, but
+    # contact lines never become fabricated work history.
+    if not sections['summary']:
+        sections['summary']=[line for line in lines[1:4] if not re.search(r'(?:@|https?://|github\.com)',line,re.I)]
+    return {"basics":{"name":name,"email":email},"skills":skills,"github":github,"text_length":len(text),"summary":sections['summary'],"work":sections['work'],"education":sections['education'],"projects":sections['projects']}
 
 def _heuristic_evaluate(text: str, resume: dict[str,Any]) -> tuple[float,float,float,float,dict[str,list[str]]]:
     lower=text.lower(); skills=resume['skills']; production=sum(word in lower for word in ['production','deployed','scale','latency','kubernetes','customer'])
