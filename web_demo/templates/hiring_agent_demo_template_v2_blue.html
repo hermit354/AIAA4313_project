@@ -1,15 +1,1369 @@
-from pathlib import Path
-import os, sqlite3, sys, urllib.request
-root=Path(__file__).resolve().parents[1]; db=root/'data'/'hiring_agent.db'
-checks=[('Python environment available', True),('SQLite database path writable', db.parent.exists()),('Database schema current', db.exists()),('FastAPI reachable', False),('Next.js frontend reachable', False),('Ollama reachable with gemma3:4b or explicitly unavailable', True),('Upload directory writable',(root/'data'/'uploads').exists()),('Artifact directory writable',(root/'data'/'artifacts').exists()),('DeepSeek configured or explicitly skipped', not bool(os.getenv('DEEPSEEK_API_KEY')) or bool(os.getenv('DEEPSEEK_BASE_URL') and os.getenv('DEEPSEEK_MODEL')))]
-try: checks[3]=('FastAPI reachable', urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=2).status==200)
-except Exception: pass
-try: checks[4]=('Next.js frontend reachable', urllib.request.urlopen('http://127.0.0.1:3000/',timeout=2).status==200)
-except Exception: pass
-for label, ok in checks: print(f"[{'OK' if ok else 'FAIL'}] {label}")
-if not all(v for _,v in checks): print('Start the demo first: powershell -ExecutionPolicy Bypass -File web_demo/scripts/dev_local.ps1');sys.exit(1)
-dbx=sqlite3.connect(db)
-try: print('[OK] Alembic migration current' if dbx.execute("select version_num from alembic_version").fetchone()[0]=='0001_local_demo_schema' else '[FAIL] Alembic migration current')
-except Exception: print('[FAIL] Alembic migration current')
-for label, query in [('Demo users exist','select count(*) from users'),('Demo applications exist','select count(*) from applications'),('At least one completed Evaluation Run',"select count(*) from evaluation_runs where status='COMPLETED'")]:
- print(f"[{'OK' if dbx.execute(query).fetchone()[0] else 'FAIL'}] {label}")
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Light blue and white Glass Editorial UI template for the Hiring Agent web demo." />
+  <title>HireLens — Hiring Agent Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /*
+      Hiring Agent — Glass Editorial Blue UI Template
+      ---------------------------------------------------------------
+      This is a standalone, framework-free mock UI. The coding agent can:
+      1) copy the visual tokens/components into Next.js/Tailwind;
+      2) replace mockApi methods with real fetch() calls;
+      3) split each hash route into the corresponding app route.
+
+      Suggested route mapping:
+        #/login                         -> /login
+        #/candidate                     -> /candidate
+        #/staff/applications            -> /staff/applications
+        #/staff/application/:id         -> /staff/applications/[id]
+        #/staff/experiments             -> /staff/experiments
+        #/staff/models                  -> /staff/models
+        #/staff/runs                    -> /staff/runs
+        #/staff/demo                    -> /staff/demo
+    */
+
+    :root {
+      --page-bg: #f5f9fd;
+      --page-bg-deep: #e7f0f8;
+      --surface-nav: rgba(248, 252, 255, 0.62);
+      --surface-card: rgba(255, 255, 255, 0.74);
+      --surface-raised: rgba(255, 255, 255, 0.93);
+      --surface-subtle: rgba(239, 247, 253, 0.54);
+      --text-primary: #1d2b3a;
+      --text-secondary: #607489;
+      --text-soft: #8a9bad;
+      --accent: #5b8fca;
+      --accent-soft: rgba(91, 143, 202, 0.12);
+      --accent-mid: rgba(91, 143, 202, 0.22);
+      --sage: #6d9d9a;
+      --sage-soft: rgba(109, 157, 154, 0.13);
+      --amber: #a57f49;
+      --amber-soft: rgba(165, 127, 73, 0.13);
+      --danger: #b45e68;
+      --danger-soft: rgba(180, 94, 104, 0.12);
+      --border: rgba(58, 91, 122, 0.14);
+      --border-strong: rgba(58, 91, 122, 0.24);
+      --shadow-soft: 0 20px 60px rgba(43, 78, 112, 0.09);
+      --shadow-float: 0 18px 48px rgba(43, 78, 112, 0.13);
+      --radius-sm: 12px;
+      --radius-md: 18px;
+      --radius-lg: 26px;
+      --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+      --font-body: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      background:
+        radial-gradient(circle at 11% 8%, rgba(91, 143, 202, 0.15), transparent 30%),
+        radial-gradient(circle at 92% 74%, rgba(119, 177, 196, 0.13), transparent 32%),
+        linear-gradient(135deg, var(--page-bg), var(--page-bg-deep));
+      background-attachment: fixed;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.08;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+      mix-blend-mode: soft-light;
+      z-index: 0;
+    }
+
+    button, input, select, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    [hidden] { display: none !important; }
+
+    :focus-visible {
+      outline: 3px solid rgba(91, 143, 202, 0.28);
+      outline-offset: 2px;
+    }
+
+    .app-root { position: relative; z-index: 1; min-height: 100vh; }
+    .display { font-family: var(--font-display); }
+    .mono { font-family: var(--font-mono); }
+    .muted { color: var(--text-secondary); }
+    .soft { color: var(--text-soft); }
+    .eyebrow {
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .section-number {
+      display: inline-grid;
+      width: 30px;
+      height: 30px;
+      place-items: center;
+      border: 1px solid var(--border-strong);
+      border-radius: 999px;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: rgba(255,255,255,.28);
+    }
+
+    .glass-nav {
+      background: var(--surface-nav);
+      border: 1px solid rgba(255,255,255,.58);
+      box-shadow: inset 0 0 0 1px var(--border), var(--shadow-soft);
+      backdrop-filter: blur(22px) saturate(125%);
+      -webkit-backdrop-filter: blur(22px) saturate(125%);
+    }
+    .glass-card {
+      background: var(--surface-card);
+      border: 1px solid rgba(255,255,255,.62);
+      box-shadow: inset 0 0 0 1px var(--border), var(--shadow-soft);
+      backdrop-filter: blur(14px) saturate(118%);
+      -webkit-backdrop-filter: blur(14px) saturate(118%);
+    }
+    .glass-raised {
+      background: var(--surface-raised);
+      border: 1px solid rgba(255,255,255,.74);
+      box-shadow: inset 0 0 0 1px var(--border), var(--shadow-float);
+      backdrop-filter: blur(10px) saturate(115%);
+      -webkit-backdrop-filter: blur(10px) saturate(115%);
+    }
+
+    .btn {
+      min-height: 42px;
+      border: 1px solid var(--border-strong);
+      border-radius: 999px;
+      padding: 0 17px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(255,255,255,.34);
+      transition: background .18s ease, border-color .18s ease, transform .18s ease;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .btn:hover { background: rgba(255,255,255,.68); border-color: rgba(58,91,122,.34); }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--accent); color: #f8fbff; border-color: var(--accent); }
+    .btn-primary:hover { background: #4b7fba; border-color: #4b7fba; }
+    .btn-sage { background: var(--sage); color: #f7fcfc; border-color: var(--sage); }
+    .btn-danger { background: var(--danger-soft); color: var(--danger); border-color: rgba(180,94,104,.24); }
+    .btn-ghost { border-color: transparent; background: transparent; }
+    .btn-square { width: 42px; padding: 0; }
+    .btn-sm { min-height: 34px; padding: 0 12px; font-size: 12px; }
+    .btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
+
+    .field { display: grid; gap: 8px; }
+    .field label { font-size: 13px; font-weight: 600; }
+    .input, .select, .textarea {
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      background: rgba(255,255,255,.52);
+      border-radius: 14px;
+      min-height: 44px;
+      padding: 10px 13px;
+      transition: border-color .18s ease, background .18s ease;
+    }
+    .textarea { min-height: 108px; resize: vertical; }
+    .input:hover, .select:hover, .textarea:hover { background: rgba(255,255,255,.72); }
+    .input:focus, .select:focus, .textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(255,255,255,.48);
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .75; }
+    .pill-success { color: var(--sage); background: var(--sage-soft); }
+    .pill-warning { color: var(--amber); background: var(--amber-soft); }
+    .pill-danger { color: var(--danger); background: var(--danger-soft); }
+    .pill-neutral { color: var(--text-secondary); }
+    .pill-accent { color: var(--accent); background: var(--accent-soft); }
+
+    .icon { width: 18px; height: 18px; display: inline-block; vertical-align: middle; }
+    .icon-lg { width: 24px; height: 24px; }
+
+    .brand-mark {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--accent); color: #f8fbff;
+      font-family: var(--font-display); font-weight: 700; font-size: 22px;
+      box-shadow: 0 12px 26px rgba(91,143,202,.25);
+    }
+
+    .login-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(360px, .88fr);
+      gap: 34px;
+      padding: clamp(22px, 4vw, 58px);
+      align-items: stretch;
+    }
+    .login-story {
+      padding: clamp(22px, 5vw, 72px);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 700px;
+      overflow: hidden;
+      position: relative;
+    }
+    .login-story::after {
+      content: "";
+      position: absolute;
+      width: 480px; height: 480px; border-radius: 50%;
+      right: -160px; bottom: -170px;
+      border: 1px solid rgba(91,143,202,.22);
+      box-shadow: 0 0 0 70px rgba(91,143,202,.045), 0 0 0 140px rgba(119,177,196,.035);
+    }
+    .login-title {
+      margin: 26px 0 18px;
+      max-width: 720px;
+      font-family: var(--font-display);
+      font-size: clamp(58px, 7.3vw, 110px);
+      line-height: .87;
+      letter-spacing: -.045em;
+      font-weight: 600;
+    }
+    .login-story p { max-width: 600px; font-size: 17px; line-height: 1.75; }
+    .story-flow { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .story-step { border-top: 1px solid var(--border-strong); padding-top: 14px; font-size: 13px; }
+    .story-step strong { display: block; margin: 6px 0 3px; }
+
+    .login-panel {
+      align-self: center;
+      width: min(100%, 520px);
+      justify-self: center;
+      border-radius: var(--radius-lg);
+      padding: clamp(28px, 4vw, 48px);
+    }
+    .login-panel h1 { margin: 18px 0 6px; font: 600 50px/.95 var(--font-display); }
+    .login-form { display: grid; gap: 18px; margin-top: 30px; }
+    .demo-accounts { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .demo-account-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; font-size: 12px; }
+
+    .staff-shell { min-height: 100vh; padding: 18px; display: grid; grid-template-columns: 256px minmax(0,1fr); gap: 18px; }
+    .sidebar {
+      min-height: calc(100vh - 36px);
+      position: sticky; top: 18px; align-self: start;
+      border-radius: 24px; padding: 20px 16px;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .sidebar-brand { display: flex; align-items: center; gap: 12px; padding: 4px 8px 18px; border-bottom: 1px solid var(--border); }
+    .sidebar-brand .name { font-family: var(--font-display); font-size: 24px; font-weight: 700; line-height: .9; }
+    .sidebar-brand .sub { color: var(--text-secondary); font-size: 11px; margin-top: 5px; }
+    .nav-group { margin-top: 23px; }
+    .nav-label { padding: 0 12px 8px; color: var(--text-soft); font-size: 10px; font-weight: 700; letter-spacing: .14em; }
+    .nav-link {
+      display: flex; align-items: center; gap: 11px;
+      min-height: 43px; padding: 0 12px; border-radius: 13px;
+      color: var(--text-secondary); font-weight: 600; font-size: 13px;
+      border: 1px solid transparent;
+      transition: background .18s ease, color .18s ease;
+    }
+    .nav-link:hover { background: rgba(255,255,255,.36); color: var(--text-primary); }
+    .nav-link.active { color: var(--text-primary); background: var(--accent-soft); border-color: rgba(91,143,202,.15); }
+    .sidebar-footer { margin-top: auto; padding: 16px 8px 0; border-top: 1px solid var(--border); }
+    .user-chip { display: flex; gap: 10px; align-items: center; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--sage-soft); color: var(--sage); font-weight: 700; }
+
+    .staff-main { min-width: 0; }
+    .topbar {
+      min-height: 68px; border-radius: 20px; padding: 10px 14px 10px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+      position: sticky; top: 18px; z-index: 20;
+    }
+    .topbar-left, .topbar-actions { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .breadcrumb { font-size: 13px; color: var(--text-secondary); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .model-control { display: flex; align-items: center; gap: 10px; min-width: 250px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 999px; background: rgba(255,255,255,.4); }
+    .model-control select { border: 0; outline: 0; background: transparent; min-width: 155px; font-size: 12px; font-weight: 700; }
+    .health-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sage); box-shadow: 0 0 0 4px var(--sage-soft); }
+
+    .demo-switch { display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 700; }
+    .switch { width: 42px; height: 24px; border: 1px solid var(--border-strong); border-radius: 999px; padding: 2px; background: rgba(255,255,255,.44); }
+    .switch span { display: block; width: 18px; height: 18px; border-radius: 50%; background: var(--text-soft); transition: transform .2s ease, background .2s ease; }
+    .switch.on span { transform: translateX(18px); background: var(--accent); }
+
+    .mobile-menu { display: none; }
+    .page { padding: 36px 10px 70px; max-width: 1680px; margin: 0 auto; }
+    .page-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; align-items: end; margin-bottom: 28px; }
+    .page-title { margin: 7px 0 0; font: 600 clamp(50px, 6vw, 88px)/.84 var(--font-display); letter-spacing: -.045em; max-width: 760px; }
+    .page-title.small { font-size: clamp(44px, 5vw, 70px); }
+    .page-intro { max-width: 460px; color: var(--text-secondary); line-height: 1.65; font-size: 14px; padding-bottom: 5px; }
+    .page-intro strong { color: var(--text-primary); }
+
+    .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin-bottom: 22px; }
+    .metric { padding: 18px; border-top: 2px solid transparent; border-radius: 18px; }
+    .metric:nth-child(1) { border-color: var(--accent); }
+    .metric:nth-child(2) { border-color: var(--sage); }
+    .metric:nth-child(3) { border-color: var(--amber); }
+    .metric:nth-child(4) { border-color: var(--danger); }
+    .metric-label { color: var(--text-secondary); font-size: 12px; }
+    .metric-value { margin-top: 7px; font: 600 38px/1 var(--font-display); }
+    .metric-note { margin-top: 7px; color: var(--text-soft); font-size: 11px; }
+
+    .toolbar { display: grid; grid-template-columns: minmax(220px,1fr) repeat(3, minmax(145px,.35fr)); gap: 10px; padding: 14px; border-radius: 18px; margin-bottom: 14px; }
+    .search-wrap { position: relative; }
+    .search-wrap svg { position: absolute; left: 13px; top: 13px; color: var(--text-soft); }
+    .search-wrap input { padding-left: 40px; }
+
+    .table-shell { border-radius: 22px; overflow: hidden; }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 980px; }
+    th { text-align: left; padding: 15px 16px; font-size: 10px; letter-spacing: .11em; text-transform: uppercase; color: var(--text-soft); border-bottom: 1px solid var(--border-strong); }
+    td { padding: 17px 16px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
+    tr:last-child td { border-bottom: 0; }
+    tbody tr { transition: background .16s ease; }
+    tbody tr:hover { background: rgba(255,255,255,.38); }
+    .clickable-row { cursor: pointer; }
+    .rank { font: 600 21px/1 var(--font-display); color: var(--text-secondary); }
+    .candidate-cell { display: flex; align-items: center; gap: 11px; min-width: 230px; }
+    .candidate-cell .avatar { width: 38px; height: 38px; }
+    .candidate-name { font-weight: 700; }
+    .candidate-meta { margin-top: 4px; color: var(--text-secondary); font-size: 11px; }
+    .score-number { font: 600 24px/1 var(--font-display); }
+    .score-mini { width: 82px; height: 5px; margin-top: 6px; background: rgba(58,91,122,.10); border-radius: 999px; overflow: hidden; }
+    .score-mini span { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
+
+    .empty-state { padding: 70px 24px; text-align: center; }
+    .empty-state h3 { margin: 16px 0 8px; font: 600 34px/1 var(--font-display); }
+
+    .detail-head { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 24px; align-items: end; margin-bottom: 22px; }
+    .candidate-title { margin: 8px 0 0; font: 600 clamp(56px,7vw,94px)/.78 var(--font-display); letter-spacing: -.045em; }
+    .detail-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 9px; }
+    .detail-grid { display: grid; grid-template-columns: minmax(300px,.9fr) minmax(330px,1.1fr) minmax(290px,.82fr); gap: 14px; align-items: start; }
+    .panel { border-radius: 20px; padding: 18px; min-width: 0; }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 13px; border-bottom: 1px solid var(--border); }
+    .panel-title { font-weight: 700; font-size: 14px; }
+    .panel-sub { color: var(--text-secondary); font-size: 11px; margin-top: 3px; }
+
+    .pdf-frame { min-height: 740px; margin-top: 14px; border: 1px solid var(--border-strong); border-radius: 14px; background: #fbfdff; padding: 34px 30px; box-shadow: inset 0 0 28px rgba(43,78,112,.05); overflow: hidden; }
+    .pdf-name { font: 700 34px/1 var(--font-display); }
+    .pdf-contact { margin-top: 8px; color: #64778a; font-size: 9px; }
+    .pdf-rule { margin: 15px 0; border-top: 1px solid #c6d4e1; }
+    .pdf-section { margin-top: 18px; }
+    .pdf-section h4 { margin: 0 0 7px; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+    .pdf-section p, .pdf-section li { font-family: Georgia, serif; font-size: 8.5px; line-height: 1.55; color: #283a4c; }
+    .pdf-section ul { padding-left: 15px; }
+
+    .resume-section { padding: 17px 0; border-bottom: 1px solid var(--border); }
+    .resume-section:last-child { border-bottom: 0; }
+    .resume-section h3 { margin: 0 0 12px; font: 600 25px/1 var(--font-display); }
+    .timeline-item { position: relative; padding-left: 19px; margin: 14px 0; }
+    .timeline-item::before { content: ""; position: absolute; left: 1px; top: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+    .timeline-item::after { content: ""; position: absolute; left: 4px; top: 17px; bottom: -17px; width: 1px; background: var(--border-strong); }
+    .timeline-item:last-child::after { display: none; }
+    .timeline-item strong { font-size: 13px; }
+    .timeline-item p { margin: 5px 0 0; color: var(--text-secondary); font-size: 12px; line-height: 1.55; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 7px; }
+    .tag { padding: 6px 9px; border-radius: 999px; background: rgba(255,255,255,.44); border: 1px solid var(--border); font-size: 11px; }
+
+    .score-hero { display: grid; grid-template-columns: 110px minmax(0,1fr); gap: 15px; align-items: center; margin: 18px 0; }
+    .score-ring { width: 106px; height: 106px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--accent) 0 86%, rgba(58,91,122,.10) 86% 100%); position: relative; }
+    .score-ring::after { content: ""; position: absolute; inset: 8px; border-radius: 50%; background: var(--surface-raised); }
+    .score-ring span { position: relative; z-index: 1; font: 600 34px/1 var(--font-display); }
+    .score-copy h3 { margin: 0; font: 600 26px/1 var(--font-display); }
+    .score-copy p { margin: 7px 0 0; color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
+    .score-breakdown { display: grid; gap: 14px; }
+    .score-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; align-items: end; }
+    .score-row .label { font-size: 12px; font-weight: 700; }
+    .score-row .value { font-family: var(--font-mono); font-size: 11px; }
+    .bar { grid-column: 1 / -1; height: 7px; background: rgba(58,91,122,.10); border-radius: 999px; overflow: hidden; }
+    .bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), #8bb8e1); border-radius: inherit; }
+    .score-adjustments { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; margin: 16px 0; }
+    .adjustment { padding: 10px; border-radius: 12px; background: rgba(255,255,255,.36); border: 1px solid var(--border); }
+    .adjustment span { display: block; color: var(--text-secondary); font-size: 9px; text-transform: uppercase; letter-spacing: .08em; }
+    .adjustment strong { display: block; margin-top: 5px; font-family: var(--font-mono); font-size: 12px; }
+
+    details { border-top: 1px solid var(--border); }
+    details summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 10px; padding: 15px 0; font-weight: 700; font-size: 13px; }
+    details summary::-webkit-details-marker { display: none; }
+    details summary::after { content: "+"; font-family: var(--font-mono); color: var(--accent); }
+    details[open] summary::after { content: "−"; }
+    .detail-body { padding: 0 0 15px; color: var(--text-secondary); font-size: 12px; line-height: 1.65; }
+
+    .pipeline { margin-top: 12px; }
+    .pipeline-step { display: grid; grid-template-columns: 30px minmax(0,1fr) auto; gap: 10px; min-height: 60px; position: relative; }
+    .pipeline-step:not(:last-child)::after { content: ""; position: absolute; left: 14px; top: 31px; bottom: -5px; width: 1px; background: var(--border-strong); }
+    .pipeline-dot { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--sage-soft); color: var(--sage); border: 1px solid rgba(109,157,154,.20); font-size: 10px; font-weight: 700; z-index: 1; }
+    .pipeline-step.running .pipeline-dot { color: var(--accent); background: var(--accent-soft); border-color: rgba(91,143,202,.22); }
+    .pipeline-step.failed .pipeline-dot { color: var(--danger); background: var(--danger-soft); }
+    .pipeline-name { font-size: 12px; font-weight: 700; padding-top: 4px; }
+    .pipeline-note { margin-top: 3px; color: var(--text-secondary); font-size: 10px; }
+    .pipeline-time { padding-top: 5px; font-family: var(--font-mono); color: var(--text-secondary); font-size: 10px; }
+
+    .candidate-shell { min-height: 100vh; padding: 22px; }
+    .candidate-top { max-width: 1220px; margin: 0 auto; border-radius: 20px; min-height: 68px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+    .candidate-content { max-width: 1220px; margin: 46px auto 80px; }
+    .candidate-hero { display: grid; grid-template-columns: minmax(0,1fr) minmax(320px,.72fr); gap: 36px; align-items: end; }
+    .candidate-hero h1 { margin: 9px 0 15px; font: 600 clamp(60px,8vw,105px)/.82 var(--font-display); letter-spacing: -.05em; }
+    .candidate-hero p { max-width: 680px; color: var(--text-secondary); line-height: 1.75; }
+    .application-card { border-radius: 22px; padding: 22px; }
+    .upload-zone { margin-top: 24px; padding: 28px; border: 1px dashed rgba(91,143,202,.42); border-radius: 18px; background: var(--accent-soft); text-align: center; transition: background .18s ease, border-color .18s ease; }
+    .upload-zone.dragging { background: var(--accent-mid); border-color: var(--accent); }
+    .upload-icon { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 13px; background: var(--accent); color: #fff; }
+    .uploaded-file { margin-top: 20px; padding: 15px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; background: rgba(255,255,255,.42); border: 1px solid var(--border); }
+    .file-info { display: flex; align-items: center; gap: 11px; min-width: 0; }
+    .file-icon { width: 38px; height: 44px; border-radius: 8px; background: var(--danger-soft); color: var(--danger); display: grid; place-items: center; font-size: 10px; font-weight: 800; }
+    .file-name { font-weight: 700; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
+    .file-meta { color: var(--text-secondary); font-size: 10px; margin-top: 4px; }
+    .status-story { margin-top: 30px; display: grid; grid-template-columns: repeat(4,1fr); gap: 9px; }
+    .status-step { padding: 16px 8px 13px 0; border-top: 1px solid var(--border-strong); position: relative; }
+    .status-step::before { content: ""; position: absolute; top: -5px; left: 0; width: 9px; height: 9px; border-radius: 50%; background: var(--text-soft); }
+    .status-step.done::before { background: var(--sage); }
+    .status-step.current::before { background: var(--accent); box-shadow: 0 0 0 5px var(--accent-soft); }
+    .status-step strong { display: block; font-size: 12px; }
+    .status-step span { display: block; margin-top: 5px; color: var(--text-secondary); font-size: 10px; line-height: 1.4; }
+
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+    .run-card { border-radius: 20px; padding: 20px; }
+    .run-card h3 { margin: 7px 0 0; font: 600 34px/1 var(--font-display); }
+    .config-list { margin-top: 18px; }
+    .config-row { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+    .config-row span:first-child { color: var(--text-secondary); }
+    .delta { display: inline-flex; padding: 4px 7px; border-radius: 999px; font-size: 10px; font-family: var(--font-mono); background: var(--sage-soft); color: var(--sage); }
+    .delta.down { background: var(--danger-soft); color: var(--danger); }
+
+    .model-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 13px; }
+    .model-card { border-radius: 20px; padding: 19px; min-height: 230px; display: flex; flex-direction: column; }
+    .model-card h3 { margin: 15px 0 5px; font: 600 30px/1 var(--font-display); }
+    .model-meta { display: grid; gap: 8px; margin: 17px 0; }
+    .model-meta div { display: flex; justify-content: space-between; gap: 10px; font-size: 11px; }
+    .model-meta span:first-child { color: var(--text-secondary); }
+    .model-card .actions { margin-top: auto; display: flex; gap: 8px; }
+
+    .demo-banner { margin-bottom: 18px; padding: 16px 18px; border-radius: 18px; display: flex; justify-content: space-between; align-items: center; gap: 14px; background: var(--accent-soft); border: 1px solid rgba(91,143,202,.22); }
+    .demo-steps { display: flex; flex-wrap: wrap; gap: 8px; }
+    .demo-step { padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,.42); border: 1px solid var(--border); font-size: 11px; font-weight: 700; }
+    .demo-step.active { color: var(--accent); background: rgba(255,255,255,.72); border-color: rgba(91,143,202,.30); }
+
+    .toast-stack { position: fixed; right: 18px; bottom: 18px; z-index: 100; display: grid; gap: 9px; width: min(360px, calc(100vw - 36px)); }
+    .toast { padding: 14px 15px; border-radius: 15px; display: flex; align-items: flex-start; gap: 10px; animation: toast-in .22s ease; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } }
+    .toast strong { display: block; font-size: 12px; }
+    .toast span { display: block; margin-top: 3px; color: var(--text-secondary); font-size: 11px; line-height: 1.4; }
+
+    .modal-backdrop { position: fixed; inset: 0; z-index: 90; background: rgba(24,43,61,.30); display: grid; place-items: center; padding: 22px; backdrop-filter: blur(5px); }
+    .modal { width: min(600px,100%); max-height: 90vh; overflow-y: auto; border-radius: 24px; padding: 24px; }
+    .modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .modal-head h2 { margin: 5px 0 0; font: 600 38px/1 var(--font-display); }
+    .modal-body { display: grid; gap: 16px; padding: 20px 0; }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .modal-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 9px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+    .code-box { border: 1px solid var(--border); border-radius: 13px; background: rgba(45,78,109,.045); padding: 12px; font: 10px/1.65 var(--font-mono); color: var(--text-secondary); overflow-x: auto; }
+    .skeleton { position: relative; overflow: hidden; background: rgba(58,91,122,.09); border-radius: 8px; }
+    .skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); animation: shimmer 1.5s infinite; }
+    @keyframes shimmer { 100% { transform: translateX(100%); } }
+
+    @media (max-width: 1180px) {
+      .detail-grid { grid-template-columns: minmax(300px,.9fr) minmax(350px,1.1fr); }
+      .detail-grid > :last-child { grid-column: 1 / -1; }
+      .model-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width: 980px) {
+      .demo-sequence-grid { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+      .login-shell { grid-template-columns: 1fr; }
+      .login-story { min-height: 580px; }
+      .staff-shell { grid-template-columns: 1fr; padding: 10px; }
+      .sidebar { position: fixed; left: 10px; top: 10px; bottom: 10px; width: min(286px, calc(100vw - 38px)); min-height: 0; z-index: 60; transform: translateX(-115%); transition: transform .22s ease; }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay { position: fixed; inset: 0; background: rgba(24,43,61,.27); z-index: 50; backdrop-filter: blur(3px); }
+      .mobile-menu { display: inline-flex; }
+      .topbar { top: 10px; }
+      .page { padding-inline: 4px; }
+      .page-head, .detail-head { grid-template-columns: 1fr; align-items: start; }
+      .detail-actions { justify-content: flex-start; }
+      .metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .toolbar { grid-template-columns: 1fr 1fr; }
+      .toolbar .search-wrap { grid-column: 1 / -1; }
+      .candidate-hero { grid-template-columns: 1fr; }
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .demo-sequence-grid { grid-template-columns: 1fr !important; }
+      .login-shell { padding: 12px; }
+      .login-story { padding: 28px; min-height: 500px; }
+      .story-flow { grid-template-columns: repeat(2,1fr); }
+      .staff-shell { padding: 7px; }
+      .topbar { min-height: 62px; padding: 8px; }
+      .breadcrumb, .model-control { display: none; }
+      .page { padding-top: 28px; }
+      .page-head { margin-bottom: 22px; }
+      .page-title { font-size: 58px; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .toolbar { grid-template-columns: 1fr; }
+      .toolbar .search-wrap { grid-column: auto; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .detail-grid > :last-child { grid-column: auto; }
+      .pdf-frame { min-height: 560px; }
+      .candidate-shell { padding: 10px; }
+      .candidate-content { margin-top: 30px; }
+      .status-story { grid-template-columns: 1fr 1fr; }
+      .model-grid { grid-template-columns: 1fr; }
+      .form-grid-2 { grid-template-columns: 1fr; }
+      .demo-banner { align-items: flex-start; flex-direction: column; }
+    }
+    @media (max-width: 460px) {
+      .metrics { grid-template-columns: 1fr; }
+      .login-title { font-size: 58px; }
+      .login-panel { padding: 24px; }
+      .candidate-hero h1 { font-size: 64px; }
+      .status-story { grid-template-columns: 1fr; }
+      .topbar-actions .btn:not(.mobile-menu) { display: none; }
+      .score-hero { grid-template-columns: 90px minmax(0,1fr); }
+      .score-ring { width: 88px; height: 88px; }
+      .score-adjustments { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="app-root" aria-live="polite"></div>
+  <div id="toastStack" class="toast-stack" aria-live="assertive"></div>
+  <div id="modalRoot"></div>
+  <script>
+    // ---------------------------------------------------------------------
+    // Mock data. Replace mockApi methods with real backend fetch() calls.
+    // ---------------------------------------------------------------------
+    const state = {
+      user: null,
+      demoMode: false,
+      mobileNavOpen: false,
+      candidateStatus: 'UNDER_REVIEW',
+      uploadedFile: { name: 'alice_resume.pdf', size: '1.4 MB', uploaded: '23 Jul 2026, 15:42' },
+      defaultModel: 'gemma3:4b',
+      applicationFilters: { search: '', status: 'all', decision: 'all', sort: 'score_desc' },
+      runFilters: { status: 'all', model: 'all' },
+      compare: { applicationId: 'app-alice', left: 'run-a1', right: 'run-a2' }
+    };
+
+    const models = [
+      { id: 'gemma3:4b', name: 'Gemma 3 4B', provider: 'Ollama', type: 'Local', healthy: true, installed: true, temperature: 0.1, topP: 0.9, structured: true },
+      { id: 'qwen3:8b', name: 'Qwen 3 8B', provider: 'Ollama', type: 'Local', healthy: true, installed: true, temperature: 0.1, topP: 0.9, structured: true },
+      { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', provider: 'Google', type: 'Cloud', healthy: true, installed: true, temperature: 0.1, topP: 0.9, structured: true },
+      { id: 'llama3.2:3b', name: 'Llama 3.2 3B', provider: 'Ollama', type: 'Local', healthy: false, installed: false, temperature: 0.1, topP: 0.9, structured: false }
+    ];
+
+    const candidates = [
+      {
+        id: 'app-alice', ref: 'APP-0027', name: 'Alice Chen', email: 'alice@example.com', initials: 'AC', rank: 1,
+        score: 91.5, base: 87, bonus: 6, deduction: 1.5, reviewTier: 'High Priority', candidateStatus: 'UNDER_REVIEW', decision: 'ADVANCE',
+        model: 'gemma3:4b', updated: '2 min ago', submitted: '23 Jul 2026, 15:42', role: 'Distributed systems · Go · Kubernetes',
+        skills: ['Go', 'Python', 'Kubernetes', 'PostgreSQL', 'gRPC', 'AWS'], github: 'github.com/alicechen',
+        summary: 'Backend engineer with repeated ownership of production distributed systems, strong open-source evidence, and clear technical depth.',
+        breakdown: [
+          { label: 'Open Source', value: 23, max: 25 }, { label: 'Self Projects', value: 20, max: 25 },
+          { label: 'Production', value: 25, max: 30 }, { label: 'Technical Skills', value: 19, max: 20 }
+        ],
+        evidence: {
+          strengths: [
+            'Maintained a distributed task scheduler used by 2,000+ developers.',
+            'Owned reliability work that reduced p95 API latency by 41%.',
+            'Consistent public contributions across infrastructure repositories.'
+          ],
+          improvements: ['Limited explicit evidence of frontend work.', 'Leadership scope is strong but mostly described at team level.']
+        },
+        work: [
+          { title: 'Senior Backend Engineer · Red Maple Robotics', dates: '2022–2026', body: 'Led platform reliability and distributed job orchestration for a fleet management product.' },
+          { title: 'Software Engineer · Northstar Cloud', dates: '2020–2022', body: 'Built Go services, observability pipelines, and Kubernetes deployment tooling.' }
+        ],
+        education: 'B.Sc. Computer Science · University of Toronto · 2020',
+        projects: ['Atlas Queue — distributed task scheduler', 'Tracegarden — OpenTelemetry debugging toolkit'],
+        runs: [
+          { id: 'run-a1', label: 'Run A1', status: 'COMPLETED', model: 'gemma3:4b', score: 91.5, base: 87, bonus: 6, deduction: 1.5, prompt: 'baseline-v1', pipeline: 'web-v0.1.0', cache: 'SAFE_REUSE', reused: false, duration: '24.8s', created: '23 Jul, 15:44', temperature: 0.1, topP: 0.9 },
+          { id: 'run-a2', label: 'Run A2', status: 'COMPLETED', model: 'qwen3:8b', score: 87.0, base: 84, bonus: 4, deduction: 1, prompt: 'baseline-v1', pipeline: 'web-v0.1.0', cache: 'FORCE_FRESH', reused: false, duration: '31.2s', created: '23 Jul, 16:03', temperature: 0.1, topP: 0.9 }
+        ]
+      },
+      {
+        id: 'app-david', ref: 'APP-0025', name: 'David Lee', email: 'david@example.com', initials: 'DL', rank: 2,
+        score: 86.0, base: 84, bonus: 3, deduction: 1, reviewTier: 'High Priority', candidateStatus: 'UNDER_REVIEW', decision: 'HOLD',
+        model: 'gemma3:4b', updated: '8 min ago', submitted: '23 Jul 2026, 15:11', role: 'ML infrastructure · Python · Ray',
+        skills: ['Python', 'PyTorch', 'Ray', 'Docker', 'FastAPI'], github: 'github.com/davidlee',
+        summary: 'Machine-learning infrastructure engineer with solid deployment and open-source contributions.',
+        breakdown: [{ label: 'Open Source', value: 20, max: 25 }, { label: 'Self Projects', value: 19, max: 25 }, { label: 'Production', value: 26, max: 30 }, { label: 'Technical Skills', value: 19, max: 20 }],
+        evidence: { strengths: ['Shipped model serving infrastructure for multiple product teams.', 'Strong Python and distributed compute experience.'], improvements: ['Project descriptions provide limited usage metrics.'] },
+        work: [{ title: 'ML Platform Engineer · Vertex Forge', dates: '2021–2026', body: 'Built model-serving, evaluation, and batch-training systems.' }],
+        education: 'M.Eng. Computer Engineering · UBC · 2021', projects: ['BatchScope — ML batch observability'],
+        runs: [{ id: 'run-d1', label: 'Run D1', status: 'COMPLETED', model: 'gemma3:4b', score: 86, base: 84, bonus: 3, deduction: 1, prompt: 'baseline-v1', pipeline: 'web-v0.1.0', cache: 'SAFE_REUSE', reused: false, duration: '27.4s', created: '23 Jul, 15:16', temperature: 0.1, topP: 0.9 }]
+      },
+      {
+        id: 'app-maya', ref: 'APP-0023', name: 'Maya Singh', email: 'maya@example.com', initials: 'MS', rank: 3,
+        score: 82.5, base: 81, bonus: 2.5, deduction: 1, reviewTier: 'Standard Review', candidateStatus: 'UNDER_REVIEW', decision: 'NONE',
+        model: 'gemma3:4b', updated: '14 min ago', submitted: '23 Jul 2026, 14:56', role: 'Backend APIs · Java · PostgreSQL', skills: ['Java', 'Spring', 'PostgreSQL', 'Kafka'], github: 'github.com/mayasingh',
+        summary: 'Backend engineer with good production ownership and a balanced technical profile.',
+        breakdown: [{ label: 'Open Source', value: 16, max: 25 }, { label: 'Self Projects', value: 19, max: 25 }, { label: 'Production', value: 28, max: 30 }, { label: 'Technical Skills', value: 18, max: 20 }],
+        evidence: { strengths: ['Strong production evidence and measurable API improvements.'], improvements: ['Open-source activity is modest.'] },
+        work: [{ title: 'Backend Engineer · Mercator Labs', dates: '2022–2026', body: 'Designed APIs and event-driven billing workflows.' }], education: 'B.Tech. Computer Science · IIT Delhi · 2022', projects: ['LedgerLab — event replay tool'],
+        runs: [{ id: 'run-m1', label: 'Run M1', status: 'COMPLETED', model: 'gemma3:4b', score: 82.5, base: 81, bonus: 2.5, deduction: 1, prompt: 'baseline-v1', pipeline: 'web-v0.1.0', cache: 'SAFE_REUSE', reused: true, duration: '1.2s', created: '23 Jul, 15:02', temperature: 0.1, topP: 0.9 }]
+      },
+      {
+        id: 'app-dana', ref: 'APP-0018', name: 'Dana Patel', email: 'dana@example.com', initials: 'DP', rank: 4,
+        score: 74.0, base: 74, bonus: 1, deduction: 1, reviewTier: 'Standard Review', candidateStatus: 'PROCESSING', decision: 'NONE',
+        model: 'gemma3:4b', updated: 'now', submitted: '23 Jul 2026, 16:08', role: 'Data engineering · Spark · SQL', skills: ['Python', 'Spark', 'SQL', 'Airflow'], github: 'github.com/danapatel',
+        summary: 'Data engineer with relevant stack experience; current evaluation is still running.',
+        breakdown: [{ label: 'Open Source', value: 14, max: 25 }, { label: 'Self Projects', value: 17, max: 25 }, { label: 'Production', value: 27, max: 30 }, { label: 'Technical Skills', value: 16, max: 20 }],
+        evidence: { strengths: ['Relevant data platform stack.'], improvements: ['Evaluation still in progress.'] },
+        work: [{ title: 'Data Engineer · Orbit Commerce', dates: '2023–2026', body: 'Maintained batch and streaming analytics workflows.' }], education: 'B.Sc. Data Science · NUS · 2023', projects: ['FlowLens — Airflow health dashboard'],
+        runs: [{ id: 'run-p1', label: 'Run P1', status: 'RUNNING', model: 'gemma3:4b', score: null, base: null, bonus: null, deduction: null, prompt: 'baseline-v1', pipeline: 'web-v0.1.0', cache: 'FORCE_FRESH', reused: false, duration: '18.1s', created: '23 Jul, 16:09', temperature: 0.1, topP: 0.9 }]
+      },
+      {
+        id: 'app-evan', ref: 'APP-0012', name: 'Evan Liu', email: 'evan@example.com', initials: 'EL', rank: 5,
+        score: 18.5, base: 21, bonus: 0, deduction: 2.5, reviewTier: 'Below Review Cutoff', candidateStatus: 'UNDER_REVIEW', decision: 'ARCHIVE',
+        model: 'gemma3:4b', updated: '1 hr ago', submitted: '23 Jul 2026, 13:02', role: 'Early career · General software', skills: ['Python', 'JavaScript'], github: 'Not provided',
+        summary: 'Early-career application with limited evidence of sustained project ownership or production use.',
+        breakdown: [{ label: 'Open Source', value: 2, max: 25 }, { label: 'Self Projects', value: 7, max: 25 }, { label: 'Production', value: 4, max: 30 }, { label: 'Technical Skills', value: 8, max: 20 }],
+        evidence: { strengths: ['Lists foundational programming skills.'], improvements: ['Add concrete project outcomes.', 'Provide evidence of production or collaborative work.'] },
+        work: [{ title: 'Student Developer', dates: '2025–2026', body: 'Course projects and small prototypes.' }], education: 'B.Sc. Computer Science · In progress', projects: ['Todo application'],
+        runs: [
+          { id: 'run-e1', label: 'Run E1', status: 'COMPLETED', model: 'gemma3:4b', score: 18.5, base: 21, bonus: 0, deduction: 2.5, prompt: 'baseline-v1', pipeline: 'web-v0.1.0', cache: 'SAFE_REUSE', reused: false, duration: '18.7s', created: '23 Jul, 13:07', temperature: 0.1, topP: 0.9 },
+          { id: 'run-e0', label: 'Run E0', status: 'FAILED', model: 'qwen3:8b', score: null, base: null, bonus: null, deduction: null, prompt: 'baseline-v1', pipeline: 'web-v0.0.9', cache: 'FORCE_FRESH', reused: false, duration: '6.2s', created: '23 Jul, 12:58', temperature: 0.1, topP: 0.9, error: 'Structured output validation failed during RESUME_SECTION_PARSE.' }
+        ]
+      }
+    ];
+
+    const stagePresets = {
+      completed: [
+        { name: 'Upload validation', status: 'done', time: '0.1s', note: 'PDF signature and size verified' },
+        { name: 'PDF text extraction', status: 'done', time: '0.8s', note: '3 pages · 1,842 words' },
+        { name: 'Resume section parsing', status: 'done', time: '12.4s', note: 'Pydantic structure validated' },
+        { name: 'GitHub enrichment', status: 'done', time: '4.1s', note: 'Profile and repositories retrieved' },
+        { name: 'LLM evaluation', status: 'done', time: '7.2s', note: 'Evidence-backed score generated' },
+        { name: 'Rank and persist', status: 'done', time: '0.2s', note: 'Application ranking updated' }
+      ],
+      running: [
+        { name: 'Upload validation', status: 'done', time: '0.1s', note: 'PDF signature and size verified' },
+        { name: 'PDF text extraction', status: 'done', time: '0.9s', note: '2 pages · 1,209 words' },
+        { name: 'Resume section parsing', status: 'done', time: '11.2s', note: 'Pydantic structure validated' },
+        { name: 'GitHub enrichment', status: 'done', time: '3.9s', note: 'Profile retrieved' },
+        { name: 'LLM evaluation', status: 'running', time: 'running', note: 'Generating evidence and score' },
+        { name: 'Rank and persist', status: 'pending', time: '—', note: 'Waiting for evaluation' }
+      ],
+      failed: [
+        { name: 'Upload validation', status: 'done', time: '0.1s', note: 'PDF signature and size verified' },
+        { name: 'PDF text extraction', status: 'done', time: '0.7s', note: '2 pages · 932 words' },
+        { name: 'Resume section parsing', status: 'failed', time: '5.4s', note: 'Structured output validation failed' },
+        { name: 'GitHub enrichment', status: 'pending', time: '—', note: 'Not started' },
+        { name: 'LLM evaluation', status: 'pending', time: '—', note: 'Not started' },
+        { name: 'Rank and persist', status: 'pending', time: '—', note: 'Not started' }
+      ]
+    };
+
+    const mockApi = {
+      // BACKEND INTEGRATION POINT: replace with POST /api/auth/login
+      async login(email, password) {
+        await wait(260);
+        if (password !== 'demo123') throw new Error('Invalid email or password.');
+        if (email === 'staff@demo.local') return { role: 'staff', name: 'Research Staff', email };
+        if (email.includes('@')) return { role: 'candidate', name: email.split('@')[0], email };
+        throw new Error('Invalid email or password.');
+      },
+      // BACKEND INTEGRATION POINT: POST /api/candidate/resume
+      async uploadResume(file) { await wait(700); return { name: file.name, size: formatBytes(file.size), uploaded: new Date().toLocaleString() }; },
+      // BACKEND INTEGRATION POINT: POST /api/staff/applications/{id}/rerun
+      async rerun(applicationId, config) { await wait(800); return { applicationId, config }; },
+      // BACKEND INTEGRATION POINT: PATCH /api/staff/settings/default-model
+      async setDefaultModel(modelId) { await wait(250); return { modelId }; },
+      // BACKEND INTEGRATION POINT: POST /api/demo/reset
+      async resetDemo() { await wait(700); return { ok: true }; }
+    };
+
+    function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+    function formatBytes(bytes) {
+      if (!Number.isFinite(bytes)) return '—';
+      if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+      return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+    }
+    function escapeHtml(value = '') {
+      return String(value).replace(/[&<>'"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch]));
+    }
+    function currentModel() { return models.find(model => model.id === state.defaultModel) || models[0]; }
+    function getCandidate(id) { return candidates.find(candidate => candidate.id === id) || candidates[0]; }
+    function getRun(candidate, id) { return candidate.runs.find(run => run.id === id) || candidate.runs[0]; }
+    function initials(name) { return name.split(/\s+/).map(s => s[0]).join('').slice(0,2).toUpperCase(); }
+    function scoreOrDash(value) { return Number.isFinite(value) ? Number(value).toFixed(1) : '—'; }
+    function routeFromHash() {
+      const raw = location.hash.replace(/^#/, '') || '/login';
+      const clean = raw.split('?')[0];
+      if (clean.startsWith('/staff/application/')) return { name: 'application-detail', id: clean.split('/').pop() };
+      if (clean === '/staff/applications') return { name: 'applications' };
+      if (clean === '/staff/experiments') return { name: 'experiments' };
+      if (clean === '/staff/models') return { name: 'models' };
+      if (clean === '/staff/runs') return { name: 'runs' };
+      if (clean === '/staff/demo') return { name: 'demo' };
+      if (clean === '/candidate') return { name: 'candidate' };
+      return { name: 'login' };
+    }
+    function navigate(path) { location.hash = path; }
+
+    const icons = {
+      menu: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+      search: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>',
+      applications: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
+      experiment: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3h6M10 3v5l-5 9a2 2 0 0 0 1.7 3h10.6A2 2 0 0 0 19 17l-5-9V3"/><path d="M8 14h8"/></svg>',
+      model: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h6v6H9zM9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg>',
+      runs: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg>',
+      demo: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3V9z"/></svg>',
+      logout: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 5H5v14h5M14 8l4 4-4 4M8 12h10"/></svg>',
+      upload: '<svg class="icon icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg>',
+      chevron: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 18 6-6-6-6"/></svg>',
+      close: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+      plus: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>',
+      refresh: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M18 10a7 7 0 0 0-12-3M6 14a7 7 0 0 0 12 3"/></svg>',
+      arrow: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M14 7l5 5-5 5"/></svg>',
+      check: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m5 12 4 4L19 6"/></svg>'
+    };
+    function pill(text, kind = 'neutral') { return `<span class="pill pill-${kind}">${escapeHtml(text)}</span>`; }
+    function statusPill(status) {
+      const map = {
+        UNDER_REVIEW: ['Under review', 'success'], PROCESSING: ['Processing', 'warning'], SUBMITTED: ['Submitted', 'neutral'], CLOSED: ['Closed', 'neutral'],
+        ADVANCE: ['Advance', 'success'], HOLD: ['Hold', 'warning'], ARCHIVE: ['Archive', 'neutral'], NONE: ['Unreviewed', 'neutral'],
+        COMPLETED: ['Completed', 'success'], RUNNING: ['Running', 'warning'], FAILED: ['Failed', 'danger'], QUEUED: ['Queued', 'neutral']
+      };
+      const value = map[status] || [status, 'neutral'];
+      return pill(value[0], value[1]);
+    }
+    function reviewPill(tier) {
+      if (tier === 'High Priority') return pill(tier, 'accent');
+      if (tier === 'Below Review Cutoff') return pill(tier, 'danger');
+      return pill(tier, 'neutral');
+    }
+
+    function showToast(title, message, kind = 'success') {
+      const node = document.createElement('div');
+      node.className = 'toast glass-raised';
+      const symbol = kind === 'danger' ? '!' : kind === 'warning' ? '•' : '✓';
+      node.innerHTML = `<span class="section-number">${symbol}</span><div><strong>${escapeHtml(title)}</strong><span>${escapeHtml(message)}</span></div>`;
+      document.getElementById('toastStack').appendChild(node);
+      setTimeout(() => node.remove(), 3800);
+    }
+
+    function showModal(html) {
+      document.getElementById('modalRoot').innerHTML = `<div class="modal-backdrop" data-modal-backdrop><section class="modal glass-raised">${html}</section></div>`;
+      const backdrop = document.querySelector('[data-modal-backdrop]');
+      backdrop.addEventListener('click', event => { if (event.target === backdrop) closeModal(); });
+      document.querySelectorAll('[data-close-modal]').forEach(button => button.addEventListener('click', closeModal));
+    }
+    function closeModal() { document.getElementById('modalRoot').innerHTML = ''; }
+
+    function staffNavLink(path, label, icon, active) {
+      return `<a class="nav-link ${active ? 'active' : ''}" href="#${path}">${icons[icon]}<span>${label}</span></a>`;
+    }
+
+    function staffShell(route, content, title = 'Staff Console') {
+      const model = currentModel();
+      return `
+        <div class="staff-shell">
+          <div class="sidebar-overlay" ${state.mobileNavOpen ? '' : 'hidden'} data-sidebar-overlay></div>
+          <aside class="sidebar glass-nav ${state.mobileNavOpen ? 'open' : ''}" id="staffSidebar">
+            <div class="sidebar-brand">
+              <div class="brand-mark">H</div>
+              <div><div class="name">HireLens</div><div class="sub">AI screening workspace</div></div>
+            </div>
+            <nav>
+              <div class="nav-group">
+                <div class="nav-label">RECRUITMENT</div>
+                ${staffNavLink('/staff/applications', 'Applications', 'applications', ['applications','application-detail'].includes(route.name))}
+              </div>
+              <div class="nav-group">
+                <div class="nav-label">AI LAB</div>
+                ${staffNavLink('/staff/experiments', 'Experiments', 'experiment', route.name === 'experiments')}
+                ${staffNavLink('/staff/models', 'Models & Prompts', 'model', route.name === 'models')}
+                ${staffNavLink('/staff/runs', 'System Runs', 'runs', route.name === 'runs')}
+              </div>
+              <div class="nav-group">
+                <div class="nav-label">DEMO</div>
+                ${staffNavLink('/staff/demo', 'Demo Controls', 'demo', route.name === 'demo')}
+              </div>
+            </nav>
+            <div class="sidebar-footer">
+              <div class="user-chip">
+                <div class="avatar">RS</div>
+                <div style="min-width:0"><div style="font-size:12px;font-weight:700">Research Staff</div><div class="soft" style="font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">staff@demo.local</div></div>
+              </div>
+              <button class="btn btn-ghost btn-sm" style="margin-top:14px;width:100%;justify-content:flex-start" data-logout>${icons.logout} Sign out</button>
+            </div>
+          </aside>
+          <main class="staff-main">
+            <header class="topbar glass-nav">
+              <div class="topbar-left">
+                <button class="btn btn-square btn-ghost mobile-menu" aria-label="Open menu" data-mobile-menu>${icons.menu}</button>
+                <div class="breadcrumb">HireLens / ${escapeHtml(title)}</div>
+              </div>
+              <div class="topbar-actions">
+                <div class="model-control" title="Default model for new runs">
+                  <span class="health-dot"></span>
+                  <select aria-label="Default model" data-top-model>
+                    ${models.filter(item => item.healthy).map(item => `<option value="${item.id}" ${item.id === state.defaultModel ? 'selected' : ''}>${item.name} · ${item.type}</option>`).join('')}
+                  </select>
+                </div>
+                <div class="demo-switch"><span>Demo Mode</span><button class="switch ${state.demoMode ? 'on' : ''}" aria-label="Toggle demo mode" aria-pressed="${state.demoMode}" data-demo-toggle><span></span></button></div>
+                <button class="btn btn-square btn-ghost" title="Sign out" data-logout>${icons.logout}</button>
+              </div>
+            </header>
+            <div class="page">
+              ${state.demoMode ? demoBanner() : ''}
+              ${content}
+            </div>
+          </main>
+        </div>`;
+    }
+
+    function demoBanner() {
+      return `<section class="demo-banner">
+        <div><div class="eyebrow">Presentation mode</div><div style="margin-top:4px;font-size:13px">The interface is focused on the end-to-end system story.</div></div>
+        <div class="demo-steps"><span class="demo-step active">1 · Upload</span><span class="demo-step">2 · Screening</span><span class="demo-step">3 · Rerun</span><span class="demo-step">4 · Compare</span></div>
+      </section>`;
+    }
+
+    function pageHeader(kicker, titleLines, intro, actions = '') {
+      return `<header class="page-head">
+        <div><div class="eyebrow">${escapeHtml(kicker)}</div><h1 class="page-title">${titleLines}</h1></div>
+        <div class="page-intro">${intro}${actions ? `<div style="margin-top:15px;display:flex;gap:8px;flex-wrap:wrap">${actions}</div>` : ''}</div>
+      </header>`;
+    }
+
+    function renderLogin() {
+      return `<main class="login-shell">
+        <section class="login-story glass-nav">
+          <div style="position:relative;z-index:1">
+            <div style="display:flex;align-items:center;gap:12px"><div class="brand-mark">H</div><div><strong>HireLens</strong><div class="soft" style="font-size:12px;margin-top:3px">AI-assisted resume prioritization</div></div></div>
+            <div class="eyebrow" style="margin-top:64px">Human review, intelligently ordered</div>
+            <h2 class="login-title">Review the<br/>right signals<br/>first.</h2>
+            <p class="muted">A controlled hiring-agent demo that turns PDF resumes into structured evidence, priority scores and a transparent review queue. The model prioritizes; people decide.</p>
+          </div>
+          <div class="story-flow">
+            <div class="story-step"><span class="section-number">01</span><strong>Upload</strong><span class="soft">Candidate PDF</span></div>
+            <div class="story-step"><span class="section-number">02</span><strong>Parse</strong><span class="soft">Structured resume</span></div>
+            <div class="story-step"><span class="section-number">03</span><strong>Evaluate</strong><span class="soft">Evidence and score</span></div>
+            <div class="story-step"><span class="section-number">04</span><strong>Review</strong><span class="soft">Human decision</span></div>
+          </div>
+        </section>
+        <section class="login-panel glass-raised">
+          <div class="eyebrow">Secure workspace</div>
+          <h1>Sign in.</h1>
+          <p class="muted" style="line-height:1.6;margin:0">Use a candidate account to submit a resume, or the staff account to open the review console.</p>
+          <form class="login-form" id="loginForm">
+            <div class="field"><label for="loginEmail">Email</label><input class="input" id="loginEmail" type="email" value="staff@demo.local" autocomplete="username" required /></div>
+            <div class="field"><label for="loginPassword">Password</label><input class="input" id="loginPassword" type="password" value="demo123" autocomplete="current-password" required /></div>
+            <button class="btn btn-primary" type="submit" id="loginButton">Sign in ${icons.arrow}</button>
+            <div id="loginError" class="pill pill-danger" hidden></div>
+          </form>
+          <div class="demo-accounts">
+            <div class="eyebrow">Demo accounts</div>
+            <button class="demo-account-row btn-ghost" style="width:100%;border:0;background:transparent;text-align:left" type="button" data-fill-account="staff@demo.local"><span><strong>Staff console</strong><br/><span class="soft mono">staff@demo.local</span></span><span class="mono">demo123</span></button>
+            <button class="demo-account-row btn-ghost" style="width:100%;border:0;background:transparent;text-align:left" type="button" data-fill-account="alice@example.com"><span><strong>Candidate workspace</strong><br/><span class="soft mono">alice@example.com</span></span><span class="mono">demo123</span></button>
+          </div>
+        </section>
+      </main>`;
+    }
+
+    function renderCandidate() {
+      const statusIndex = { SUBMITTED: 0, PROCESSING: 2, UNDER_REVIEW: 3, CLOSED: 3 }[state.candidateStatus] ?? 0;
+      const statusText = state.candidateStatus === 'PROCESSING' ? 'Resume processing' : state.candidateStatus === 'UNDER_REVIEW' ? 'Under human review' : 'Application submitted';
+      return `<div class="candidate-shell">
+        <header class="candidate-top glass-nav">
+          <div style="display:flex;align-items:center;gap:11px"><div class="brand-mark">H</div><div><strong>HireLens</strong><div class="soft" style="font-size:10px;margin-top:3px">Candidate workspace</div></div></div>
+          <div style="display:flex;align-items:center;gap:9px">${pill(statusText, state.candidateStatus === 'PROCESSING' ? 'warning' : 'success')}<button class="btn btn-square btn-ghost" data-logout>${icons.logout}</button></div>
+        </header>
+        <main class="candidate-content">
+          <section class="candidate-hero">
+            <div>
+              <div class="eyebrow">APPLICATION / APP-0027</div>
+              <h1>Your<br/>application.</h1>
+              <p>Submit one PDF resume and follow its review status. Internal scoring, ranking and model configuration are visible only to authorized staff.</p>
+            </div>
+            <aside class="application-card glass-card">
+              <div class="eyebrow">Current status</div>
+              <div class="display" style="font-size:42px;line-height:.95;margin-top:12px">${escapeHtml(statusText)}</div>
+              <div class="muted" style="font-size:12px;margin-top:13px">Last updated just now · Reference APP-0027</div>
+            </aside>
+          </section>
+          <section class="application-card glass-card" style="margin-top:30px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap"><div><div class="eyebrow">Resume document</div><h2 class="display" style="font-size:42px;line-height:1;margin:8px 0 0">Upload or replace PDF</h2></div><span class="pill pill-neutral">PDF · Maximum 10 MB</span></div>
+            <div class="upload-zone" id="uploadZone">
+              <div class="upload-icon">${icons.upload}</div>
+              <strong>Drop your resume here</strong>
+              <div class="muted" style="font-size:12px;margin:7px 0 15px">or choose a PDF from your computer</div>
+              <input id="resumeInput" type="file" accept="application/pdf,.pdf" hidden />
+              <button class="btn btn-primary" type="button" data-choose-file>Choose PDF</button>
+            </div>
+            ${state.uploadedFile ? `<div class="uploaded-file"><div class="file-info"><div class="file-icon">PDF</div><div style="min-width:0"><div class="file-name">${escapeHtml(state.uploadedFile.name)}</div><div class="file-meta">${escapeHtml(state.uploadedFile.size)} · Uploaded ${escapeHtml(state.uploadedFile.uploaded)}</div></div></div><button class="btn btn-sm" type="button" data-choose-file>Replace resume</button></div>` : ''}
+            <div class="status-story">
+              ${['Application submitted','Resume received','Resume processing','Under human review'].map((label,index) => `<div class="status-step ${index < statusIndex ? 'done' : index === statusIndex ? 'current' : ''}"><strong>${label}</strong><span>${['Account and application created','PDF safely stored','Extraction and evaluation','Awaiting staff assessment'][index]}</span></div>`).join('')}
+            </div>
+          </section>
+        </main>
+      </div>`;
+    }
+    function filteredCandidates() {
+      const filters = state.applicationFilters;
+      let rows = [...candidates];
+      if (filters.search) {
+        const q = filters.search.toLowerCase();
+        rows = rows.filter(candidate => `${candidate.name} ${candidate.email} ${candidate.role}`.toLowerCase().includes(q));
+      }
+      if (filters.status !== 'all') rows = rows.filter(candidate => candidate.candidateStatus === filters.status);
+      if (filters.decision !== 'all') rows = rows.filter(candidate => candidate.decision === filters.decision);
+      rows.sort((a,b) => {
+        if (filters.sort === 'score_asc') return a.score - b.score;
+        if (filters.sort === 'name_asc') return a.name.localeCompare(b.name);
+        if (filters.sort === 'submitted_desc') return b.submitted.localeCompare(a.submitted);
+        return b.score - a.score;
+      });
+      return rows;
+    }
+
+    function renderApplications() {
+      const rows = filteredCandidates();
+      const metrics = [
+        ['Applications', candidates.length, 'Demo review cohort'],
+        ['Processing', candidates.filter(c => c.candidateStatus === 'PROCESSING').length, 'Worker currently active'],
+        ['Ready for review', candidates.filter(c => c.candidateStatus === 'UNDER_REVIEW').length, 'Human decision pending'],
+        ['Below cutoff', candidates.filter(c => c.reviewTier === 'Below Review Cutoff').length, 'Low-priority review tier']
+      ];
+      const actions = `<button class="btn btn-primary" data-open-candidate>${icons.plus} Open candidate view</button>`;
+      const intro = `AI-assisted prioritization for human review. <strong>${candidates.length} applications</strong> · ${candidates.filter(c => c.runs.some(r => r.status === 'COMPLETED')).length} evaluated.`;
+      const content = `
+        ${pageHeader('Applications', 'Candidate<br/>Review Queue', intro, actions)}
+        <section class="metrics">${metrics.map(item => `<div class="metric glass-card"><div class="metric-label">${item[0]}</div><div class="metric-value">${item[1]}</div><div class="metric-note">${item[2]}</div></div>`).join('')}</section>
+        <section class="toolbar glass-card">
+          <div class="search-wrap">${icons.search}<input class="input" placeholder="Search candidate, email or skill" value="${escapeHtml(state.applicationFilters.search)}" data-filter-search /></div>
+          <select class="select" aria-label="Candidate status" data-filter-status><option value="all">All statuses</option><option value="UNDER_REVIEW" ${state.applicationFilters.status === 'UNDER_REVIEW' ? 'selected' : ''}>Under review</option><option value="PROCESSING" ${state.applicationFilters.status === 'PROCESSING' ? 'selected' : ''}>Processing</option></select>
+          <select class="select" aria-label="Staff decision" data-filter-decision><option value="all">All decisions</option><option value="NONE" ${state.applicationFilters.decision === 'NONE' ? 'selected' : ''}>Unreviewed</option><option value="ADVANCE" ${state.applicationFilters.decision === 'ADVANCE' ? 'selected' : ''}>Advance</option><option value="HOLD" ${state.applicationFilters.decision === 'HOLD' ? 'selected' : ''}>Hold</option><option value="ARCHIVE" ${state.applicationFilters.decision === 'ARCHIVE' ? 'selected' : ''}>Archive</option></select>
+          <select class="select" aria-label="Sort" data-filter-sort><option value="score_desc" ${state.applicationFilters.sort === 'score_desc' ? 'selected' : ''}>Score: high to low</option><option value="score_asc" ${state.applicationFilters.sort === 'score_asc' ? 'selected' : ''}>Score: low to high</option><option value="name_asc" ${state.applicationFilters.sort === 'name_asc' ? 'selected' : ''}>Name: A–Z</option><option value="submitted_desc" ${state.applicationFilters.sort === 'submitted_desc' ? 'selected' : ''}>Newest first</option></select>
+        </section>
+        <section class="table-shell glass-card">
+          ${rows.length ? `<div class="table-scroll"><table><thead><tr><th>Rank</th><th>Candidate</th><th>Priority score</th><th>Review tier</th><th>Status</th><th>Decision</th><th>Model</th><th>Updated</th></tr></thead><tbody>
+          ${rows.map((candidate,index) => `<tr class="clickable-row" data-open-application="${candidate.id}"><td><span class="rank">${String(index + 1).padStart(2,'0')}</span></td><td><div class="candidate-cell"><div class="avatar">${candidate.initials}</div><div><div class="candidate-name">${candidate.name}</div><div class="candidate-meta">${candidate.role}</div></div></div></td><td><div class="score-number">${candidate.candidateStatus === 'PROCESSING' ? '—' : scoreOrDash(candidate.score)}</div><div class="score-mini"><span style="width:${candidate.score}%"></span></div></td><td>${reviewPill(candidate.reviewTier)}</td><td>${statusPill(candidate.candidateStatus)}</td><td>${statusPill(candidate.decision)}</td><td><span class="mono" style="font-size:10px">${candidate.model}</span></td><td class="muted">${candidate.updated}</td></tr>`).join('')}
+          </tbody></table></div>` : `<div class="empty-state"><span class="section-number">0</span><h3>No matching applications</h3><p class="muted">Clear one or more filters to restore the review queue.</p><button class="btn" data-clear-filters>Clear filters</button></div>`}
+        </section>`;
+      return staffShell({ name: 'applications' }, content, 'Applications');
+    }
+
+    function pdfMock(candidate) {
+      return `<div class="pdf-frame">
+        <div class="pdf-name">${candidate.name}</div>
+        <div class="pdf-contact">${candidate.email} · ${candidate.github} · Toronto, Canada</div>
+        <div class="pdf-rule"></div>
+        <div class="pdf-section"><h4>Profile</h4><p>${candidate.summary}</p></div>
+        <div class="pdf-section"><h4>Experience</h4>${candidate.work.map(item => `<p><strong>${item.title}</strong><br/><em>${item.dates}</em><br/>${item.body}</p>`).join('')}</div>
+        <div class="pdf-section"><h4>Projects</h4><ul>${candidate.projects.map(project => `<li>${project}</li>`).join('')}</ul></div>
+        <div class="pdf-section"><h4>Education</h4><p>${candidate.education}</p></div>
+        <div class="pdf-section"><h4>Skills</h4><p>${candidate.skills.join(' · ')}</p></div>
+      </div>`;
+    }
+
+    function pipelineHtml(run) {
+      const stages = run.status === 'FAILED' ? stagePresets.failed : run.status === 'RUNNING' ? stagePresets.running : stagePresets.completed;
+      return `<div class="pipeline">${stages.map((stage,index) => `<div class="pipeline-step ${stage.status === 'running' ? 'running' : stage.status === 'failed' ? 'failed' : ''}"><div class="pipeline-dot">${stage.status === 'done' ? '✓' : stage.status === 'running' ? '…' : stage.status === 'failed' ? '!' : String(index+1).padStart(2,'0')}</div><div><div class="pipeline-name">${stage.name}</div><div class="pipeline-note">${stage.note}</div></div><div class="pipeline-time">${stage.time}</div></div>`).join('')}</div>`;
+    }
+
+    function runAdvanced(candidate, run) {
+      return `<details open><summary>Advanced run details</summary><div class="detail-body">
+        <div class="config-list">
+          <div class="config-row"><span>Run ID</span><span class="mono">${run.id}</span></div>
+          <div class="config-row"><span>Model</span><span class="mono">${run.model}</span></div>
+          <div class="config-row"><span>Temperature / top-p</span><span class="mono">${run.temperature} / ${run.topP}</span></div>
+          <div class="config-row"><span>Prompt version</span><span class="mono">${run.prompt}</span></div>
+          <div class="config-row"><span>Pipeline version</span><span class="mono">${run.pipeline}</span></div>
+          <div class="config-row"><span>Cache policy</span><span class="mono">${run.cache}</span></div>
+          <div class="config-row"><span>Duration</span><span class="mono">${run.duration}</span></div>
+        </div>
+        <div style="margin-top:15px"><div class="eyebrow">Stage timeline</div>${pipelineHtml(run)}</div>
+        ${run.error ? `<div class="code-box" style="margin-top:12px;color:var(--danger)">${escapeHtml(run.error)}</div>` : ''}
+        <div style="margin-top:15px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-sm" data-artifact="text">Extracted text</button><button class="btn btn-sm" data-artifact="resume">Resume JSON</button><button class="btn btn-sm" data-artifact="evaluation">Evaluation JSON</button></div>
+      </div></details>`;
+    }
+
+    function renderApplicationDetail(id) {
+      const candidate = getCandidate(id);
+      const run = candidate.runs[0];
+      const content = `
+        <header class="detail-head">
+          <div><div class="eyebrow">Application / ${candidate.ref}</div><h1 class="candidate-title">${candidate.name.split(' ').join('<br/>')}</h1><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:17px">${statusPill(candidate.candidateStatus)}${reviewPill(candidate.reviewTier)}<span class="pill pill-neutral">${candidate.email}</span></div></div>
+          <div class="detail-actions"><button class="btn" data-decision="HOLD">Hold</button><button class="btn btn-danger" data-decision="ARCHIVE">Archive</button><button class="btn btn-sage" data-decision="ADVANCE">${icons.check} Advance</button><button class="btn btn-primary" data-rerun="${candidate.id}">${icons.refresh} Rerun</button></div>
+        </header>
+        <section class="detail-grid">
+          <article class="panel glass-card"><div class="panel-head"><div><div class="panel-title">Resume PDF</div><div class="panel-sub">alice_resume.pdf · SHA isolated</div></div><button class="btn btn-sm" data-toast="PDF download is a backend integration point.">Download</button></div>${pdfMock(candidate)}</article>
+          <article class="panel glass-card">
+            <div class="panel-head"><div><div class="panel-title">Structured Resume</div><div class="panel-sub">Parsed into JSON Resume fields</div></div><span class="pill pill-success">Validated</span></div>
+            <section class="resume-section"><div class="eyebrow">Summary</div><h3>Candidate signal</h3><p class="muted" style="font-size:12px;line-height:1.65">${candidate.summary}</p></section>
+            <section class="resume-section"><div class="eyebrow">Experience</div><h3>Work history</h3>${candidate.work.map(item => `<div class="timeline-item"><strong>${item.title}</strong><div class="soft" style="font-size:10px;margin-top:3px">${item.dates}</div><p>${item.body}</p></div>`).join('')}</section>
+            <section class="resume-section"><div class="eyebrow">Technical profile</div><h3>Skills</h3><div class="tag-list">${candidate.skills.map(skill => `<span class="tag">${skill}</span>`).join('')}</div></section>
+            <section class="resume-section"><div class="eyebrow">Projects</div><h3>Selected work</h3>${candidate.projects.map(project => `<div style="display:flex;gap:10px;margin:9px 0;font-size:12px"><span class="section-number">→</span><span>${project}</span></div>`).join('')}</section>
+            <section class="resume-section"><div class="eyebrow">GitHub enrichment</div><h3>Public signals</h3><div class="config-row"><span>Profile</span><span class="mono">${candidate.github}</span></div><div class="config-row"><span>Repository activity</span><span>Consistent</span></div><div class="config-row"><span>Primary language</span><span>${candidate.skills[0]}</span></div></section>
+          </article>
+          <aside class="panel glass-raised">
+            <div class="panel-head"><div><div class="panel-title">AI Evaluation</div><div class="panel-sub">${run.model} · ${run.prompt}</div></div>${statusPill(run.status)}</div>
+            <div class="score-hero"><div class="score-ring" style="background:conic-gradient(var(--accent) 0 ${Math.min(candidate.score,100)}%, rgba(58,91,122,.10) ${Math.min(candidate.score,100)}% 100%)"><span>${scoreOrDash(candidate.score)}</span></div><div class="score-copy"><h3>Priority score</h3><p>${candidate.reviewTier}. Final decision remains with human reviewers.</p></div></div>
+            <div class="score-adjustments"><div class="adjustment"><span>Base</span><strong>${candidate.base}</strong></div><div class="adjustment"><span>Bonus</span><strong>+${candidate.bonus}</strong></div><div class="adjustment"><span>Deduction</span><strong>−${candidate.deduction}</strong></div></div>
+            <div class="score-breakdown">${candidate.breakdown.map(item => `<div class="score-row"><span class="label">${item.label}</span><span class="value">${item.value} / ${item.max}</span><div class="bar"><span style="width:${item.value/item.max*100}%"></span></div></div>`).join('')}</div>
+            <div style="margin-top:20px"><div class="eyebrow">Evidence</div><details open><summary>Key strengths</summary><div class="detail-body"><ul>${candidate.evidence.strengths.map(text => `<li>${text}</li>`).join('')}</ul></div></details><details><summary>Areas for improvement</summary><div class="detail-body"><ul>${candidate.evidence.improvements.map(text => `<li>${text}</li>`).join('')}</ul></div></details></div>
+            <div style="margin-top:12px"><div class="eyebrow">Staff review</div><div class="field" style="margin-top:10px"><label for="staffNote">Internal note</label><textarea class="textarea" id="staffNote" placeholder="Add a human review note…"></textarea></div><button class="btn btn-sm" style="margin-top:9px" data-save-note>Save note</button></div>
+            <div style="margin-top:19px">${runAdvanced(candidate, run)}</div>
+            <div style="margin-top:15px;display:grid;gap:8px"><button class="btn" data-compare-candidate="${candidate.id}">Compare ${candidate.runs.length} runs</button><button class="btn btn-primary" data-rerun="${candidate.id}">${icons.refresh} Create new run</button></div>
+          </aside>
+        </section>`;
+      return staffShell({ name: 'application-detail' }, content, `Application / ${candidate.ref}`);
+    }
+    function renderExperiments() {
+      const candidate = getCandidate(state.compare.applicationId);
+      const left = getRun(candidate, state.compare.left);
+      const right = getRun(candidate, state.compare.right);
+      const scoreDelta = (Number(right.score || 0) - Number(left.score || 0));
+      const content = `
+        ${pageHeader('Experiments', 'Run<br/>Comparison', 'Compare model configuration, scores, evidence and stage behavior without overwriting historical results.', `<button class="btn btn-primary" data-rerun="${candidate.id}">${icons.plus} New run</button>`)}
+        <section class="toolbar glass-card" style="grid-template-columns:1fr 1fr 1fr auto">
+          <select class="select" data-compare-candidate-select>${candidates.filter(c => c.runs.length).map(c => `<option value="${c.id}" ${c.id === candidate.id ? 'selected' : ''}>${c.name}</option>`).join('')}</select>
+          <select class="select" data-compare-left>${candidate.runs.map(r => `<option value="${r.id}" ${r.id === left.id ? 'selected' : ''}>Left · ${r.label} · ${r.model}</option>`).join('')}</select>
+          <select class="select" data-compare-right>${candidate.runs.map(r => `<option value="${r.id}" ${r.id === right.id ? 'selected' : ''}>Right · ${r.label} · ${r.model}</option>`).join('')}</select>
+          <button class="btn" data-swap-runs>Swap</button>
+        </section>
+        <section class="compare-grid">
+          ${compareRunCard(candidate,left,'Baseline')}
+          ${compareRunCard(candidate,right,'Comparison')}
+        </section>
+        <section class="panel glass-card" style="margin-top:14px">
+          <div class="panel-head"><div><div class="panel-title">Observed differences</div><div class="panel-sub">A concise human-readable comparison for the demo</div></div><span class="delta ${scoreDelta < 0 ? 'down' : ''}">${scoreDelta >= 0 ? '+' : ''}${scoreDelta.toFixed(1)} score</span></div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px">
+            <div><div class="eyebrow">Model behavior</div><p class="muted" style="font-size:12px;line-height:1.65">The comparison run assigns slightly less weight to public project evidence while preserving the same overall review tier.</p></div>
+            <div><div class="eyebrow">Pipeline cost</div><p class="muted" style="font-size:12px;line-height:1.65">${right.duration} versus ${left.duration}. Historical runs remain immutable and independently reproducible.</p></div>
+            <div><div class="eyebrow">Safety-ready trace</div><p class="muted" style="font-size:12px;line-height:1.65">Future attack and defense configurations can be attached to the same run abstraction without changing this UI.</p></div>
+          </div>
+        </section>`;
+      return staffShell({ name: 'experiments' }, content, 'Experiments');
+    }
+
+    function compareRunCard(candidate, run, label) {
+      const score = Number.isFinite(run.score) ? run.score : 0;
+      return `<article class="run-card glass-card">
+        <div style="display:flex;justify-content:space-between;gap:12px"><div><div class="eyebrow">${label}</div><h3>${run.label}</h3></div>${statusPill(run.status)}</div>
+        <div class="score-hero"><div class="score-ring" style="background:conic-gradient(var(--accent) 0 ${Math.min(score,100)}%, rgba(58,91,122,.10) ${Math.min(score,100)}% 100%)"><span>${scoreOrDash(run.score)}</span></div><div class="score-copy"><h3>${models.find(m => m.id === run.model)?.name || run.model}</h3><p>${candidate.name} · ${run.created}</p></div></div>
+        <div class="config-list">
+          <div class="config-row"><span>Provider / model</span><span class="mono">${run.model}</span></div>
+          <div class="config-row"><span>Base / bonus / deduction</span><span class="mono">${scoreOrDash(run.base)} / +${scoreOrDash(run.bonus)} / −${scoreOrDash(run.deduction)}</span></div>
+          <div class="config-row"><span>Temperature / top-p</span><span class="mono">${run.temperature} / ${run.topP}</span></div>
+          <div class="config-row"><span>Prompt</span><span class="mono">${run.prompt}</span></div>
+          <div class="config-row"><span>Cache</span><span class="mono">${run.cache}${run.reused ? ' · reused' : ''}</span></div>
+          <div class="config-row"><span>Duration</span><span class="mono">${run.duration}</span></div>
+        </div>
+        <details style="margin-top:15px"><summary>Pipeline trace</summary><div class="detail-body">${pipelineHtml(run)}</div></details>
+      </article>`;
+    }
+
+    function renderModels() {
+      const content = `
+        ${pageHeader('Models & Prompts', 'Model<br/>Registry', 'Configured providers and runtime health. The default model affects only new Evaluation Runs.', `<button class="btn" data-health-check>${icons.refresh} Refresh health</button>`)}
+        <section class="model-grid">
+          ${models.map(model => `<article class="model-card ${model.id === state.defaultModel ? 'glass-raised' : 'glass-card'}">
+            <div style="display:flex;justify-content:space-between;gap:10px"><span class="pill pill-neutral">${model.provider} · ${model.type}</span>${model.healthy ? pill('Online','success') : pill('Unavailable','danger')}</div>
+            <h3>${model.name}</h3><div class="mono soft" style="font-size:10px">${model.id}</div>
+            <div class="model-meta"><div><span>Installed</span><strong>${model.installed ? 'Yes' : 'No'}</strong></div><div><span>Structured output</span><strong>${model.structured ? 'Supported' : 'Unknown'}</strong></div><div><span>Temperature</span><strong class="mono">${model.temperature}</strong></div><div><span>Top-p</span><strong class="mono">${model.topP}</strong></div></div>
+            <div class="actions">${model.id === state.defaultModel ? `<button class="btn btn-sm" disabled>Current default</button>` : `<button class="btn btn-sm ${model.healthy ? 'btn-primary' : ''}" ${model.healthy ? '' : 'disabled'} data-set-default-model="${model.id}">Set as default</button>`}<button class="btn btn-sm" data-toast="Prompt editing is intentionally deferred; connect this to versioned prompt metadata.">Prompt version</button></div>
+          </article>`).join('')}
+        </section>
+        <section class="panel glass-card" style="margin-top:15px"><div class="panel-head"><div><div class="panel-title">Prompt version</div><div class="panel-sub">Immutable metadata attached to every run</div></div><span class="pill pill-accent">baseline-v1</span></div><div class="code-box" style="margin-top:15px">Model-specific prompts remain in the backend repository. The browser should receive only version metadata, never API keys or hidden provider configuration.</div></section>`;
+      return staffShell({ name: 'models' }, content, 'Models & Prompts');
+    }
+
+    function allRuns() { return candidates.flatMap(candidate => candidate.runs.map(run => ({...run, candidate}))); }
+    function filteredRuns() {
+      return allRuns().filter(item => (state.runFilters.status === 'all' || item.status === state.runFilters.status) && (state.runFilters.model === 'all' || item.model === state.runFilters.model));
+    }
+    function renderRuns() {
+      const rows = filteredRuns();
+      const content = `
+        ${pageHeader('System Runs', 'Pipeline<br/>History', 'Every model execution is stored as an immutable run with configuration, artifacts and stage-level status.', `<button class="btn" data-health-check>${icons.refresh} Worker status</button>`)}
+        <section class="toolbar glass-card" style="grid-template-columns:1fr 1fr 2fr">
+          <select class="select" data-run-status><option value="all">All statuses</option><option value="COMPLETED" ${state.runFilters.status === 'COMPLETED' ? 'selected' : ''}>Completed</option><option value="RUNNING" ${state.runFilters.status === 'RUNNING' ? 'selected' : ''}>Running</option><option value="FAILED" ${state.runFilters.status === 'FAILED' ? 'selected' : ''}>Failed</option></select>
+          <select class="select" data-run-model><option value="all">All models</option>${models.map(model => `<option value="${model.id}" ${state.runFilters.model === model.id ? 'selected' : ''}>${model.name}</option>`).join('')}</select>
+          <div class="muted" style="display:flex;align-items:center;justify-content:flex-end;font-size:12px">${rows.length} runs · Worker <span class="pill pill-success" style="margin-left:9px">Online</span></div>
+        </section>
+        <section class="table-shell glass-card"><div class="table-scroll"><table><thead><tr><th>Run</th><th>Candidate</th><th>Status</th><th>Score</th><th>Model</th><th>Cache</th><th>Duration</th><th>Created</th><th></th></tr></thead><tbody>
+          ${rows.map(item => `<tr><td><span class="mono">${item.id}</span></td><td><div class="candidate-cell"><div class="avatar">${item.candidate.initials}</div><div><div class="candidate-name">${item.candidate.name}</div><div class="candidate-meta">${item.candidate.ref}</div></div></div></td><td>${statusPill(item.status)}</td><td><span class="score-number">${scoreOrDash(item.score)}</span></td><td><span class="mono" style="font-size:10px">${item.model}</span></td><td><span class="mono" style="font-size:10px">${item.cache}</span></td><td class="mono">${item.duration}</td><td class="muted">${item.created}</td><td><button class="btn btn-sm" data-open-application="${item.candidate.id}">Open</button>${item.status === 'FAILED' ? `<button class="btn btn-sm btn-primary" data-rerun="${item.candidate.id}">Retry</button>` : ''}</td></tr>`).join('')}
+        </tbody></table></div></section>`;
+      return staffShell({ name: 'runs' }, content, 'System Runs');
+    }
+
+    function renderDemoControls() {
+      const content = `
+        ${pageHeader('Demo Controls', 'Presentation<br/>Workspace', 'Seed a stable dataset, jump to the key screens and rehearse the end-to-end story. Use the single Demo Mode switch in the top bar to simplify the interface.')}
+        <section class="compare-grid">
+          <article class="panel glass-card"><div class="eyebrow">01 / Data state</div><h2 class="display" style="font-size:42px;line-height:1;margin:10px 0">Seed and reset</h2><p class="muted" style="font-size:13px;line-height:1.65">Restore the fixed five-candidate cohort, historical runs and deterministic review state.</p><div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:18px"><button class="btn btn-primary" data-seed-demo>Seed demo data</button><button class="btn btn-danger" data-reset-demo>Reset demo data</button></div></article>
+          <article class="panel glass-card"><div class="eyebrow">02 / View shortcuts</div><h2 class="display" style="font-size:42px;line-height:1;margin:10px 0">Move through the story</h2><p class="muted" style="font-size:13px;line-height:1.65">Open the candidate upload, staff review, rerun and comparison screens in the intended presentation order.</p><div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:18px"><button class="btn" data-open-candidate>Candidate view</button><button class="btn" data-go="/staff/applications">Review queue</button><button class="btn" data-go="/staff/application/app-alice">Alice detail</button><button class="btn" data-go="/staff/experiments">Compare runs</button></div></article>
+        </section>
+        <section class="panel glass-raised" style="margin-top:14px"><div class="panel-head"><div><div class="panel-title">Guided demo sequence</div><div class="panel-sub">Suggested 15-minute flow</div></div><span class="pill pill-accent">4 steps</span></div><div class="demo-sequence-grid" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px">
+          ${[['01','Candidate upload','Show PDF input and candidate privacy.'],['02','AI screening','Open structured resume, evidence and ranking.'],['03','Model rerun','Switch the model without restarting services.'],['04','Run comparison','Compare immutable outputs and technical traces.']].map(item => `<div style="padding:15px;border-top:1px solid var(--border-strong)"><span class="section-number">${item[0]}</span><strong style="display:block;margin-top:10px;font-size:13px">${item[1]}</strong><span class="muted" style="display:block;margin-top:6px;font-size:11px;line-height:1.5">${item[2]}</span></div>`).join('')}
+        </div></section>`;
+      return staffShell({ name: 'demo' }, content, 'Demo Controls');
+    }
+
+    function rerunModal(candidate) {
+      showModal(`
+        <div class="modal-head"><div><div class="eyebrow">New evaluation run</div><h2>Rerun ${candidate.name}</h2></div><button class="btn btn-square btn-ghost" data-close-modal>${icons.close}</button></div>
+        <div class="modal-body">
+          <div class="field"><label for="rerunModel">Model</label><select class="select" id="rerunModel">${models.filter(model => model.healthy).map(model => `<option value="${model.id}" ${model.id === state.defaultModel ? 'selected' : ''}>${model.name} · ${model.type}</option>`).join('')}</select></div>
+          <div class="form-grid-2"><div class="field"><label for="rerunTemperature">Temperature</label><input class="input" id="rerunTemperature" type="number" min="0" max="2" step="0.1" value="0.1" /></div><div class="field"><label for="rerunTopP">Top-p</label><input class="input" id="rerunTopP" type="number" min="0" max="1" step="0.1" value="0.9" /></div></div>
+          <div class="form-grid-2"><div class="field"><label for="rerunPrompt">Prompt version</label><select class="select" id="rerunPrompt"><option>baseline-v1</option></select></div><div class="field"><label for="rerunCache">Cache policy</label><select class="select" id="rerunCache"><option value="FORCE_FRESH">Force fresh</option><option value="SAFE_REUSE">Safe reuse</option></select></div></div>
+          <label style="display:flex;align-items:center;gap:10px;font-size:13px"><input id="rerunGithub" type="checkbox" checked /> Enable GitHub enrichment</label>
+          <div class="code-box">A new immutable Evaluation Run will be created. Existing scores and artifacts remain unchanged.</div>
+        </div>
+        <div class="modal-actions"><button class="btn" data-close-modal>Cancel</button><button class="btn btn-primary" data-confirm-rerun="${candidate.id}">${icons.refresh} Run evaluation</button></div>`);
+    }
+
+    function artifactModal(type) {
+      const payloads = {
+        text: '# Extracted Resume\n\nAlice Chen\nSenior Backend Engineer...\n\n## Work\nRed Maple Robotics...',
+        resume: JSON.stringify({ basics: { name: 'Alice Chen', email: 'alice@example.com' }, work: [{ name: 'Red Maple Robotics', position: 'Senior Backend Engineer' }], skills: [{ name: 'Infrastructure', keywords: ['Go','Kubernetes','PostgreSQL'] }] }, null, 2),
+        evaluation: JSON.stringify({ base_score: 87, bonus: 6, deductions: 1.5, adjusted_score: 91.5, review_tier: 'High Priority', human_review_required: true }, null, 2)
+      };
+      showModal(`<div class="modal-head"><div><div class="eyebrow">Raw artifact</div><h2>${escapeHtml(type)}</h2></div><button class="btn btn-square btn-ghost" data-close-modal>${icons.close}</button></div><div class="modal-body"><pre class="code-box" style="max-height:500px;white-space:pre-wrap">${escapeHtml(payloads[type] || '')}</pre></div><div class="modal-actions"><button class="btn btn-primary" data-close-modal>Close</button></div>`);
+    }
+    async function handleResume(file) {
+      if (!file) return;
+      if (!file.name.toLowerCase().endsWith('.pdf') && file.type !== 'application/pdf') {
+        showToast('Upload rejected', 'Please choose a valid PDF file.', 'danger');
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        showToast('Upload rejected', 'The maximum PDF size is 10 MB.', 'danger');
+        return;
+      }
+      state.candidateStatus = 'PROCESSING';
+      render();
+      try {
+        state.uploadedFile = await mockApi.uploadResume(file);
+        showToast('Resume uploaded', 'A new evaluation run has been queued.');
+        render();
+        setTimeout(() => {
+          state.candidateStatus = 'UNDER_REVIEW';
+          if (routeFromHash().name === 'candidate') render();
+          showToast('Processing complete', 'Your application is now under human review.');
+        }, 1800);
+      } catch (error) {
+        showToast('Upload failed', error.message, 'danger');
+      }
+    }
+
+    function bindGlobal() {
+      document.querySelectorAll('[data-logout]').forEach(button => button.addEventListener('click', () => { state.user = null; navigate('/login'); }));
+      document.querySelectorAll('[data-mobile-menu]').forEach(button => button.addEventListener('click', () => { state.mobileNavOpen = true; render(); }));
+      document.querySelectorAll('[data-sidebar-overlay]').forEach(node => node.addEventListener('click', () => { state.mobileNavOpen = false; render(); }));
+      document.querySelectorAll('[data-demo-toggle]').forEach(button => button.addEventListener('click', () => { state.demoMode = !state.demoMode; render(); showToast('Demo Mode', state.demoMode ? 'Presentation-focused controls are enabled.' : 'Standard staff view restored.'); }));
+      document.querySelectorAll('[data-go]').forEach(button => button.addEventListener('click', () => navigate(button.dataset.go)));
+      document.querySelectorAll('[data-open-candidate]').forEach(button => button.addEventListener('click', () => navigate('/candidate')));
+      document.querySelectorAll('[data-top-model]').forEach(select => select.addEventListener('change', async () => {
+        await mockApi.setDefaultModel(select.value);
+        state.defaultModel = select.value;
+        render();
+        showToast('Default model updated', `${currentModel().name} will be used for new runs.`);
+      }));
+      document.querySelectorAll('[data-toast]').forEach(button => button.addEventListener('click', () => showToast('Template interaction', button.dataset.toast, 'warning')));
+      document.querySelectorAll('[data-health-check]').forEach(button => button.addEventListener('click', () => showToast('Health check complete', 'API, worker and configured model providers are reachable.')));
+    }
+
+    function bindLogin() {
+      document.querySelectorAll('[data-fill-account]').forEach(button => button.addEventListener('click', () => {
+        document.getElementById('loginEmail').value = button.dataset.fillAccount;
+        document.getElementById('loginPassword').value = 'demo123';
+      }));
+      document.getElementById('loginForm')?.addEventListener('submit', async event => {
+        event.preventDefault();
+        const button = document.getElementById('loginButton');
+        const error = document.getElementById('loginError');
+        button.disabled = true;
+        button.textContent = 'Signing in…';
+        error.hidden = true;
+        try {
+          state.user = await mockApi.login(document.getElementById('loginEmail').value.trim(), document.getElementById('loginPassword').value);
+          navigate(state.user.role === 'staff' ? '/staff/applications' : '/candidate');
+        } catch (err) {
+          error.textContent = err.message;
+          error.hidden = false;
+          button.disabled = false;
+          button.innerHTML = `Sign in ${icons.arrow}`;
+        }
+      });
+    }
+
+    function bindCandidate() {
+      const input = document.getElementById('resumeInput');
+      document.querySelectorAll('[data-choose-file]').forEach(button => button.addEventListener('click', () => input?.click()));
+      input?.addEventListener('change', event => handleResume(event.target.files?.[0]));
+      const zone = document.getElementById('uploadZone');
+      if (zone) {
+        ['dragenter','dragover'].forEach(type => zone.addEventListener(type, event => { event.preventDefault(); zone.classList.add('dragging'); }));
+        ['dragleave','drop'].forEach(type => zone.addEventListener(type, event => { event.preventDefault(); zone.classList.remove('dragging'); }));
+        zone.addEventListener('drop', event => handleResume(event.dataTransfer.files?.[0]));
+      }
+    }
+
+    function bindApplications() {
+      document.querySelector('[data-filter-search]')?.addEventListener('input', event => { state.applicationFilters.search = event.target.value; renderApplicationsOnly(); });
+      document.querySelector('[data-filter-status]')?.addEventListener('change', event => { state.applicationFilters.status = event.target.value; render(); });
+      document.querySelector('[data-filter-decision]')?.addEventListener('change', event => { state.applicationFilters.decision = event.target.value; render(); });
+      document.querySelector('[data-filter-sort]')?.addEventListener('change', event => { state.applicationFilters.sort = event.target.value; render(); });
+      document.querySelector('[data-clear-filters]')?.addEventListener('click', () => { state.applicationFilters = { search: '', status: 'all', decision: 'all', sort: 'score_desc' }; render(); });
+      document.querySelectorAll('[data-open-application]').forEach(row => row.addEventListener('click', event => {
+        if (event.target.closest('button')) return;
+        navigate(`/staff/application/${row.dataset.openApplication}`);
+      }));
+    }
+
+    function renderApplicationsOnly() {
+      const route = routeFromHash();
+      if (route.name !== 'applications') return;
+      document.getElementById('app').innerHTML = renderApplications();
+      bindGlobal();
+      bindApplications();
+      const search = document.querySelector('[data-filter-search]');
+      search?.focus();
+      if (search) search.setSelectionRange(search.value.length, search.value.length);
+    }
+
+    function bindDetail(candidate) {
+      document.querySelectorAll('[data-rerun]').forEach(button => button.addEventListener('click', () => rerunModal(getCandidate(button.dataset.rerun))));
+      document.querySelectorAll('[data-decision]').forEach(button => button.addEventListener('click', () => {
+        candidate.decision = button.dataset.decision;
+        render();
+        showToast('Human decision saved', `${candidate.name} is marked ${button.dataset.decision.toLowerCase()}.`);
+      }));
+      document.querySelector('[data-save-note]')?.addEventListener('click', () => showToast('Internal note saved', 'The note is visible only to staff.'));
+      document.querySelector('[data-compare-candidate]')?.addEventListener('click', () => {
+        state.compare.applicationId = candidate.id;
+        state.compare.left = candidate.runs[0]?.id;
+        state.compare.right = candidate.runs[1]?.id || candidate.runs[0]?.id;
+        navigate('/staff/experiments');
+      });
+      document.querySelectorAll('[data-artifact]').forEach(button => button.addEventListener('click', () => artifactModal(button.dataset.artifact)));
+    }
+
+    function bindExperiments() {
+      document.querySelector('[data-compare-candidate-select]')?.addEventListener('change', event => {
+        const candidate = getCandidate(event.target.value);
+        state.compare.applicationId = candidate.id;
+        state.compare.left = candidate.runs[0]?.id;
+        state.compare.right = candidate.runs[1]?.id || candidate.runs[0]?.id;
+        render();
+      });
+      document.querySelector('[data-compare-left]')?.addEventListener('change', event => { state.compare.left = event.target.value; render(); });
+      document.querySelector('[data-compare-right]')?.addEventListener('change', event => { state.compare.right = event.target.value; render(); });
+      document.querySelector('[data-swap-runs]')?.addEventListener('click', () => { [state.compare.left,state.compare.right] = [state.compare.right,state.compare.left]; render(); });
+      document.querySelectorAll('[data-rerun]').forEach(button => button.addEventListener('click', () => rerunModal(getCandidate(button.dataset.rerun))));
+    }
+
+    function bindModels() {
+      document.querySelectorAll('[data-set-default-model]').forEach(button => button.addEventListener('click', async () => {
+        button.disabled = true;
+        await mockApi.setDefaultModel(button.dataset.setDefaultModel);
+        state.defaultModel = button.dataset.setDefaultModel;
+        render();
+        showToast('Default model updated', `${currentModel().name} will be used for future runs.`);
+      }));
+    }
+
+    function bindRuns() {
+      document.querySelector('[data-run-status]')?.addEventListener('change', event => { state.runFilters.status = event.target.value; render(); });
+      document.querySelector('[data-run-model]')?.addEventListener('change', event => { state.runFilters.model = event.target.value; render(); });
+      document.querySelectorAll('[data-open-application]').forEach(button => button.addEventListener('click', () => navigate(`/staff/application/${button.dataset.openApplication}`)));
+      document.querySelectorAll('[data-rerun]').forEach(button => button.addEventListener('click', () => rerunModal(getCandidate(button.dataset.rerun))));
+    }
+
+    function bindDemo() {
+      document.querySelector('[data-seed-demo]')?.addEventListener('click', () => showToast('Demo data ready', 'Five candidates and their historical runs are available.'));
+      document.querySelector('[data-reset-demo]')?.addEventListener('click', async () => {
+        showModal(`<div class="modal-head"><div><div class="eyebrow">Reset demonstration</div><h2>Restore demo data?</h2></div><button class="btn btn-square btn-ghost" data-close-modal>${icons.close}</button></div><div class="modal-body"><p class="muted">This mock resets the visible state. The real endpoint should remove only records tagged as demo data.</p></div><div class="modal-actions"><button class="btn" data-close-modal>Cancel</button><button class="btn btn-danger" data-confirm-reset>Reset data</button></div>`);
+        document.querySelector('[data-confirm-reset]')?.addEventListener('click', async () => { await mockApi.resetDemo(); closeModal(); showToast('Demo reset complete', 'The fixed presentation state has been restored.'); });
+      });
+    }
+
+    function bindModalActions() {
+      document.querySelectorAll('[data-confirm-rerun]').forEach(button => button.addEventListener('click', async () => {
+        const candidate = getCandidate(button.dataset.confirmRerun);
+        button.disabled = true;
+        button.textContent = 'Queueing run…';
+        const config = {
+          model: document.getElementById('rerunModel').value,
+          temperature: Number(document.getElementById('rerunTemperature').value),
+          topP: Number(document.getElementById('rerunTopP').value),
+          prompt: document.getElementById('rerunPrompt').value,
+          cache: document.getElementById('rerunCache').value,
+          github: document.getElementById('rerunGithub').checked
+        };
+        await mockApi.rerun(candidate.id, config);
+        const nextIndex = candidate.runs.length + 1;
+        const variation = config.model === 'qwen3:8b' ? -2.8 : config.model === 'gemini-2.5-flash' ? 1.2 : 0.3;
+        candidate.runs.unshift({
+          id: `run-${candidate.initials.toLowerCase()}${Date.now().toString().slice(-4)}`,
+          label: `Run ${nextIndex}`, status: 'COMPLETED', model: config.model,
+          score: Math.max(0, candidate.score + variation), base: candidate.base + variation,
+          bonus: candidate.bonus, deduction: candidate.deduction, prompt: config.prompt,
+          pipeline: 'web-v0.1.0', cache: config.cache, reused: config.cache === 'SAFE_REUSE', duration: config.cache === 'SAFE_REUSE' ? '1.3s' : '26.6s',
+          created: 'just now', temperature: config.temperature, topP: config.topP
+        });
+        closeModal();
+        showToast('Evaluation completed', `A new immutable run was created with ${models.find(model => model.id === config.model)?.name}.`);
+        if (routeFromHash().name === 'application-detail') render();
+      }));
+    }
+
+    function render() {
+      const route = routeFromHash();
+      state.mobileNavOpen = false;
+      let html;
+      if (route.name === 'login') html = renderLogin();
+      else if (route.name === 'candidate') html = renderCandidate();
+      else if (route.name === 'applications') html = renderApplications();
+      else if (route.name === 'application-detail') html = renderApplicationDetail(route.id);
+      else if (route.name === 'experiments') html = renderExperiments();
+      else if (route.name === 'models') html = renderModels();
+      else if (route.name === 'runs') html = renderRuns();
+      else if (route.name === 'demo') html = renderDemoControls();
+      else html = renderLogin();
+      document.getElementById('app').innerHTML = html;
+      bindGlobal();
+      if (route.name === 'login') bindLogin();
+      if (route.name === 'candidate') bindCandidate();
+      if (route.name === 'applications') bindApplications();
+      if (route.name === 'application-detail') bindDetail(getCandidate(route.id));
+      if (route.name === 'experiments') bindExperiments();
+      if (route.name === 'models') bindModels();
+      if (route.name === 'runs') bindRuns();
+      if (route.name === 'demo') bindDemo();
+      bindModalActions();
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    window.addEventListener('hashchange', render);
+    window.addEventListener('keydown', event => { if (event.key === 'Escape') closeModal(); });
+    document.addEventListener('click', event => {
+      if (event.target.closest('[data-close-modal]')) closeModal();
+      setTimeout(bindModalActions, 0);
+    });
+    render();
+  </script>
+</body>
+</html>
