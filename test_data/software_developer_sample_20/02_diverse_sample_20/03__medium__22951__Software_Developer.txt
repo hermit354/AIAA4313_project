@@ -1,0 +1,19 @@
+Software Developer Software Developer Developer, Innovator, and Tech-Enthusiast Charlotte, NC Jonathan Byrne is a recent graduate in Computer Science at UNC Charlotte with a concentration in Business. He has interest and experience with machine learning, blockchain technologies, software development, sales, and project management. Jonathan is currently looking for a position in a forward-thinking organization in which he can make the largest contribution and impact. Authorized to work in the US for any employer
+
+Work Experience
+Software Developer Yetta Blockchain - Charlotte, NC March 2018 to July 2019 Software Developer / Operations Manager for a Blockchain Startup · Developed and tested smart contract and blockchain code · Built mass marketing email campaign program · Helped develop a coin payment gateway for accepting multiple cryptocurrencies as payment · Wrote an AutoContract program that leveraged IBM Watson’s natural language processing to read and parameterize Articles of Incorporation · Subcontracted software designs and programs · Managed language translation services · Wrote and edited official business documents, whitepapers, and decks · Consistently performed market research · Setup social media marketing channels · Engaged investors and fostered business partnerships Sales LED Source - Raleigh, NC June 2015 to March 2018 B2B LED Lighting Salesperson · Helped sell in excess of $1.5 million worth of LED lighting projects · Authored and produced ROI's, Value-Add Propositions, Contracts, and Invoices · Completed full-scope lighting audits for commercial businesses · Oversaw and managed the implementation of new lighting audit and ROI software · Worked as a Duke Energy Trade Ally to file rebates on the customer's behalf · Subcontracted lighting design proposals · Fostered manufacturer and customer relationships
+
+Education
+Bachelor's in Computer Science UNC Charlotte - Charlotte, NC August 2014 to December 2018
+
+Skills
+Javascript, Blockchain, Ethereum, Git, Google Cloud, Azure, Linux, Mac OS X, Java, Swift, MYSQL, IOS, JSON, C++, HTML 5, CSS, Python, Sales, Public Speaking, Market Research, Project Management, Software Development, Financial Technology
+
+Links
+https://www.linkedin.com/in/jonathan-byrne-87b07577/
+
+Awards
+1st Place - Southeast Fintech Venture Conference 2018-11 Project Manager for a team of 4 other UNC Charlotte students whereby we developed a cryptocurrency payment gateway for Carolina Fintech Hub's 2018 Fall Hackathon. After making it through 3 rounds, I pitched our company, Wads, at the Southeast Fintech Venture Conference on November 14th, 2018. Our team secured first place and the top prize of $10,000 - beating over 150 students across 8 different universities from around the state. To learn more about the project: https://wads.io/ For more information about our win: https://inside.uncc.edu/news-features/2018-11-27/cci-team-creates-cryptocurrency-platform-win-hackathon
+
+Additional Information
+Capstone Project - Java Blockchain (Onit Network) • Project Manager for a team of five other students, in which we designed and developed a blockchain protocol in Java. Decentralized Medical Prescription Application (Generation Blockchain Challenge) • 1 of 6 finalists out of an original 74 teams that competed to build a decentralized application. I led a team of two other developers, in which we successfully built a medical prescription platform on top of the Ethereum blockchain. The final event was held at AvidXChange in Uptown Charlotte, North Carolina. We gave a 20 minute presentation in which we successfully demoed our working product on stage.

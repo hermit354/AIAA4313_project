@@ -4,8 +4,18 @@ Utility functions for LLM providers.
 
 import logging
 from typing import Any, Dict, Optional
-from models import ModelProvider, OllamaProvider, GeminiProvider
-from prompt import MODEL_PROVIDER_MAPPING, GEMINI_API_KEY
+from models import (
+    ModelProvider,
+    OllamaProvider,
+    GeminiProvider,
+    OpenAICompatibleProvider,
+)
+from prompt import (
+    MODEL_PROVIDER_MAPPING,
+    GEMINI_API_KEY,
+    OPENAI_COMPATIBLE_API_KEY,
+    OPENAI_COMPATIBLE_BASE_URL,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +67,19 @@ def initialize_llm_provider(model_name: str) -> Any:
         else:
             logger.info(f"🔄 Using Google Gemini API provider with model {model_name}")
             provider = GeminiProvider(api_key=GEMINI_API_KEY)
+    elif model_provider == ModelProvider.OPENAI_COMPATIBLE:
+        if not OPENAI_COMPATIBLE_API_KEY or not OPENAI_COMPATIBLE_BASE_URL:
+            logger.warning(
+                "⚠️ OpenAI-compatible API config not found. Falling back to Ollama."
+            )
+        else:
+            logger.info(
+                f"🔄 Using OpenAI-compatible API provider with model {model_name}"
+            )
+            provider = OpenAICompatibleProvider(
+                api_key=OPENAI_COMPATIBLE_API_KEY,
+                base_url=OPENAI_COMPATIBLE_BASE_URL,
+            )
     else:
         logger.info(f"🔄 Using Ollama provider with model {model_name}")
     return provider

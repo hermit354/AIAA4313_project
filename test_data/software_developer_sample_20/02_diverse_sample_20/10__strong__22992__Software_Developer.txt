@@ -1,0 +1,13 @@
+SOFTWARE DEVELOPER SOFTWARE DEVELOPER SOFTWARE DEVELOPER San Francisco Bay Area, CA
+
+Work Experience
+SOFTWARE DEVELOPER Deloitte - Hyderabad, Telangana July 2017 to August 2018 UHIP-State of Rhode Island: Integrated Eligibility Systems • Worked on the Software and Database components of State of Rhode Island Service Web portal that identified Individual or household Eligibility for government benefits using Java, Oracle and Rules Engine. • Achieved 75% reduction in defect inflow by analyzing the root cause of the defect and providing bug fixes in the existing modules. • Contributed to all the stages of software development from design hands off to implementation, enhancements and testing. • Developed Technical Design Documents from the requirements which included Sequence Diagram, UML diagrams and Class diagrams. SOFTWARE ENGINEER II Capgemini - Hyderabad, Telangana December 2015 to June 2017 Discover Financial Services: Core Banking Application ATLAS(DSL) • Developed Discover Student Loan UI screens for the Banking application, made code enhancements, and bug fixing of various defects that arose in the application post production. The project was done using SWT following MVP architecture. • Proactively created a batch script to automate reports to find delinquent/fraud accounts which reduced manual data extraction by 80%. • Was responsible for end to end delivery of CRs (Change Request/New features) by client. SOFTWARE ENGINEER Capgemini - Hyderabad, Telangana August 2014 to November 2015 Discover Financial Services: Core Banking Application ATLAS(DPL) • Developed Core Banking Back Office CRM application using Java (MVP Framework), integrated backend service using RESTful webservice to consume data from 3rd party banking product (Finacle). • Online customers had to request for verification each time they wanted to see their statement details. I developed a feature to retrieve and view statements in a .pdf format for correspondence module. It reduced the response time drastically by 60% to view statement and saved manual verification. • Performed requirement gathering and analysis, design, coding, testing, performance tuning, reviews etc. Well versed with software development lifecycle (Waterfall Model, Agile methodologies).
+
+Education
+Master's in Science and Engineering Santa Clara University - Santa Clara, CA September 2018 to Present
+
+Links
+https://github.com/deepcie http://www.linkedin.com/in/deepachoudhary1 https://github.com/deepcie/deepa
+
+Certifications/Licenses
+Oracle certified Java SE Programmer

@@ -1,4 +1,4 @@
-Extract ONLY the projects information from this resume.
+Extract ONLY explicitly listed projects from this resume.
 
 --- The input markdown starts here ---
 
@@ -18,4 +18,10 @@ Return ONLY a JSON object with this structure:
   ]
 }
 
-**IMPORTANT**: Return ONLY valid JSON. Do not include any explanatory text. 
+Important:
+- Extract projects from explicit Projects, Capstone, Portfolio, Open Source, Selected Projects, or Additional Information project-like sections.
+- Personal projects, academic projects, hackathon projects, freelance projects, and open-source projects may all be included when explicitly listed.
+- Do not invent projects from ordinary work experience. Work-based systems are preserved by the work extraction and will be evaluated there.
+- A missing project section is acceptable and should return an empty projects array.
+
+Return ONLY valid JSON. Do not include explanatory text.

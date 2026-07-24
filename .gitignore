@@ -232,3 +232,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local experiment outputs
+runs/
+resume_evaluations_new_rubric.csv
+resume_evaluations_*.csv
+test_data/software_developer_sample_20/01_initial_pool/
+test_data/software_developer_sample_20/initial_pool_metadata.json
+test_data/software_developer_sample_20/initial_pool_metrics.csv

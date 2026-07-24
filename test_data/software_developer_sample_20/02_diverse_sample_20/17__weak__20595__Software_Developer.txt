@@ -1,0 +1,10 @@
+Software Developer Software Developer Newark, NJ Authorized to work in the US for any employer
+
+Work Experience
+Software Developer NextCode S.A. - Guayaquil January 2019 to March 2019 Consultant, NextCode S.A, Guayaquil, Ecuador. Develops in Angular 5 for Front End and Laravel for Back End • Give support and develop modules for accounting systems, travel agency, and medical centers Software Developer Gea Ecuador - Guayaquil December 2014 to December 2018 GEA Ecuador, Ecuador, Guayaquil Software Developer, December 2014 - December 2018 Develop web pages and web systems with PHP, JQuery, Bootstrap, CSS, JavaScript, CodeIgniter, Laravel and mobile apps with Android (Java) ? Develop landing pages to increase sales and measure results with Google Analytics ? Give support and develop modules in macro systems to give assistance to clients through calls ? Develop modules to process massive files to databases automatically ? Give support and develop modules in file server according to ISO 9001:20008 ? Create options to search different call recordings stored in NAS servers ? Develop Back End with Laravel to save massive files and show reports ? Develop mobile apps to increase sells of services, including chat and geo localization and notifications. ? Develop mobile apps with conversational interface, pay libraries and blogs. ? Develop app to give security to private citadels with QR codes
+
+Education
+Bachelor's in System Engineering Universidad de Guayaquil - Guayaquil February 2012 to July 2017
+
+Skills
+CSS, Git, Android, HTML 5, Javascript, PHP, MYSQL, JQuery

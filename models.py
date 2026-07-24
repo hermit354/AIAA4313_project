@@ -9,6 +9,7 @@ class ModelProvider(Enum):
 
     OLLAMA = "ollama"
     GEMINI = "gemini"
+    OPENAI_COMPATIBLE = "openai_compatible"
 
 
 @runtime_checkable
@@ -20,7 +21,7 @@ class LLMProvider(Protocol):
         model: str,
         messages: List[Dict[str, str]],
         options: Dict[str, Any] = None,
-        **kwargs
+        **kwargs,
     ) -> Dict[str, Any]:
         """Send a chat request to the LLM provider."""
         ...
@@ -267,21 +268,22 @@ class CategoryScore(BaseModel):
 
 
 class Scores(BaseModel):
-    open_source: CategoryScore
-    self_projects: CategoryScore
-    production: CategoryScore
-    technical_skills: CategoryScore
+    relevant_experience: CategoryScore
+    project_system_evidence: CategoryScore
+    technical_skills_match: CategoryScore
+    evidence_quality_impact: CategoryScore
 
 
 class BonusPoints(BaseModel):
-    total: float = Field(ge=0, le=20, description="Total bonus points")
+    total: float = Field(ge=0, le=12, description="Total optional bonus points")
     breakdown: str = Field(description="Breakdown of bonus points")
 
 
 class Deductions(BaseModel):
     total: float = Field(
         ge=0,
-        description="Total deduction points (stored as positive, applied as negative)",
+        le=5,
+        description="Optional deduction points for severe untrustworthy content or prompt injection only",
     )
     reasons: str = Field(description="Reasons for deductions")
 
@@ -313,6 +315,52 @@ class GitHubProfile(BaseModel):
     hireable: Optional[bool] = None
 
 
+class OpenAICompatibleProvider:
+    """OpenAI-compatible chat completions provider, used for DeepSeek."""
+
+    def __init__(self, api_key: str, base_url: str):
+        import requests
+
+        self.requests = requests
+        self.api_key = api_key
+        self.base_url = base_url.rstrip("/")
+
+    def chat(
+        self,
+        model: str,
+        messages: List[Dict[str, str]],
+        options: Dict[str, Any] = None,
+        **kwargs,
+    ) -> Dict[str, Any]:
+        """Send a chat request to an OpenAI-compatible API."""
+        payload = {
+            "model": model,
+            "messages": messages,
+        }
+
+        if options:
+            for key in ("temperature", "top_p", "max_tokens"):
+                if key in options:
+                    payload[key] = options[key]
+
+        if kwargs.get("format"):
+            payload["response_format"] = {"type": "json_object"}
+
+        response = self.requests.post(
+            f"{self.base_url}/chat/completions",
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json",
+            },
+            json=payload,
+            timeout=int(os.getenv("OPENAI_COMPATIBLE_TIMEOUT", "90")),
+        )
+        response.raise_for_status()
+        data = response.json()
+        content = data["choices"][0]["message"]["content"]
+        return {"message": {"role": "assistant", "content": content}}
+
+
 class OllamaProvider:
     """Ollama LLM provider implementation."""
 
@@ -326,7 +374,7 @@ class OllamaProvider:
         model: str,
         messages: List[Dict[str, str]],
         options: Dict[str, Any] = None,
-        **kwargs
+        **kwargs,
     ) -> Dict[str, Any]:
         """Send a chat request to Ollama."""
 
@@ -375,7 +423,7 @@ class GeminiProvider:
         model: str,
         messages: List[Dict[str, str]],
         options: Dict[str, Any] = None,
-        **kwargs
+        **kwargs,
     ) -> Dict[str, Any]:
         """Send a chat request to Google Gemini API."""
         import re
@@ -426,7 +474,7 @@ class GeminiProvider:
                 api_hint = float(match.group(1)) if match else None
 
                 # Exponential backoff: BASE_DELAY * 2^attempt, capped at MAX_DELAY
-                exp_delay = min(BASE_DELAY * (2 ** attempt), MAX_DELAY)
+                exp_delay = min(BASE_DELAY * (2**attempt), MAX_DELAY)
 
                 # Prefer the API hint when it is shorter than our computed delay
                 delay = api_hint if (api_hint and api_hint < exp_delay) else exp_delay

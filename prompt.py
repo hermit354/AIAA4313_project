@@ -6,11 +6,12 @@ Centralizing prompts here makes them easier to maintain and update.
 """
 
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 from models import ModelProvider
 
-# Load environment variables
-load_dotenv()
+# Load environment variables from the project root.
+load_dotenv(Path(__file__).with_name(".env"))
 
 # Constants
 DEFAULT_MODEL_NAME = "llama3.1:8b"
@@ -42,6 +43,9 @@ MODEL_PARAMETERS = {
     "gemini-2.5-flash-lite": {"temperature": 0.1, "top_p": 0.9},
     "gemini-3.5-flash": {"temperature": 0.1, "top_p": 0.9},
     "gemini-3.1-flash-lite": {"temperature": 0.1, "top_p": 0.9},
+    # OpenAI-compatible models
+    "deepseek-v4-flash": {"temperature": 0.1, "top_p": 0.9},
+    "deepseek-chat": {"temperature": 0.1, "top_p": 0.9},
 }
 
 # Model provider mapping
@@ -63,7 +67,16 @@ MODEL_PROVIDER_MAPPING = {
     "gemini-2.5-pro": ModelProvider.GEMINI,
     "gemini-3.5-flash": ModelProvider.GEMINI,
     "gemini-3.1-flash-lite": ModelProvider.GEMINI,
+    # OpenAI-compatible models
+    "deepseek-v4-flash": ModelProvider.OPENAI_COMPATIBLE,
+    "deepseek-chat": ModelProvider.OPENAI_COMPATIBLE,
 }
 
 # Get API keys from environment
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+OPENAI_COMPATIBLE_API_KEY = os.getenv(
+    "OPENAI_COMPATIBLE_API_KEY", os.getenv("DEEPSEEK_API_KEY", "")
+)
+OPENAI_COMPATIBLE_BASE_URL = os.getenv(
+    "OPENAI_COMPATIBLE_BASE_URL", os.getenv("DEEPSEEK_BASE_URL", "")
+)

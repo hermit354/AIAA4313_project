@@ -674,59 +674,66 @@ def transform_evaluation_response(
     # Extract evaluation scores
     if evaluation and hasattr(evaluation, "scores"):
         scores = evaluation.scores
+        score_fields = [
+            "relevant_experience",
+            "project_system_evidence",
+            "technical_skills_match",
+            "evidence_quality_impact",
+        ]
+        core_score = 0.0
+        core_max = 0.0
 
-        csv_row["open_source_score"] = scores.open_source.score
-        csv_row["open_source_max"] = scores.open_source.max
+        for field in score_fields:
+            category = getattr(scores, field)
+            score_value = min(float(category.score), float(category.max))
+            csv_row[f"{field}_score"] = score_value
+            csv_row[f"{field}_max"] = category.max
+            csv_row[f"{field}_evidence"] = category.evidence
+            core_score += score_value
+            core_max += float(category.max)
 
-        csv_row["self_projects_score"] = scores.self_projects.score
-        csv_row["self_projects_max"] = scores.self_projects.max
-
-        csv_row["production_score"] = scores.production.score
-        csv_row["production_max"] = scores.production.max
-
-        csv_row["technical_skills_score"] = scores.technical_skills.score
-        csv_row["technical_skills_max"] = scores.technical_skills.max
-
-        total_score = (
-            scores.open_source.score
-            + scores.self_projects.score
-            + scores.production.score
-            + scores.technical_skills.score
+        bonus_score = (
+            float(evaluation.bonus_points.total)
+            if hasattr(evaluation, "bonus_points") and evaluation.bonus_points
+            else 0.0
         )
-        total_max = (
-            scores.open_source.max
-            + scores.self_projects.max
-            + scores.production.max
-            + scores.technical_skills.max
+        deduction_score = (
+            float(evaluation.deductions.total)
+            if hasattr(evaluation, "deductions") and evaluation.deductions
+            else 0.0
         )
+        final_score = max(0.0, min(100.0, core_score + bonus_score - deduction_score))
 
-        csv_row["total_score"] = total_score
-        csv_row["total_max"] = total_max
+        csv_row["core_score"] = core_score
+        csv_row["core_max"] = core_max
+        csv_row["bonus_score"] = bonus_score
+        csv_row["deduction_score"] = deduction_score
+        csv_row["final_score"] = final_score
     else:
-        csv_row["open_source_score"] = "N/A"
-        csv_row["open_source_max"] = "N/A"
-        csv_row["self_projects_score"] = "N/A"
-        csv_row["self_projects_max"] = "N/A"
-        csv_row["production_score"] = "N/A"
-        csv_row["production_max"] = "N/A"
-        csv_row["technical_skills_score"] = "N/A"
-        csv_row["technical_skills_max"] = "N/A"
-        csv_row["total_score"] = "N/A"
-        csv_row["total_max"] = "N/A"
+        for field in [
+            "relevant_experience",
+            "project_system_evidence",
+            "technical_skills_match",
+            "evidence_quality_impact",
+        ]:
+            csv_row[f"{field}_score"] = "N/A"
+            csv_row[f"{field}_max"] = "N/A"
+            csv_row[f"{field}_evidence"] = "N/A"
+        csv_row["core_score"] = "N/A"
+        csv_row["core_max"] = "N/A"
+        csv_row["bonus_score"] = 0
+        csv_row["deduction_score"] = 0
+        csv_row["final_score"] = "N/A"
 
     # Extract bonus points and deductions
     if evaluation and hasattr(evaluation, "bonus_points"):
-        csv_row["bonus_points"] = evaluation.bonus_points.total
         csv_row["bonus_breakdown"] = evaluation.bonus_points.breakdown
     else:
-        csv_row["bonus_points"] = 0
         csv_row["bonus_breakdown"] = ""
 
     if evaluation and hasattr(evaluation, "deductions"):
-        csv_row["deductions"] = evaluation.deductions.total
         csv_row["deduction_reasons"] = evaluation.deductions.reasons
     else:
-        csv_row["deductions"] = 0
         csv_row["deduction_reasons"] = ""
 
     # Extract key strengths and areas for improvement
@@ -899,7 +906,9 @@ def convert_github_data_to_text(github_data: dict) -> str:
         github_text += f"GitHub Profile:\n"
         github_text += f"- Username: {profile.get('username', 'N/A')}\n"
         github_text += f"- Name: {profile.get('name', 'N/A')}\n"
-        github_text += f"- Bio: {sanitize_untrusted_github_text(profile.get('bio', 'N/A'))}\n"
+        github_text += (
+            f"- Bio: {sanitize_untrusted_github_text(profile.get('bio', 'N/A'))}\n"
+        )
         github_text += f"- Public Repositories: {profile.get('public_repos', 'N/A')}\n"
         github_text += f"- Followers: {profile.get('followers', 'N/A')}\n"
         github_text += f"- Following: {profile.get('following', 'N/A')}\n"
