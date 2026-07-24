@@ -1,4 +1,4 @@
-## AIAA4313 Project Version
+# AIAA4313 Project Version
 
 这是我们课程项目使用的改造版仓库，基于原始 [interviewstreet/hiring-agent](https://github.com/interviewstreet/hiring-agent)。
 
@@ -16,7 +16,7 @@
 - [LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md](test_data/github_fixture_samples/LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md)
 - [LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md](test_data/software_developer_sample_20_ablation/LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md)
 
-### Web Demo 快速入口
+## Web Demo 快速入口
 
 本地 Web Demo 位于 [`web_demo/`](web_demo/)，用于上传 PDF、切换 Ollama/API 模型、执行 Rerun、保存 Evaluation Run，并比较不同实验结果。
 
