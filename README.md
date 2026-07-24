@@ -13,8 +13,11 @@
 
 然后再根据需要阅读具体实验报告：
 
+- **最新完整链路泛化实验（当前主报告）**：[FULL_CHAIN_GENERALIZATION_PROBE_CN.md](test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_CN.md)
 - [LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md](test_data/github_fixture_samples/LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md)
 - [LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md](test_data/software_developer_sample_20_ablation/LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md)
+
+说明：各实验报告末尾会列出对应的原始结果 JSON；例如完整链路实验的结果 JSON 位于 [`test_data/software_developer_sample_20_ablation/full_chain_generalization_probe_20260724.json`](test_data/software_developer_sample_20_ablation/full_chain_generalization_probe_20260724.json)。
 
 ## Web Demo 快速入口
 

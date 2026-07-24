@@ -306,6 +306,11 @@ python score.py /path/to/resume.pdf
 常用脚本：
 
 ```text
+scripts/run_full_chain_generalization_probe.py
+scripts/run_pdf_hidden_span_defense_probe.py
+scripts/run_pdf_payload_variant_probe.py
+scripts/run_pdf_schema_compatible_attack.py
+scripts/run_structure_smuggling_attack.py
 scripts/run_llama31_group_prompt_ablation.py
 scripts/run_github_fixture_matrix.sh
 scripts/run_borderline_attack_matrix.py
@@ -319,13 +324,13 @@ scripts/run_schema_ablation.py
 当前最重要的一轮实验是：
 
 ```text
-scripts/run_llama31_group_prompt_ablation.py
+scripts/run_full_chain_generalization_probe.py
 ```
 
 对应报告：
 
 ```text
-test_data/software_developer_sample_20_ablation/LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md
+test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_CN.md
 ```
 
 ## 9. 重要报告文件
@@ -338,25 +343,58 @@ test_data/software_developer_sample_20_ablation/LLAMA31_GROUP_PROMPT_ABLATION_AU
    PROJECT_OVERVIEW_CN.md
    ```
 
-2. 当前 baseline / 攻击 / 防御总结：
+2. 最新完整链路泛化实验（当前主报告）：
+
+   ```text
+   test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_CN.md
+   ```
+
+   对应原始结果：
+
+   ```text
+   test_data/software_developer_sample_20_ablation/full_chain_generalization_probe_20260724.json
+   ```
+
+3. 当前 baseline / 攻击 / 防御总结：
 
    ```text
    test_data/github_fixture_samples/LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md
    ```
 
-3. 最近四组 ablation 实验：
+4. prompt hardening / GitHub sanitizer ablation：
 
    ```text
    test_data/software_developer_sample_20_ablation/LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md
    ```
 
-4. 模型对比：
+5. PDF 完整链路攻击与防御：
+
+   ```text
+   test_data/software_developer_sample_20_ablation/PDF_PAYLOAD_VARIANT_PROBE_CN.md
+   test_data/software_developer_sample_20_ablation/PDF_HIDDEN_SPAN_DEFENSE_PROBE_CN.md
+   test_data/software_developer_sample_20_ablation/PDF_SCHEMA_COMPATIBLE_ATTACK_RESULTS_CN.md
+   ```
+
+6. GitHub / structure smuggling：
+
+   ```text
+   test_data/software_developer_sample_20_ablation/STRUCTURE_SMUGGLING_ATTACK_RESULTS_CN.md
+   test_data/software_developer_sample_20_ablation/STEALTH_SMUGGLING_PROBE_CN.md
+   ```
+
+7. clean utility impact：
+
+   ```text
+   test_data/software_developer_sample_20_ablation/LLAMA31_CLEAN_UTILITY_IMPACT_CN.md
+   ```
+
+8. 模型对比：
 
    ```text
    test_data/github_fixture_samples/MODEL_SWEEP_RESULTS_CN.md
    ```
 
-5. schema 消融：
+9. schema 消融：
 
    ```text
    test_data/github_fixture_samples/SCHEMA_ABLATION_RESULTS_CN.md
@@ -453,7 +491,8 @@ resume_evaluations.csv
 *.pdf
 *.png
 *.zip
-大型 JSON 实验结果
+实验缓存目录
+超大型中间 JSON / 原始 LLM cache
 ```
 
 这些已经在 `.gitignore` 中排除。
@@ -465,6 +504,8 @@ resume_evaluations.csv
 prompt 模板
 实验脚本
 中文 md 报告
+关键实验 summary JSON / results JSON
 小型 manifest / mapping 文件
 ```
 
+说明：关键实验的 summary JSON 可以提交，用于让组员复核表格和复现实验结论；但不要提交批量缓存、生成的攻击 PDF、raw LLM 中间缓存或体积很大的临时文件。
