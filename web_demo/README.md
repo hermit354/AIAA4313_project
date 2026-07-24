@@ -1,67 +1,144 @@
-# Hiring Agent Web Demo 使用说明
+# Hiring Agent Web Demo：队友快速接入手册
 
-这是一个本地课堂演示与测试平台，用于展示简历上传、异步解析、AI 优先级评分、人工复核、模型切换和运行结果对比。界面使用 `templates/hiring_agent_glass_editorial_template.html`，后端使用 FastAPI + SQLite，文件与运行产物保存在本地。
+这套 Demo 用于统一做简历 PDF、Prompt、模型和输入注入实验。每个人可以在自己的电脑上运行，使用自己的 Ollama 模型或 API；实验结果保存在自己的 `web_demo/data/` 中，不会上传到 GitHub。
 
-## 启动
+## 一、最快启动
 
-在 `hiring-agent` 目录执行：
+在仓库根目录 `hiring-agent/` 执行：
 
 ```powershell
-\.venv\Scripts\python.exe -m pip install -r requirements.txt
+# Windows
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+Copy-Item web_demo\.env.example web_demo\.env
 powershell -ExecutionPolicy Bypass -File web_demo/scripts/dev_local.ps1
 ```
 
-然后打开 <http://127.0.0.1:3000>。
+打开 <http://127.0.0.1:3000>。
 
-Windows 启动脚本会自动执行 Alembic 数据库迁移、启动 FastAPI（8000 端口）和 Next.js（3000 端口）。macOS/Linux 可执行：
+macOS/Linux：
 
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp web_demo/.env.example web_demo/.env
 sh web_demo/scripts/dev_local.sh
 ```
 
-## 演示账号
+Demo 账号：
 
 - Staff：`staff@demo.local` / `demo123`
 - Candidate：`alice@demo.local` / `demo123`
 
-Candidate 只能上传自己的 PDF 并查看处理状态，不能看到评分、排名、Evidence、模型或运行产物。Staff 可以查看申请列表、候选人详情、PDF、结构化简历、评分证据、Pipeline 阶段和历史 Evaluation Run。
+## 二、换成本地 Ollama 模型
 
-## 推荐演示流程
+先确认模型已经下载：
 
-1. 以 Candidate 登录并上传 PDF，观察 `Processing` 状态。
-2. 退出后以 Staff 登录，查看 Applications 和候选人详情。
-3. 在 Models 中切换默认模型，或在候选人详情中创建新的 Rerun。
-4. 在 Experiments 中比较不同 Evaluation Run。
-5. 在 Demo Controls 中执行 Seed/Reset，恢复固定演示数据。
+```bash
+ollama serve
+ollama pull llama3.1:8b
+ollama list
+```
 
-## 模型配置
-
-本地 Ollama 可选配置：
+编辑 `web_demo/.env`：
 
 ```env
 OLLAMA_BASE_URL=http://127.0.0.1:11434
-OLLAMA_MODEL=gemma3:4b
+OLLAMA_MODEL=llama3.1:8b
 ```
 
-DeepSeek 为可选服务，在 `web_demo/.env` 中配置 `DEEPSEEK_API_KEY`、`DEEPSEEK_BASE_URL` 和 `DEEPSEEK_MODEL`。密钥只在后端使用，不会发送到浏览器。模型不可用时，Demo 会记录 Provider 状态并使用确定性的本地回退评分，便于离线演示。
+也可以换成其他本机模型，例如 `gemma3:4b`、`qwen3:8b`。修改后重启后端，Staff → Models 会显示新的模型。
 
-阿里云百炼可使用 OpenAI-compatible 接口，在 `web_demo/.env` 中配置：
+## 三、接入阿里云百炼或其他 OpenAI-compatible API
+
+在 `web_demo/.env` 中配置阿里云百炼：
 
 ```env
-DASHSCOPE_API_KEY=你的百炼APIKey
+DASHSCOPE_API_KEY=你的APIKey
 DASHSCOPE_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
 DASHSCOPE_MODEL=qwen-plus
 ```
 
-重启后端后，Staff 的 Models 页面会显示 Alibaba DashScope，之后可以将它设为默认模型或在 Rerun 中单独选择。不要把真实 API Key 提交到 GitHub；免费额度由阿里云按模型和账号管理，额度用完不会自动切换模型。
+重启后端后，Staff → Models 会出现 `Alibaba DashScope`。可以把它设为默认模型，或在候选人详情中创建 Rerun。
 
-## 检查与测试
+如果队友使用其他 OpenAI-compatible 服务，可以复用同样的接口结构；最小适配只需要提供：
 
-服务启动后执行：
-
-```powershell
-\.venv\Scripts\python.exe web_demo/scripts/verify_local.py
-\.venv\Scripts\python.exe -m unittest discover -s web_demo/tests -v
+```text
+API Key
+Base URL（能够访问 /chat/completions）
+Model ID
 ```
 
-数据库、上传文件和运行产物位于 `web_demo/data/`，这些目录已加入 Git 忽略。Demo Reset 只删除标记为 Demo 的记录，不会删除测试过程中产生的非 Demo 数据。
+目前项目内置了 Ollama、DeepSeek 和 DashScope。新的服务如果不是 OpenAI-compatible，需要在 `web_demo/pipeline.py` 增加一个 Provider Adapter，不要修改前端页面。
+
+## 四、如何把自己的实验接入
+
+推荐把实验分成三层：
+
+```text
+实验代码 / Prompt / Sanitizer
+          ↓
+统一输出 PipelineResult
+          ↓
+web_demo/backend.py 保存 Evaluation Run 和 Artifact
+```
+
+如果你的实验只改变评分逻辑或 Prompt：
+
+1. 在 `web_demo/pipeline.py` 中保留 PDF 提取和 `PipelineConfig`。
+2. 替换或扩展 `_evaluate()`，返回 `score/base/bonus/deduction/evidence`。
+3. 保持 `PipelineResult` 字段结构不变。
+4. 在 `web_demo/tests/` 增加一个针对该实验的测试。
+
+如果你的实验会大幅修改后端：
+
+1. 不要改动 Candidate/Staff API 的返回权限。
+2. 继续使用 `application_id` 和 `run_id` 区分数据。
+3. 每次实验生成新的 Evaluation Run，不要覆盖历史 Run。
+4. 把实验配置写入 `PipelineConfig`，这样可以在 Experiments 页面比较。
+5. 如果新增数据库字段，补一条 Alembic migration。
+
+如果只是想快速试验，不想改 Web Demo，可以先在仓库根目录运行原有 CLI，确认结果后再把核心逻辑接到 `_evaluate()`。
+
+## 五、推荐团队实验方法
+
+每个人使用自己的 `.env` 和本地模型，但使用相同的：
+
+- 测试 PDF 集合；
+- Prompt 版本；
+- `PipelineConfig` 参数；
+- 评分输出格式。
+
+实验完成后，可以分享 `web_demo/data/artifacts/*.json` 中的 Run 结果，或手动整理成 CSV。不要提交以下内容：
+
+- `web_demo/.env`；
+- API Key；
+- 真实简历 PDF；
+- `web_demo/data/`；
+- `node_modules/` 和 `.next/`。
+
+## 六、检查和排错
+
+```powershell
+python web_demo/scripts/verify_local.py
+python -m unittest discover -s web_demo/tests -v
+```
+
+常见问题：
+
+- Models 页面显示模型不可用：检查 `ollama list` 或 `.env` 中的 API 配置。
+- 上传后一直 Processing：查看运行中的 FastAPI 终端，以及 `web_demo/data/artifacts/`。
+- 改了模型但页面没有变化：确认重启的是后端，而不仅是浏览器。
+- API Key 不生效：确认变量写在 `web_demo/.env`，不要只写在根目录旧的 CLI `.env` 中。
+
+## 七、数据位置
+
+```text
+web_demo/data/hiring_agent.db   SQLite 数据库
+web_demo/data/uploads/          上传 PDF
+web_demo/data/artifacts/        Evaluation Run JSON
+```
+
+Demo Reset 只清理标记为 Demo 的数据，不会删除队友创建的非 Demo 实验记录。
