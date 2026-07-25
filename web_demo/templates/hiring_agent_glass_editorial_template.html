@@ -553,9 +553,11 @@
       user: null,
       demoMode: false,
       mobileNavOpen: false,
-      candidateStatus: 'UNDER_REVIEW',
-      uploadedFile: { name: 'alice_resume.pdf', size: '1.4 MB', uploaded: '23 Jul 2026, 15:42' },
+      candidateStatus: 'SUBMITTED',
+      candidateApplication: null,
+      uploadedFile: null,
       defaultModel: 'gemma3:4b',
+      promptVersion: 'formal-software-developer-v1',
       applicationFilters: { search: '', status: 'all', decision: 'all', sort: 'score_desc' },
       runFilters: { status: 'all', model: 'all' },
       compare: { applicationId: 'app-alice', left: 'run-a1', right: 'run-a2' }
@@ -703,6 +705,7 @@
         const result = await api('/api/candidate/resume', { method:'POST', body:form });
         return { name: result.name, size: formatBytes(result.size), uploaded: new Date().toLocaleString(), runId: result.run_id };
       },
+      async candidateApplication() { return api('/api/candidate/application'); },
       async rerun(applicationId, config) { return api(`/api/staff/applications/${applicationId}/rerun`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(config) }); },
       async setDefaultModel(modelId) { return api('/api/staff/settings/default-model', { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({model_id:modelId}) }); },
       async resetDemo() { return api('/api/demo/reset', { method:'POST' }); }
@@ -711,20 +714,42 @@
     // Convert the API shape to the fixed visual-reference shape.  This keeps
     // layout ownership in the approved template while all visible staff data
     // comes from SQLite rather than hard-coded demo arrays.
+    function categoryBreakdown(categories = {}) {
+      const definitions = [
+        ['relevant_experience', 'Relevant Experience', 30],
+        ['project_system_evidence', 'Project/System Evidence', 30],
+        ['technical_skills_match', 'Technical Skills Match', 25],
+        ['evidence_quality_impact', 'Evidence Quality/Impact', 15]
+      ];
+      return definitions.map(([key,label,max]) => ({ label, value:categories[key]?.score ?? 0, max:categories[key]?.max ?? max, evidence:categories[key]?.evidence || '' }));
+    }
+    function skillNames(skills = []) {
+      return skills.flatMap(skill => typeof skill === 'string' ? [skill] : [skill.name, ...(skill.keywords || [])]).filter(Boolean);
+    }
     function backendCandidate(item, index) {
-      const resume = item.resume || {}, basics = resume.basics || {}, evidence = item.evidence || {};
-      const score = item.score, base = item.base, bonus = item.bonus, deduction = item.deduction;
+      const resume = item.resume || {}, basics = resume.basics || {};
+      const latest = (item.runs || [])[0] || {}, evidence = latest.evidence || item.evidence || {};
+      const score = latest.score ?? item.score, base = latest.core_score ?? item.base, bonus = latest.bonus ?? item.bonus, deduction = latest.deduction ?? item.deduction;
+      const skills = skillNames(resume.skills || []);
+      const githubProfile = latest.github_data?.profile;
+      const profileLinks = [
+        ...(basics.profiles || []).map(profile => ({ label:profile.network || 'Profile', url:profile.url })),
+        ...(basics.url ? [{ label:'Website', url:basics.url }] : [])
+      ].filter((profile, position, all) => profile.url && all.findIndex(other => other.url === profile.url) === position);
+      const displayName = item.candidate_identifier || basics.name || `Candidate ${index + 1}`;
       return {
-        id:item.id, ref:item.id.toUpperCase(), name:basics.name || item.email.split('@')[0], email:item.email,
-        initials:initials(basics.name || item.email), rank:index + 1, score, base, bonus, deduction,
+        id:item.id, ref:item.candidate_identifier ? `CANDIDATE-${item.candidate_identifier}` : item.id.toUpperCase(), name:displayName, email:item.email,
+        initials:initials(displayName), rank:index + 1, score, base, bonus, deduction,
         reviewTier: score == null ? 'Processing' : score < 40 ? 'Below Review Cutoff' : score >= 85 ? 'High Priority' : 'Standard Review',
-        candidateStatus:item.status, decision:'NONE', model:(item.runs[0] || {}).model_id || 'gemma3:4b', updated:'just now',
-        submitted:new Date(item.created * 1000).toLocaleString(), role:(resume.skills || []).slice(0,3).join(' · ') || 'Resume submitted',
-        skills:resume.skills || [], github:resume.github || 'Not provided', summary:(resume.summary || []).join(' ') || `Local evaluation record for ${basics.name || item.email}.`,
-        breakdown:[{label:'Relevant Experience',value:Math.min(25,Math.round((base || 0) * .25)),max:25},{label:'Project/System Evidence',value:Math.min(25,Math.round((base || 0) * .25)),max:25},{label:'Evidence Quality Match',value:Math.min(30,Math.round((base || 0) * .3)),max:30},{label:'Evidence Quality',value:Math.min(20,Math.round((base || 0) * .2)),max:20}],
+        candidateStatus:item.status, decision:'NONE', model:latest.model_id || state.defaultModel, updated:'just now',
+        submitted:new Date(item.created * 1000).toLocaleString(), role:skills.slice(0,3).join(' · ') || 'Resume submitted',
+        skills, profiles:profileLinks, github:githubProfile ? `github.com/${githubProfile.username}` : (profileLinks.find(profile => /github/i.test(profile.label) || /github\.com/i.test(profile.url))?.url || 'Not provided'), githubData:latest.github_data, summary:basics.summary || `Formal evaluation record for ${displayName}.`,
+        breakdown:categoryBreakdown(latest.categories),
         evidence:{strengths:evidence.strengths || [],improvements:evidence.improvements || []},
-        work:(resume.work || []).map((line,i)=>({title:`Experience ${i+1}`,dates:'',body:typeof line === 'string' ? line : JSON.stringify(line)})),
-        education:(resume.education || []).join(' · ') || 'Not extracted',projects:resume.projects || [], runs:(item.runs || []).map((run,i)=>({id:run.id,label:`Run ${i+1}`,status:run.status,model:run.model_id,score:run.score,base,bonus,deduction,prompt:'web-v1',pipeline:'web-v1',cache:run.reused_from ? 'SAFE_REUSE' : 'FORCE_FRESH',reused:!!run.reused_from,duration:'local',created:new Date(run.created * 1000).toLocaleString(),temperature:.1,topP:.9,error:run.error}))
+        work:(resume.work || []).map((work,i)=>({title:[work.position,work.name].filter(Boolean).join(' · ') || `Experience ${i+1}`,dates:[work.startDate,work.endDate].filter(Boolean).join('–'),body:work.summary || (work.highlights || []).join(' · ')})),
+        education:(resume.education || []).map(entry => [entry.studyType,entry.area,entry.institution].filter(Boolean).join(' · ')).join(' · ') || 'Not extracted',
+        projects:(resume.projects || []).map(project => project.name || project.description || 'Unnamed project'),
+        runs:(item.runs || []).map((run,i)=>{ const cfg=run.config || {}; return {id:run.id,label:`Run ${i+1}`,status:run.status,model:run.model_id,score:run.score,base:run.core_score,bonus:run.bonus,deduction:run.deduction,categories:run.categories || {},evidence:run.evidence || {},prompt:run.prompt_version || cfg.prompt_version || state.promptVersion,pipeline:'formal-v1',engine:run.evaluation_engine || 'formal_resume_evaluator',schema:run.schema_mode || cfg.extraction_schema_mode || 'balanced',github:cfg.github_enrichment !== false,cache:cfg.force_fresh ? 'FORCE_FRESH' : 'SAFE_REUSE',reused:!!run.reused_from,duration:run.completed && run.created ? `${Math.max(0,run.completed-run.created).toFixed(1)}s` : 'running',created:new Date(run.created * 1000).toLocaleString(),temperature:cfg.temperature ?? .1,topP:cfg.top_p ?? .9,error:run.error,stages:run.stages || []};})
       };
     }
     async function syncStaffData() {
@@ -733,11 +758,39 @@
       candidates.splice(0, candidates.length, ...records.map(backendCandidate));
       models.splice(0, models.length, ...modelData.models.map(model => ({...model, temperature:.1, topP:.9})));
       state.defaultModel = modelData.default_model;
+      state.promptVersion = modelData.prompt_version || state.promptVersion;
       if (!candidates.some(c => c.id === state.compare.applicationId) && candidates[0]) state.compare.applicationId = candidates[0].id;
       if (candidates.some(candidate => candidate.runs.some(run => run.status === 'QUEUED' || run.status === 'RUNNING'))) {
         window.setTimeout(async () => {
           await syncStaffData();
           if (routeFromHash().name !== 'login') render();
+        }, 2000);
+      }
+    }
+    async function syncCandidateData({ notify = false } = {}) {
+      if (!state.user || state.user.role !== 'candidate') return;
+      const payload = await mockApi.candidateApplication();
+      const application = payload.application;
+      state.candidateApplication = application;
+      if (!application) {
+        state.candidateStatus = 'SUBMITTED';
+        state.uploadedFile = null;
+        return;
+      }
+      const previous = state.candidateStatus;
+      state.candidateStatus = application.status;
+      state.uploadedFile = {
+        name: application.filename,
+        size: state.uploadedFile?.name === application.filename ? state.uploadedFile.size : 'Stored PDF',
+        uploaded: new Date(application.created * 1000).toLocaleString()
+      };
+      if (notify && previous === 'PROCESSING' && application.status === 'UNDER_REVIEW') {
+        showToast('Processing complete', 'Your application is now under human review.');
+      }
+      if (['PROCESSING', 'SUBMITTED'].includes(application.status)) {
+        window.setTimeout(async () => {
+          await syncCandidateData({ notify: true });
+          if (routeFromHash().name === 'candidate') render();
         }, 2000);
       }
     }
@@ -934,11 +987,11 @@
 
     function renderCandidate() {
       const statusIndex = { SUBMITTED: 0, PROCESSING: 2, UNDER_REVIEW: 3, CLOSED: 3 }[state.candidateStatus] ?? 0;
-      const statusText = state.candidateStatus === 'PROCESSING' ? 'Resume processing' : state.candidateStatus === 'UNDER_REVIEW' ? 'Under human review' : 'Application submitted';
+      const statusText = state.candidateStatus === 'PROCESSING' ? 'Resume processing' : state.candidateStatus === 'UNDER_REVIEW' ? 'Under human review' : state.candidateStatus === 'FAILED' ? 'Processing failed' : 'Application submitted';
       return `<div class="candidate-shell">
         <header class="candidate-top glass-nav">
           <div style="display:flex;align-items:center;gap:11px"><div class="brand-mark">H</div><div><strong>HireLens</strong><div class="soft" style="font-size:10px;margin-top:3px">Candidate workspace</div></div></div>
-          <div style="display:flex;align-items:center;gap:9px">${pill(statusText, state.candidateStatus === 'PROCESSING' ? 'warning' : 'success')}<button class="btn btn-square btn-ghost" data-logout>${icons.logout}</button></div>
+          <div style="display:flex;align-items:center;gap:9px">${pill(statusText, state.candidateStatus === 'PROCESSING' ? 'warning' : state.candidateStatus === 'FAILED' ? 'danger' : 'success')}<button class="btn btn-square btn-ghost" title="Refresh status" data-refresh-candidate>${icons.refresh}</button><button class="btn btn-square btn-ghost" data-logout>${icons.logout}</button></div>
         </header>
         <main class="candidate-content">
           <section class="candidate-hero">
@@ -996,7 +1049,7 @@
         ['Ready for review', candidates.filter(c => c.candidateStatus === 'UNDER_REVIEW').length, 'Human decision pending'],
         ['Below cutoff', candidates.filter(c => c.reviewTier === 'Below Review Cutoff').length, 'Low-priority review tier']
       ];
-      const actions = `<button class="btn btn-primary" data-open-candidate>${icons.plus} Open candidate view</button>`;
+      const actions = `<button class="btn" data-refresh-applications>${icons.refresh} Refresh</button><button class="btn btn-primary" data-open-candidate>${icons.plus} Open candidate view</button>`;
       const intro = `AI-assisted prioritization for human review. <strong>${candidates.length} applications</strong> · ${candidates.filter(c => c.runs.some(r => r.status === 'COMPLETED')).length} evaluated.`;
       const content = `
         ${pageHeader('Applications', 'Candidate<br/>Review Queue', intro, actions)}
@@ -1031,8 +1084,8 @@
     }
 
     function pipelineHtml(run) {
-      const stages = run.status === 'FAILED' ? stagePresets.failed : run.status === 'RUNNING' ? stagePresets.running : stagePresets.completed;
-      return `<div class="pipeline">${stages.map((stage,index) => `<div class="pipeline-step ${stage.status === 'running' ? 'running' : stage.status === 'failed' ? 'failed' : ''}"><div class="pipeline-dot">${stage.status === 'done' ? '✓' : stage.status === 'running' ? '…' : stage.status === 'failed' ? '!' : String(index+1).padStart(2,'0')}</div><div><div class="pipeline-name">${stage.name}</div><div class="pipeline-note">${stage.note}</div></div><div class="pipeline-time">${stage.time}</div></div>`).join('')}</div>`;
+      const stages = (run.stages || []).map(stage => ({name:stage.name.replaceAll('_',' '),status:stage.status.toLowerCase(),note:stage.note || '',time:`${stage.duration_ms || 0}ms`}));
+      return `<div class="pipeline">${stages.map((stage,index) => `<div class="pipeline-step ${stage.status === 'running' ? 'running' : stage.status === 'failed' ? 'failed' : ''}"><div class="pipeline-dot">${stage.status === 'completed' ? '✓' : stage.status === 'running' ? '…' : stage.status === 'failed' ? '!' : String(index+1).padStart(2,'0')}</div><div><div class="pipeline-name">${stage.name}</div><div class="pipeline-note">${stage.note}</div></div><div class="pipeline-time">${stage.time}</div></div>`).join('')}</div>`;
     }
 
     function runAdvanced(candidate, run) {
@@ -1042,7 +1095,9 @@
           <div class="config-row"><span>Model</span><span class="mono">${run.model}</span></div>
           <div class="config-row"><span>Temperature / top-p</span><span class="mono">${run.temperature} / ${run.topP}</span></div>
           <div class="config-row"><span>Prompt version</span><span class="mono">${run.prompt}</span></div>
-          <div class="config-row"><span>Pipeline version</span><span class="mono">${run.pipeline}</span></div>
+          <div class="config-row"><span>Pipeline / engine</span><span class="mono">${run.pipeline} · ${run.engine}</span></div>
+          <div class="config-row"><span>Extraction schema</span><span class="mono">${run.schema}</span></div>
+          <div class="config-row"><span>GitHub enrichment</span><span class="mono">${run.github ? 'enabled' : 'disabled'}</span></div>
           <div class="config-row"><span>Cache policy</span><span class="mono">${run.cache}</span></div>
           <div class="config-row"><span>Duration</span><span class="mono">${run.duration}</span></div>
         </div>
@@ -1054,6 +1109,7 @@
 
     function renderApplicationDetail(id) {
       const candidate = getCandidate(id);
+      if (!candidate) return staffShell({ name: 'application-detail' }, `<div class="empty-state"><span class="section-number">0</span><h3>Application unavailable</h3><p class="muted">Upload a PDF through the candidate account to create a formal evaluation run.</p><button class="btn" data-go="/staff/applications">Back to applications</button></div>`, 'Application');
       const run = candidate.runs[0];
       const content = `
         <header class="detail-head">
@@ -1068,13 +1124,13 @@
             <section class="resume-section"><div class="eyebrow">Experience</div><h3>Work history</h3>${candidate.work.map(item => `<div class="timeline-item"><strong>${item.title}</strong><div class="soft" style="font-size:10px;margin-top:3px">${item.dates}</div><p>${item.body}</p></div>`).join('')}</section>
             <section class="resume-section"><div class="eyebrow">Technical profile</div><h3>Skills</h3><div class="tag-list">${candidate.skills.map(skill => `<span class="tag">${skill}</span>`).join('')}</div></section>
             <section class="resume-section"><div class="eyebrow">Projects</div><h3>Selected work</h3>${candidate.projects.map(project => `<div style="display:flex;gap:10px;margin:9px 0;font-size:12px"><span class="section-number">→</span><span>${project}</span></div>`).join('')}</section>
-            <section class="resume-section"><div class="eyebrow">GitHub enrichment</div><h3>Public signals</h3><div class="config-row"><span>Profile</span><span class="mono">${candidate.github}</span></div><div class="config-row"><span>Repository activity</span><span>Consistent</span></div><div class="config-row"><span>Primary language</span><span>${candidate.skills[0]}</span></div></section>
+            <section class="resume-section"><div class="eyebrow">Personal links</div><h3>Extracted profiles</h3>${candidate.profiles.length ? candidate.profiles.map(profile => `<div class="config-row"><span>${escapeHtml(profile.label)}</span><a class="mono" href="${escapeHtml(profile.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(profile.url)}</a></div>`).join('') : '<div class="muted">No explicit personal links found in the PDF.</div>'}<div class="eyebrow" style="margin-top:22px">GitHub enrichment</div><div class="config-row"><span>Profile</span><span class="mono">${escapeHtml(candidate.github)}</span></div><div class="config-row"><span>Enrichment</span><span>${candidate.githubData ? 'Completed' : 'Not available'}</span></div></section>
           </article>
           <aside class="panel glass-raised">
             <div class="panel-head"><div><div class="panel-title">AI Evaluation</div><div class="panel-sub">${run.model} · ${run.prompt}</div></div>${statusPill(run.status)}</div>
             <div class="score-hero"><div class="score-ring" style="background:conic-gradient(var(--accent) 0 ${Math.min(candidate.score,100)}%, rgba(58,91,122,.10) ${Math.min(candidate.score,100)}% 100%)"><span>${scoreOrDash(candidate.score)}</span></div><div class="score-copy"><h3>Priority score</h3><p>${candidate.reviewTier}. Final decision remains with human reviewers.</p></div></div>
             <div class="score-adjustments"><div class="adjustment"><span>Base</span><strong>${candidate.base}</strong></div><div class="adjustment"><span>Bonus</span><strong>+${candidate.bonus}</strong></div><div class="adjustment"><span>Deduction</span><strong>−${candidate.deduction}</strong></div></div>
-            <div class="score-breakdown">${candidate.breakdown.map(item => `<div class="score-row"><span class="label">${item.label}</span><span class="value">${item.value} / ${item.max}</span><div class="bar"><span style="width:${item.value/item.max*100}%"></span></div></div>`).join('')}</div>
+            <div class="score-breakdown">${candidate.breakdown.map(item => `<div class="score-row" title="${escapeHtml(item.evidence)}"><span class="label">${item.label}</span><span class="value">${item.value} / ${item.max}</span><div class="bar"><span style="width:${item.value/item.max*100}%"></span></div></div>`).join('')}</div>
             <div style="margin-top:20px"><div class="eyebrow">Evidence</div><details open><summary>Key strengths</summary><div class="detail-body"><ul>${candidate.evidence.strengths.map(text => `<li>${text}</li>`).join('')}</ul></div></details><details><summary>Areas for improvement</summary><div class="detail-body"><ul>${candidate.evidence.improvements.map(text => `<li>${text}</li>`).join('')}</ul></div></details></div>
             <div style="margin-top:12px"><div class="eyebrow">Staff review</div><div class="field" style="margin-top:10px"><label for="staffNote">Internal note</label><textarea class="textarea" id="staffNote" placeholder="Add a human review note…"></textarea></div><button class="btn btn-sm" style="margin-top:9px" data-save-note>Save note</button></div>
             <div style="margin-top:19px">${runAdvanced(candidate, run)}</div>
@@ -1084,6 +1140,9 @@
       return staffShell({ name: 'application-detail' }, content, `Application / ${candidate.ref}`);
     }
     function renderExperiments() {
+      if (!candidates.some(candidate => candidate.runs.length)) {
+        return staffShell({ name: 'experiments' }, `${pageHeader('Experiments', 'Run<br/>Comparison', 'Compare immutable formal evaluation runs after uploading and rerunning a PDF.')}<div class="empty-state"><span class="section-number">0</span><h3>No formal runs to compare</h3><p class="muted">Sign in as the candidate, upload a PDF, then return here after the run completes.</p><button class="btn" data-open-candidate>Candidate upload</button></div>`, 'Experiments');
+      }
       const candidate = getCandidate(state.compare.applicationId);
       const left = getRun(candidate, state.compare.left);
       const right = getRun(candidate, state.compare.right);
@@ -1121,6 +1180,7 @@
           <div class="config-row"><span>Base / bonus / deduction</span><span class="mono">${scoreOrDash(run.base)} / +${scoreOrDash(run.bonus)} / −${scoreOrDash(run.deduction)}</span></div>
           <div class="config-row"><span>Temperature / top-p</span><span class="mono">${run.temperature} / ${run.topP}</span></div>
           <div class="config-row"><span>Prompt</span><span class="mono">${run.prompt}</span></div>
+          <div class="config-row"><span>Engine / schema</span><span class="mono">${run.engine} / ${run.schema}</span></div>
           <div class="config-row"><span>Cache</span><span class="mono">${run.cache}${run.reused ? ' · reused' : ''}</span></div>
           <div class="config-row"><span>Duration</span><span class="mono">${run.duration}</span></div>
         </div>
@@ -1139,7 +1199,7 @@
             <div class="actions">${model.id === state.defaultModel ? `<button class="btn btn-sm" disabled>Current default</button>` : `<button class="btn btn-sm ${model.healthy ? 'btn-primary' : ''}" ${model.healthy ? '' : 'disabled'} data-set-default-model="${model.id}">Set as default</button>`}<button class="btn btn-sm" data-toast="Prompt editing is intentionally deferred; connect this to versioned prompt metadata.">Prompt version</button></div>
           </article>`).join('')}
         </section>
-        <section class="panel glass-card" style="margin-top:15px"><div class="panel-head"><div><div class="panel-title">Prompt version</div><div class="panel-sub">Immutable metadata attached to every run</div></div><span class="pill pill-accent">baseline-v1</span></div><div class="code-box" style="margin-top:15px">Model-specific prompts remain in the backend repository. The browser should receive only version metadata, never API keys or hidden provider configuration.</div></section>`;
+        <section class="panel glass-card" style="margin-top:15px"><div class="panel-head"><div><div class="panel-title">Prompt version</div><div class="panel-sub">Immutable metadata attached to every run</div></div><span class="pill pill-accent">${state.promptVersion}</span></div><div class="code-box" style="margin-top:15px">Runs use the formal ResumeEvaluator system and criteria Jinja templates. The browser receives only version metadata, never API keys or hidden provider configuration.</div></section>`;
       return staffShell({ name: 'models' }, content, 'Models & Prompts');
     }
 
@@ -1167,7 +1227,7 @@
         ${pageHeader('Demo Controls', 'Presentation<br/>Workspace', 'Prepare a stable classroom demonstration without changing the core business logic.', `<button class="btn btn-primary" data-demo-toggle-page>${state.demoMode ? 'Disable' : 'Enable'} Demo Mode</button>`)}
         <section class="compare-grid">
           <article class="panel glass-card"><div class="eyebrow">01 / Data state</div><h2 class="display" style="font-size:42px;line-height:1;margin:10px 0">Seed and reset</h2><p class="muted" style="font-size:13px;line-height:1.65">Restore the fixed five-candidate cohort, historical runs and deterministic review state.</p><div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:18px"><button class="btn btn-primary" data-seed-demo>Seed demo data</button><button class="btn btn-danger" data-reset-demo>Reset demo data</button></div></article>
-          <article class="panel glass-card"><div class="eyebrow">02 / View shortcuts</div><h2 class="display" style="font-size:42px;line-height:1;margin:10px 0">Move through the story</h2><p class="muted" style="font-size:13px;line-height:1.65">Open the candidate upload, staff review, rerun and comparison screens in the intended presentation order.</p><div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:18px"><button class="btn" data-open-candidate>Candidate view</button><button class="btn" data-go="/staff/applications">Review queue</button><button class="btn" data-go="/staff/application/app-alice">Alice detail</button><button class="btn" data-go="/staff/experiments">Compare runs</button></div></article>
+          <article class="panel glass-card"><div class="eyebrow">02 / View shortcuts</div><h2 class="display" style="font-size:42px;line-height:1;margin:10px 0">Move through the story</h2><p class="muted" style="font-size:13px;line-height:1.65">Open the candidate upload, staff review, rerun and comparison screens in the intended presentation order.</p><div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:18px"><button class="btn" data-open-candidate>Candidate view</button><button class="btn" data-go="/staff/applications">Review queue</button>${candidates[0] ? `<button class="btn" data-go="/staff/application/${candidates[0].id}">Candidate detail</button><button class="btn" data-go="/staff/experiments">Compare runs</button>` : ''}</div></article>
         </section>
         <section class="panel glass-raised" style="margin-top:14px"><div class="panel-head"><div><div class="panel-title">Guided demo sequence</div><div class="panel-sub">Suggested 15-minute flow</div></div><span class="pill pill-accent">4 steps</span></div><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px">
           ${[['01','Candidate upload','Show PDF input and candidate privacy.'],['02','AI screening','Open structured resume, evidence and ranking.'],['03','Model rerun','Switch the model without restarting services.'],['04','Run comparison','Compare immutable outputs and technical traces.']].map(item => `<div style="padding:15px;border-top:1px solid var(--border-strong)"><span class="section-number">${item[0]}</span><strong style="display:block;margin-top:10px;font-size:13px">${item[1]}</strong><span class="muted" style="display:block;margin-top:6px;font-size:11px;line-height:1.5">${item[2]}</span></div>`).join('')}
@@ -1182,20 +1242,22 @@
         <div class="modal-body">
           <div class="field"><label for="rerunModel">Model</label><select class="select" id="rerunModel">${models.filter(model => model.healthy).map(model => `<option value="${model.id}" ${model.id === state.defaultModel ? 'selected' : ''}>${model.name} · ${model.type}</option>`).join('')}</select></div>
           <div class="form-grid-2"><div class="field"><label for="rerunTemperature">Temperature</label><input class="input" id="rerunTemperature" type="number" min="0" max="2" step="0.1" value="0.1" /></div><div class="field"><label for="rerunTopP">Top-p</label><input class="input" id="rerunTopP" type="number" min="0" max="1" step="0.1" value="0.9" /></div></div>
-          <div class="form-grid-2"><div class="field"><label for="rerunPrompt">Prompt version</label><select class="select" id="rerunPrompt"><option>baseline-v1</option></select></div><div class="field"><label for="rerunCache">Cache policy</label><select class="select" id="rerunCache"><option value="FORCE_FRESH">Force fresh</option><option value="SAFE_REUSE">Safe reuse</option></select></div></div>
+          <div class="form-grid-2"><div class="field"><label for="rerunPrompt">Prompt version</label><select class="select" id="rerunPrompt"><option>${state.promptVersion}</option></select></div><div class="field"><label for="rerunCache">Cache policy</label><select class="select" id="rerunCache"><option value="FORCE_FRESH">Force fresh</option><option value="SAFE_REUSE">Safe reuse</option></select></div></div>
           <label style="display:flex;align-items:center;gap:10px;font-size:13px"><input id="rerunGithub" type="checkbox" checked /> Enable GitHub enrichment</label>
           <div class="code-box">A new immutable Evaluation Run will be created. Existing scores and artifacts remain unchanged.</div>
         </div>
         <div class="modal-actions"><button class="btn" data-close-modal>Cancel</button><button class="btn btn-primary" data-confirm-rerun="${candidate.id}">${icons.refresh} Run evaluation</button></div>`);
     }
 
-    function artifactModal(type) {
-      const payloads = {
-        text: '# Extracted Resume\n\nAlice Chen\nSenior Backend Engineer...\n\n## Work\nRed Maple Robotics...',
-        resume: JSON.stringify({ basics: { name: 'Alice Chen', email: 'alice@example.com' }, work: [{ name: 'Red Maple Robotics', position: 'Senior Backend Engineer' }], skills: [{ name: 'Infrastructure', keywords: ['Go','Kubernetes','PostgreSQL'] }] }, null, 2),
-        evaluation: JSON.stringify({ base_score: 87, bonus: 6, deductions: 1.5, adjusted_score: 91.5, review_tier: 'High Priority', human_review_required: true }, null, 2)
-      };
-      showModal(`<div class="modal-head"><div><div class="eyebrow">Raw artifact</div><h2>${escapeHtml(type)}</h2></div><button class="btn btn-square btn-ghost" data-close-modal>${icons.close}</button></div><div class="modal-body"><pre class="code-box" style="max-height:500px;white-space:pre-wrap">${escapeHtml(payloads[type] || '')}</pre></div><div class="modal-actions"><button class="btn btn-primary" data-close-modal>Close</button></div>`);
+    async function artifactModal(type, run) {
+      try {
+        const artifact = await api(`/api/staff/runs/${encodeURIComponent(run.id)}/artifact`);
+        const values = { text:artifact.raw_text || '', resume:artifact.resume || {}, evaluation:artifact.evaluation || {} };
+        const payload = typeof values[type] === 'string' ? values[type] : JSON.stringify(values[type] || {}, null, 2);
+        showModal(`<div class="modal-head"><div><div class="eyebrow">Formal run artifact</div><h2>${escapeHtml(type)}</h2></div><button class="btn btn-square btn-ghost" data-close-modal>${icons.close}</button></div><div class="modal-body"><pre class="code-box" style="max-height:500px;white-space:pre-wrap">${escapeHtml(payload)}</pre></div><div class="modal-actions"><button class="btn btn-primary" data-close-modal>Close</button></div>`);
+      } catch (error) {
+        showToast('Artifact unavailable', error.message, 'danger');
+      }
     }
     async function handleResume(file) {
       if (!file) return;
@@ -1213,11 +1275,7 @@
         state.uploadedFile = await mockApi.uploadResume(file);
         showToast('Resume uploaded', 'A new evaluation run has been queued.');
         render();
-        setTimeout(() => {
-          state.candidateStatus = 'UNDER_REVIEW';
-          if (routeFromHash().name === 'candidate') render();
-          showToast('Processing complete', 'Your application is now under human review.');
-        }, 1800);
+        await syncCandidateData({ notify: true });
       } catch (error) {
         showToast('Upload failed', error.message, 'danger');
       }
@@ -1254,7 +1312,8 @@
         error.hidden = true;
         try {
           state.user = await mockApi.login(document.getElementById('loginEmail').value.trim(), document.getElementById('loginPassword').value);
-          await syncStaffData();
+          if (state.user.role === 'staff') await syncStaffData();
+          else await syncCandidateData();
           navigate(state.user.role === 'staff' ? '/staff/applications' : '/candidate');
         } catch (err) {
           error.textContent = err.message;
@@ -1270,6 +1329,11 @@
       document.querySelectorAll('[data-choose-file]').forEach(button => button.addEventListener('click', () => input?.click()));
       input?.addEventListener('change', event => handleResume(event.target.files?.[0]));
       const zone = document.getElementById('uploadZone');
+      document.querySelector('[data-refresh-candidate]')?.addEventListener('click', async () => {
+        await syncCandidateData({ notify: true });
+        render();
+        showToast('Status refreshed', 'Application status was read from the evaluation service.');
+      });
       if (zone) {
         ['dragenter','dragover'].forEach(type => zone.addEventListener(type, event => { event.preventDefault(); zone.classList.add('dragging'); }));
         ['dragleave','drop'].forEach(type => zone.addEventListener(type, event => { event.preventDefault(); zone.classList.remove('dragging'); }));
@@ -1278,6 +1342,11 @@
     }
 
     function bindApplications() {
+      document.querySelector('[data-refresh-applications]')?.addEventListener('click', async () => {
+        await syncStaffData();
+        render();
+        showToast('Applications refreshed', 'The latest worker status and results are now shown.');
+      });
       document.querySelector('[data-filter-search]')?.addEventListener('input', event => { state.applicationFilters.search = event.target.value; renderApplicationsOnly(); });
       document.querySelector('[data-filter-status]')?.addEventListener('change', event => { state.applicationFilters.status = event.target.value; render(); });
       document.querySelector('[data-filter-decision]')?.addEventListener('change', event => { state.applicationFilters.decision = event.target.value; render(); });
@@ -1315,7 +1384,7 @@
         state.compare.right = candidate.runs[1]?.id || candidate.runs[0]?.id;
         navigate('/staff/experiments');
       });
-      document.querySelectorAll('[data-artifact]').forEach(button => button.addEventListener('click', () => artifactModal(button.dataset.artifact)));
+      document.querySelectorAll('[data-artifact]').forEach(button => button.addEventListener('click', () => artifactModal(button.dataset.artifact, candidate.runs[0])));
     }
 
     function bindExperiments() {
@@ -1402,7 +1471,7 @@
       if (route.name === 'login') bindLogin();
       if (route.name === 'candidate') bindCandidate();
       if (route.name === 'applications') bindApplications();
-      if (route.name === 'application-detail') bindDetail(getCandidate(route.id));
+      if (route.name === 'application-detail' && getCandidate(route.id)) bindDetail(getCandidate(route.id));
       if (route.name === 'experiments') bindExperiments();
       if (route.name === 'models') bindModels();
       if (route.name === 'runs') bindRuns();

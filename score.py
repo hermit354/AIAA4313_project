@@ -7,9 +7,10 @@ from pdf import PDFHandler
 from github import fetch_and_display_github_info
 from models import JSONResume, EvaluationData
 from typing import List, Optional, Dict
-from evaluator import ResumeEvaluator
 from pathlib import Path
 from prompt import DEFAULT_MODEL, MODEL_PARAMETERS
+from evaluation_service import EvaluationConfig, evaluate_resume_data
+from scoring import CATEGORY_MAXIMA, calculate_score
 from transform import (
     transform_evaluation_response,
     convert_json_resume_to_text,
@@ -45,28 +46,21 @@ def print_evaluation_results(
         "evidence_quality_impact": "Evidence Quality, Specificity & Impact",
     }
 
-    core_score = 0.0
-    core_max = 0.0
-    score_items = evaluation.scores.model_dump().items() if evaluation.scores else []
-    for category_name, category_data in score_items:
-        category_score = min(float(category_data["score"]), float(category_data["max"]))
-        core_score += category_score
-        core_max += float(category_data["max"])
+    summary = calculate_score(evaluation)
+    core_max = sum(CATEGORY_MAXIMA.values())
+    for category_name, category_data in evaluation.scores.model_dump().items():
+        category_score = summary.categories[category_name]["score"]
         if category_score < float(category_data["score"]):
             print(
                 f"Warning: {category_name} score capped from "
                 f"{category_data['score']} to {category_score} "
-                f"(max: {category_data['max']})"
+                f"(max: {summary.categories[category_name]['max']})"
             )
 
-    bonus = float(evaluation.bonus_points.total) if evaluation.bonus_points else 0.0
-    deductions = float(evaluation.deductions.total) if evaluation.deductions else 0.0
-    final_score = max(0.0, min(100.0, core_score + bonus - deductions))
-
-    print(f"\nCORE SCORE: {core_score:.1f}/{core_max:.0f}")
-    print(f"BONUS: +{bonus:.1f}")
-    print(f"DEDUCTIONS: -{deductions:.1f}")
-    print(f"FINAL SCORE: {final_score:.1f}/100")
+    print(f"\nCORE SCORE: {summary.core_score:.1f}/{core_max:.0f}")
+    print(f"BONUS: +{summary.bonus:.1f}")
+    print(f"DEDUCTIONS: -{summary.deduction:.1f}")
+    print(f"FINAL SCORE: {summary.final_score:.1f}/100")
 
     print("\nDETAILED SCORES:")
     print("-" * 60)
@@ -75,10 +69,8 @@ def print_evaluation_results(
             label = category_labels.get(
                 category_name, category_name.replace("_", " ").title()
             )
-            capped_score = min(
-                float(category_data["score"]), float(category_data["max"])
-            )
-            print(f"{label}: {capped_score:.1f}/{category_data['max']}")
+            normalized = summary.categories[category_name]
+            print(f"{label}: {normalized['score']:.1f}/{normalized['max']}")
             print(f"   Evidence: {category_data['evidence']}")
             print()
 
@@ -112,27 +104,18 @@ def _evaluate_resume(
 ) -> Optional[EvaluationData]:
     """Evaluate the resume using AI and display results."""
 
-    model_params = MODEL_PARAMETERS.get(DEFAULT_MODEL)
-    evaluator = ResumeEvaluator(model_name=DEFAULT_MODEL, model_params=model_params)
-
-    # Convert JSON resume data to text
-    resume_text = convert_json_resume_to_text(resume_data)
-
-    # Add GitHub data if available
-    if github_data:
-        github_text = convert_github_data_to_text(github_data)
-        resume_text += github_text
-
-    # Add blog data if available
-    if blog_data:
-        blog_text = convert_blog_data_to_text(blog_data)
-        resume_text += blog_text
-
-    # Evaluate the enhanced resume
-    evaluation_result = evaluator.evaluate_resume(resume_text)
-
-    # print(evaluation_result)
-
+    model_params = MODEL_PARAMETERS.get(
+        DEFAULT_MODEL, {"temperature": 0.1, "top_p": 0.9}
+    )
+    config = EvaluationConfig(
+        model_id=DEFAULT_MODEL,
+        temperature=model_params.get("temperature", 0.1),
+        top_p=model_params.get("top_p", 0.9),
+        extraction_schema_mode=os.environ.get("EXTRACTION_SCHEMA_MODE", "balanced"),
+        github_enrichment=bool(github_data),
+        github_sanitize_mode=os.environ.get("GITHUB_SANITIZE_MODE", "off"),
+    )
+    evaluation_result, _ = evaluate_resume_data(resume_data, config, github_data)
     return evaluation_result
 
 
