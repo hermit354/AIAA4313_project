@@ -1,0 +1,6 @@
+## Portfolio Appendix
+Evidence map from visible artifacts:
+- Self-project complexity evidence: USB storage event detection, selective folder synchronization, async tasks, WPF desktop UI, ADO.NET/LINQ database-style data access, and file-processing utilities.
+- Technical breadth evidence: C Sharp, DotNET Framework, WPF, Windows Forms, SQL, LINQ, ADO.NET, Entity Framework, and algorithmic coding examples.
+- Production evidence remains limited because the resume states no full-time production experience.
+- Open-source evidence remains limited because the repositories are personal projects, not contributions to other maintainers' projects.

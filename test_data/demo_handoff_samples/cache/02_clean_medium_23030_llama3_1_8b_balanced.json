@@ -1,0 +1,131 @@
+{
+  "candidate_id": "23030",
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/software_developer_sample_20/23030_Software_Developer.pdf",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "summary": {
+    "basics_present": true,
+    "name": "Ashley Hudgens",
+    "work_count": 3,
+    "education_count": 1,
+    "skills_count": 5,
+    "projects_count": 0,
+    "awards_count": 0,
+    "profile_count": 1,
+    "github_profiles": [
+      "https://github.com/ashleyhudgens"
+    ],
+    "full_core_pass": true
+  },
+  "resume": {
+    "basics": {
+      "name": "Ashley Hudgens",
+      "email": null,
+      "phone": null,
+      "url": null,
+      "summary": null,
+      "location": {
+        "address": null,
+        "postalCode": null,
+        "city": "Saint Peters",
+        "countryCode": "MO",
+        "region": null
+      },
+      "profiles": [
+        {
+          "network": "GitHub",
+          "username": "ashleyhudgens",
+          "url": "https://github.com/ashleyhudgens"
+        }
+      ]
+    },
+    "work": [
+      {
+        "name": "Clearent",
+        "position": "Software Developer",
+        "url": null,
+        "startDate": "2016-12",
+        "endDate": "Present",
+        "summary": "Administer and maintain systems support for software, hardware and servers: test, troubleshoot, diagnose, and resolve issues. Assist with PowerShell scripting for production automation efforts utilizing Visual Studio Code and Git. Manage user accounts in Active Directory. Office 365 support, maintenance, and administration (user accounts, distribution groups, mailflow/security rules). Oversee on/off boarding employees. Accountable for trouble tickets; first touch email resolution, quick response and resolution times. Develop software using an agile methodology.",
+        "highlights": [
+          "Administer and maintain systems support",
+          "Assist with PowerShell scripting",
+          "Manage user accounts in Active Directory",
+          "Office 365 support, maintenance, and administration",
+          "Oversee on/off boarding employees",
+          "Accountable for trouble tickets"
+        ]
+      },
+      {
+        "name": "MasterCard",
+        "position": "Network Technician",
+        "url": null,
+        "startDate": "2015-08",
+        "endDate": "2015-08",
+        "summary": "Troubleshoot all types of network and peripheral issues. Collect the specifications of each system and maintain a record to increase efficiency of future troubleshooting. Support third party field technicians on installations/connectivity issues. Maintain detailed tickets to track issues.",
+        "highlights": [
+          "Troubleshoot all types of network and peripheral issues",
+          "Collect the specifications of each system"
+        ]
+      },
+      {
+        "name": "Retail Technology Group",
+        "position": "Support Analyst",
+        "url": null,
+        "startDate": "2015-02",
+        "endDate": "2015-08",
+        "summary": "Provide front-line technical support to end users on various software and hardware issues. Responsible for tracking, updating and responding to support tickets. Answer customer concerns via phone and email.",
+        "highlights": [
+          "Provide front-line technical support"
+        ]
+      }
+    ],
+    "volunteer": null,
+    "education": [
+      {
+        "institution": "Saint Louis Community College",
+        "url": null,
+        "area": "Information Technology",
+        "studyType": "A.A.S.",
+        "startDate": "August 2011",
+        "endDate": "May 2014",
+        "score": null,
+        "courses": null
+      }
+    ],
+    "awards": [],
+    "certificates": null,
+    "publications": null,
+    "skills": [
+      {
+        "name": "Service Desk",
+        "level": null,
+        "keywords": []
+      },
+      {
+        "name": "Desktop Support",
+        "level": null,
+        "keywords": []
+      },
+      {
+        "name": "Help Desk",
+        "level": null,
+        "keywords": []
+      },
+      {
+        "name": "Tech Support",
+        "level": null,
+        "keywords": []
+      },
+      {
+        "name": "Active Directory",
+        "level": null,
+        "keywords": []
+      }
+    ],
+    "languages": null,
+    "interests": null,
+    "references": null,
+    "projects": []
+  }
+}

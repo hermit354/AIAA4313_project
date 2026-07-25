@@ -1,0 +1,4 @@
+Evidence map for listed backend projects:
+- IssueFlow Lite links JWT login, request validation, PostgreSQL search, Docker Compose, migrations, and integration tests into one service workflow.
+- Queue Watch is operational tooling for Redis failure inspection, retry triage, CSV export, and alert-script follow-up.
+- Markdown Support Bot shows retrieval/API integration; note that evaluation is limited and should not be treated as production deployment.

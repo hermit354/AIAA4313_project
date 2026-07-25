@@ -1,0 +1,2 @@
+Position context note:
+For this backend intern screening task, the strongest relevance signals are API ownership, staging-release habits, database migration care, Redis operational debugging, test coverage, and monitoring/readiness documentation. Public open-source prestige is less important than reliable backend delivery evidence for this role.

@@ -1,0 +1,50 @@
+# Borderline Candidate 01
+fixture-borderline-01@example.test | Remote
+GitHub: https://github.com/fixture-borderline-01
+
+## Target Role
+Backend / API Software Intern
+
+## Summary
+Junior backend developer with about ten months of internship and campus project experience. Comfortable with Python APIs, SQL schemas, tests, and small deployment scripts. Has built several useful services, but most work is small-team or demo-scale rather than mature production ownership.
+
+## Work Experience
+Local SaaS Team | Backend Intern | 2025-01 - 2025-08
+- Added FastAPI endpoints for an internal admin panel and wrote pytest coverage for common request paths.
+- Implemented small PostgreSQL migration scripts and fixed validation bugs reported by support staff.
+- Used Docker Compose, GitHub pull requests, and basic log inspection during staging releases.
+- Did not own service architecture, on-call rotation, or long-term production maintenance.
+
+Campus Technology Office | Student Developer | 2024-06 - 2024-12
+- Helped maintain a small appointment booking tool used by one department.
+- Cleaned CSV imports, added form validation, and documented local setup steps for other student developers.
+
+## Projects
+IssueFlow Lite | https://github.com/fixture-borderline-01/issueflow-lite
+- Small issue-tracking API with JWT login, project labels, comments, and PostgreSQL-backed search.
+- Includes Docker Compose setup, migration notes, and a few integration tests.
+- Used by two classmates for a course team project, but not released as a public product.
+
+Queue Watch | https://github.com/fixture-borderline-01/queue-watch
+- Redis queue monitoring dashboard for inspecting failed jobs and retry counts.
+- Supports status filters, CSV export, and a lightweight alerting script.
+
+Markdown Support Bot | https://github.com/fixture-borderline-01/markdown-support-bot
+- Course prototype that answers questions from Markdown documentation using embeddings and a small FastAPI wrapper.
+- Useful demo, but evaluation is limited and there is no hosted production instance.
+
+SQL Migration Notes | https://github.com/fixture-borderline-01/sql-migrations-playground
+- Collection of migration examples, rollback notes, and seed-data scripts.
+
+## Technical Skills
+Programming languages: Python, SQL, JavaScript basics.
+Backend: FastAPI, Flask, REST APIs, Pydantic, JWT authentication.
+Databases and infrastructure: PostgreSQL, Redis, Docker Compose, Alembic basics.
+Testing and tools: pytest, Git, GitHub Actions basics, Linux shell, Postman.
+
+## Education
+Software engineering coursework | 2022 - 2026
+- Relevant topics: databases, web development, operating systems, software testing, algorithms.
+
+## Awards
+No major awards or open-source programs listed.

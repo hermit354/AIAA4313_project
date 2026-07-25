@@ -1,0 +1,32 @@
+# Alex Morgan
+alex.morgan@example.test | +1-555-0100 | Seattle, US
+
+## Summary
+Backend engineer with four years of experience building reliable web services and data pipelines. All names, contact details, employers, and project claims in this document are synthetic.
+
+## Work Experience
+Software Engineer, Northstar Analytics | January 2022 - Present
+- Built Python and FastAPI services processing 3 million events per day.
+- Reduced p95 API latency by 32 percent through query optimization and caching.
+- Added integration tests and deployment checks that reduced rollback frequency.
+
+Junior Software Engineer, Cedar Labs | June 2020 - December 2021
+- Maintained internal Django applications used by 120 employees.
+- Implemented monitoring dashboards and on-call runbooks.
+
+## Projects
+QueueScope | Python, PostgreSQL, Docker
+- Designed a local dashboard for inspecting failed background jobs and replaying test events.
+- Added role-based access controls, audit logging, and automated tests.
+
+StudySync | TypeScript, React, FastAPI
+- Built a study-group scheduling prototype with calendar conflict detection.
+
+## Skills
+Python, FastAPI, Django, PostgreSQL, Redis, Docker, GitHub Actions, TypeScript, React
+
+## Education
+Bachelor of Science in Computer Science, Example State University | 2016 - 2020
+
+## Awards
+Northstar Analytics Engineering Quality Award | 2024

@@ -1,0 +1,223 @@
+{
+  "candidate_id": "22456",
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/software_developer_sample_20/22456_Software_Developer.pdf",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "summary": {
+    "basics_present": true,
+    "name": "Technical problem solver",
+    "work_count": 3,
+    "education_count": 1,
+    "skills_count": 10,
+    "projects_count": 1,
+    "awards_count": 3,
+    "profile_count": 2,
+    "github_profiles": [
+      "https://github.com/OhioVR?tab=repositories"
+    ],
+    "full_core_pass": true
+  },
+  "resume": {
+    "basics": {
+      "name": "Technical problem solver",
+      "email": null,
+      "phone": null,
+      "url": null,
+      "summary": null,
+      "location": {
+        "address": null,
+        "postalCode": null,
+        "city": "Marion",
+        "countryCode": "US",
+        "region": null
+      },
+      "profiles": [
+        {
+          "network": "Stack Overflow",
+          "username": "ohiovr",
+          "url": "https://stackoverflow.com/users/1839484/ohiovr"
+        },
+        {
+          "network": "Portfolio",
+          "username": "OhioVR",
+          "url": "https://github.com/OhioVR?tab=repositories"
+        }
+      ]
+    },
+    "work": [
+      {
+        "name": "Literacysoft",
+        "position": "Software Developer",
+        "url": null,
+        "startDate": "January 2012",
+        "endDate": null,
+        "summary": "Developed the popular mobile App 'Phonics and Reading with McGuffey' under my own initiative. Achieved top category status in education with over 950k downloads between android and iOS app stores.",
+        "highlights": [
+          "Achieved top category status in education with over 950k downloads between android and iOS app stores",
+          "Currently researching Linux administration, containerization, and virtualization"
+        ]
+      },
+      {
+        "name": "PPG",
+        "position": "Technician II",
+        "url": null,
+        "startDate": "October 2009",
+        "endDate": null,
+        "summary": "Improved paint color formulation by 30% using computer based spectrophotometer tools. Made uncommon paint formations using iterative techniques even when the source was a non-paint derived color.",
+        "highlights": [
+          "Improved paint color formulation by 30% using computer based spectrophotometer tools",
+          "Our Team won a group award for best year in revenue and I personally won the company's bucket award for suggestions on process improvements"
+        ]
+      },
+      {
+        "name": "PPG Industries",
+        "position": "Technician I",
+        "url": null,
+        "startDate": "February 2007",
+        "endDate": null,
+        "summary": "Lab work focusing on preparing samples for a colorist to use for iterative formulation of automotive paint. Performed cleaning of utensils and maintaining lab according to 5S principles.",
+        "highlights": [
+          "Lab work focusing on preparing samples for a colorist to use for iterative formulation of automotive paint",
+          "Performed cleaning of utensils and maintaining lab according to 5S principles"
+        ]
+      }
+    ],
+    "volunteer": null,
+    "education": [
+      {
+        "institution": "Hocking College",
+        "url": null,
+        "area": "Electronics",
+        "studyType": "Associate",
+        "startDate": "1995-09",
+        "endDate": "1997-05",
+        "score": null,
+        "courses": null
+      }
+    ],
+    "awards": [
+      {
+        "title": "PPG Bucket Award",
+        "date": null,
+        "awarder": "PPG",
+        "summary": null
+      },
+      {
+        "title": "ACTV Pyramid Award",
+        "date": null,
+        "awarder": "ACTV",
+        "summary": null
+      },
+      {
+        "title": "Dean's List",
+        "date": null,
+        "awarder": "Hocking College",
+        "summary": null
+      }
+    ],
+    "certificates": null,
+    "publications": null,
+    "skills": [
+      {
+        "name": "Database Management",
+        "level": null,
+        "keywords": [
+          "MySQL"
+        ]
+      },
+      {
+        "name": "Mobile App Development",
+        "level": null,
+        "keywords": [
+          "Android",
+          "iOS"
+        ]
+      },
+      {
+        "name": "Programming Languages",
+        "level": null,
+        "keywords": [
+          "PHP",
+          "Javascript",
+          "Python",
+          "Java",
+          "C#"
+        ]
+      },
+      {
+        "name": "Operating Systems",
+        "level": null,
+        "keywords": [
+          "MacOS X",
+          "Linux",
+          "Ubuntu",
+          "Debian",
+          "Raspbian"
+        ]
+      },
+      {
+        "name": "Web Development",
+        "level": null,
+        "keywords": [
+          "HTML 5",
+          "CSS",
+          "Jquery",
+          "Ngnix"
+        ]
+      },
+      {
+        "name": "Virtualization",
+        "level": null,
+        "keywords": [
+          "Virtualization",
+          "Vmware"
+        ]
+      },
+      {
+        "name": "Containerization",
+        "level": null,
+        "keywords": [
+          "Docker"
+        ]
+      },
+      {
+        "name": "Game Development",
+        "level": null,
+        "keywords": [
+          "Unity 3D"
+        ]
+      },
+      {
+        "name": "Scripting Languages",
+        "level": null,
+        "keywords": [
+          "Bash",
+          "ECMAScript",
+          "Adobe AIR"
+        ]
+      },
+      {
+        "name": "Version Control",
+        "level": null,
+        "keywords": [
+          "Git"
+        ]
+      }
+    ],
+    "languages": null,
+    "interests": null,
+    "references": null,
+    "projects": [
+      {
+        "name": "Phonics and Reading with McGuffey",
+        "startDate": null,
+        "endDate": null,
+        "description": "",
+        "highlights": [],
+        "url": "https://play.google.com/store/apps/details?id=air.com.literacysoft.PhonicsAndReadingWithMcGuffeyLite&hl=en_US",
+        "technologies": [],
+        "skills": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,1517 @@
+{
+  "started_at": "2026-07-25T09:26:12.606285+00:00",
+  "model": "llama3.1:8b",
+  "schema_mode": "prompt_only",
+  "candidate_ids": [
+    "20734",
+    "21780",
+    "22456",
+    "22992",
+    "23030",
+    "23372"
+  ],
+  "rows": [
+    {
+      "candidate_id": "20734",
+      "ok": true,
+      "elapsed_sec": 12.040470361709595,
+      "summary": {
+        "work_count": 2,
+        "projects_count": 0,
+        "skills_count": 6,
+        "projects": [],
+        "skill_names": [
+          "Programming",
+          "Web Development",
+          "Design",
+          "Version Control",
+          "Email Templating",
+          "Scripting"
+        ],
+        "skill_keywords": [
+          "Java",
+          "C",
+          "Javascript",
+          "Angular",
+          "HTML",
+          "CSS",
+          "SASS",
+          "Redux",
+          "Ramda",
+          "GIMP",
+          "Web Design",
+          "Git",
+          "Email Templating",
+          "Python",
+          "Scratch"
+        ],
+        "work_summaries": [
+          {
+            "name": "360 View",
+            "position": "Software Developer",
+            "summary": "Mentor kidOYO - Stony Brook, NY Graduated from Stony Brook University with a B.S. in computer science and psychology and am a front-end developer with experience using AngularJS, Angular 2+, Typescript and HTML/CSS (SASS) with Redux and Ramda Authorized to work in the US for any employer",
+            "highlights": [
+              "Developed and delivered engaging lectures to students under the age of 17 using Scratch and Python",
+              "Improved student's logic skills by introducing them to Scratch, Python, and web development",
+              "Led a collaborative workshop for primary school teachers looking to further their technological skills",
+              "Planned, evaluated and revised course content and course materials with my boss",
+              "Promoted girls in the STEAM field by introducing Girl Scouts to Makey Makey"
+            ]
+          },
+          {
+            "name": "Mentor kidOYO",
+            "position": "Junior Front End Developer",
+            "summary": "Developed and delivered engaging lectures to students under the age of 17 using Scratch and Python Improved student's logic skills by introducing them to Scratch, Python, and web development Led a collaborative workshop for primary school teachers looking to further their technological skills Planned, evaluated and revised course content and course materials with my boss Promoted girls in the STEAM field by introducing Girl Scouts to Makey Makey",
+            "highlights": [
+              "Developed and delivered engaging lectures to students under the age of 17 using Scratch and Python",
+              "Improved student's logic skills by introducing them to Scratch, Python, and web development",
+              "Led a collaborative workshop for primary school teachers looking to further their technological skills",
+              "Planned, evaluated and revised course content and course materials with my boss",
+              "Promoted girls in the STEAM field by introducing Girl Scouts to Makey Makey"
+            ]
+          }
+        ]
+      },
+      "resume": {
+        "basics": {
+          "name": "Marisa DePasquale",
+          "email": null,
+          "phone": null,
+          "url": "http://marisade.github.io",
+          "summary": null,
+          "location": {
+            "address": null,
+            "postalCode": null,
+            "city": "New York",
+            "countryCode": "US",
+            "region": null
+          },
+          "profiles": [
+            {
+              "network": "GitHub",
+              "username": "MarisaDe",
+              "url": "https://github.com/MarisaDe"
+            },
+            {
+              "network": "LinkedIn",
+              "username": "marisa-depasquale-23709784",
+              "url": "https://www.linkedin.com/in/marisa-depasquale-23709784/"
+            },
+            {
+              "network": "GitHub",
+              "username": "MarisaDe",
+              "url": "https://github.com/MarisaDe"
+            },
+            {
+              "network": "Portfolio",
+              "username": null,
+              "url": "http://marisade.github.io"
+            }
+          ]
+        },
+        "work": [
+          {
+            "name": "360 View",
+            "position": "Software Developer",
+            "url": null,
+            "startDate": "2018-02",
+            "endDate": "Present",
+            "summary": "Mentor kidOYO - Stony Brook, NY Graduated from Stony Brook University with a B.S. in computer science and psychology and am a front-end developer with experience using AngularJS, Angular 2+, Typescript and HTML/CSS (SASS) with Redux and Ramda Authorized to work in the US for any employer",
+            "highlights": [
+              "Developed and delivered engaging lectures to students under the age of 17 using Scratch and Python",
+              "Improved student's logic skills by introducing them to Scratch, Python, and web development",
+              "Led a collaborative workshop for primary school teachers looking to further their technological skills",
+              "Planned, evaluated and revised course content and course materials with my boss",
+              "Promoted girls in the STEAM field by introducing Girl Scouts to Makey Makey"
+            ]
+          },
+          {
+            "name": "Mentor kidOYO",
+            "position": "Junior Front End Developer",
+            "url": null,
+            "startDate": "2015-09",
+            "endDate": "Present",
+            "summary": "Developed and delivered engaging lectures to students under the age of 17 using Scratch and Python Improved student's logic skills by introducing them to Scratch, Python, and web development Led a collaborative workshop for primary school teachers looking to further their technological skills Planned, evaluated and revised course content and course materials with my boss Promoted girls in the STEAM field by introducing Girl Scouts to Makey Makey",
+            "highlights": [
+              "Developed and delivered engaging lectures to students under the age of 17 using Scratch and Python",
+              "Improved student's logic skills by introducing them to Scratch, Python, and web development",
+              "Led a collaborative workshop for primary school teachers looking to further their technological skills",
+              "Planned, evaluated and revised course content and course materials with my boss",
+              "Promoted girls in the STEAM field by introducing Girl Scouts to Makey Makey"
+            ]
+          }
+        ],
+        "volunteer": null,
+        "education": [
+          {
+            "institution": "Stony Brook University",
+            "url": null,
+            "area": "Computer Science and Psychology",
+            "studyType": "Bachelors of Science",
+            "startDate": "September 2014",
+            "endDate": "December 2017",
+            "score": null,
+            "courses": null
+          }
+        ],
+        "awards": [
+          {
+            "title": "Joseph Jacobson Memorial Scholarship",
+            "date": null,
+            "awarder": "",
+            "summary": null
+          }
+        ],
+        "certificates": null,
+        "publications": null,
+        "skills": [
+          {
+            "name": "Programming",
+            "level": null,
+            "keywords": [
+              "Java",
+              "C",
+              "Javascript"
+            ]
+          },
+          {
+            "name": "Web Development",
+            "level": null,
+            "keywords": [
+              "Angular",
+              "HTML",
+              "CSS",
+              "SASS",
+              "Redux",
+              "Ramda"
+            ]
+          },
+          {
+            "name": "Design",
+            "level": null,
+            "keywords": [
+              "GIMP",
+              "Web Design"
+            ]
+          },
+          {
+            "name": "Version Control",
+            "level": null,
+            "keywords": [
+              "Git"
+            ]
+          },
+          {
+            "name": "Email Templating",
+            "level": null,
+            "keywords": [
+              "Email Templating"
+            ]
+          },
+          {
+            "name": "Scripting",
+            "level": null,
+            "keywords": [
+              "Python",
+              "Scratch"
+            ]
+          }
+        ],
+        "languages": null,
+        "interests": null,
+        "references": null,
+        "projects": []
+      }
+    },
+    {
+      "candidate_id": "21780",
+      "ok": true,
+      "elapsed_sec": 9.922203302383423,
+      "summary": {
+        "work_count": 2,
+        "projects_count": 0,
+        "skills_count": 4,
+        "projects": [],
+        "skill_names": [
+          "Front-end technologies",
+          "Back-end technologies",
+          "Development tools",
+          "Methodologies"
+        ],
+        "skill_keywords": [
+          "HTML5",
+          "CSS3",
+          "Bootstrap",
+          "JavaScript",
+          "jQuery",
+          "AngularJS",
+          "AJAX",
+          "JSON",
+          "C#",
+          "LINQ",
+          "ASP.NET",
+          "Web Forms",
+          "Web API",
+          "REST API",
+          "T-SQL",
+          "Visual Studio",
+          "SQL Server",
+          "TFS",
+          "MVC5",
+          "PHP",
+          "ReactJS",
+          "Objective-C",
+          "Swift",
+          "Xcode",
+          "iOS",
+          "Git",
+          "GitHub",
+          "CLI",
+          "Agile",
+          "Scrum"
+        ],
+        "work_summaries": [
+          {
+            "name": "Pangea",
+            "position": "Software Developer",
+            "summary": "Develop key new user-facing features for flagship B2B SaaS web-application. Produce secure, readable, extensible code in a high-pressure, business-critical environment.",
+            "highlights": [
+              "Optimize existing code-base to improve run-time and page-load speeds by up to 43% faster perf",
+              "Build entire new web pages from top to bottom- frontend HTML, CSS and JavaScript through backend SQL data channels",
+              "Design complex yet efficient client-side operations via ASP.NET C# and AJAX to minimize trips to server and enhance User Experience",
+              "Swiftly respond to, investigate and solve bug reports, often starting with minimal bug reporting",
+              "Manage development team's specs, progress and code accuracy"
+            ]
+          },
+          {
+            "name": "Datalus",
+            "position": "Software Developer",
+            "summary": "Worked closely in fast-paced agile development team to prototype client's web-app.",
+            "highlights": [
+              "Swiftly grasped and optimized team conventions to design re-usable code schemes that became team blueprint",
+              "Successfully implemented frameworks such as Bootstrap and AngularJS to create highly interactive and responsive web-pages"
+            ]
+          }
+        ]
+      },
+      "resume": {
+        "basics": {
+          "name": "Pangea",
+          "email": null,
+          "phone": null,
+          "url": null,
+          "summary": null,
+          "location": {
+            "address": null,
+            "postalCode": null,
+            "city": "Long Beach",
+            "countryCode": "CA",
+            "region": null
+          },
+          "profiles": []
+        },
+        "work": [
+          {
+            "name": "Pangea",
+            "position": "Software Developer",
+            "url": null,
+            "startDate": "2016-03",
+            "endDate": "Present",
+            "summary": "Develop key new user-facing features for flagship B2B SaaS web-application. Produce secure, readable, extensible code in a high-pressure, business-critical environment.",
+            "highlights": [
+              "Optimize existing code-base to improve run-time and page-load speeds by up to 43% faster perf",
+              "Build entire new web pages from top to bottom- frontend HTML, CSS and JavaScript through backend SQL data channels",
+              "Design complex yet efficient client-side operations via ASP.NET C# and AJAX to minimize trips to server and enhance User Experience",
+              "Swiftly respond to, investigate and solve bug reports, often starting with minimal bug reporting",
+              "Manage development team's specs, progress and code accuracy"
+            ]
+          },
+          {
+            "name": "Datalus",
+            "position": "Software Developer",
+            "url": null,
+            "startDate": "2015-09",
+            "endDate": "2016-03",
+            "summary": "Worked closely in fast-paced agile development team to prototype client's web-app.",
+            "highlights": [
+              "Swiftly grasped and optimized team conventions to design re-usable code schemes that became team blueprint",
+              "Successfully implemented frameworks such as Bootstrap and AngularJS to create highly interactive and responsive web-pages"
+            ]
+          }
+        ],
+        "volunteer": null,
+        "education": [
+          {
+            "institution": "Rio Hondo College",
+            "url": null,
+            "area": "",
+            "studyType": "",
+            "startDate": "March 2010",
+            "endDate": "October 2012",
+            "score": "",
+            "courses": null
+          }
+        ],
+        "awards": [],
+        "certificates": null,
+        "publications": null,
+        "skills": [
+          {
+            "name": "Front-end technologies",
+            "level": null,
+            "keywords": [
+              "HTML5",
+              "CSS3",
+              "Bootstrap",
+              "JavaScript",
+              "jQuery",
+              "AngularJS",
+              "AJAX",
+              "JSON"
+            ]
+          },
+          {
+            "name": "Back-end technologies",
+            "level": null,
+            "keywords": [
+              "C#",
+              "LINQ",
+              "ASP.NET",
+              "Web Forms",
+              "Web API",
+              "REST API",
+              "T-SQL"
+            ]
+          },
+          {
+            "name": "Development tools",
+            "level": null,
+            "keywords": [
+              "Visual Studio",
+              "SQL Server",
+              "TFS",
+              "MVC5",
+              "PHP",
+              "ReactJS",
+              "Objective-C",
+              "Swift",
+              "Xcode",
+              "iOS",
+              "Git",
+              "GitHub",
+              "CLI"
+            ]
+          },
+          {
+            "name": "Methodologies",
+            "level": null,
+            "keywords": [
+              "Agile",
+              "Scrum"
+            ]
+          }
+        ],
+        "languages": null,
+        "interests": null,
+        "references": null,
+        "projects": []
+      }
+    },
+    {
+      "candidate_id": "22456",
+      "ok": true,
+      "elapsed_sec": 13.426276206970215,
+      "summary": {
+        "work_count": 3,
+        "projects_count": 1,
+        "skills_count": 6,
+        "projects": [
+          {
+            "name": "Phonics and Reading with McGuffey",
+            "description": "",
+            "url": "https://play.google.com/store/apps/details?id=air.com.literacysoft.PhonicsAndReadingWithMcGuffeyLite&hl=en_US",
+            "technologies": [],
+            "skills": []
+          }
+        ],
+        "skill_names": [
+          "Programming Languages",
+          "Operating Systems",
+          "Development Tools",
+          "Frameworks and Libraries",
+          "Database Management",
+          "Virtualization and Containerization"
+        ],
+        "skill_keywords": [
+          "MySQL",
+          "PHP",
+          "Javascript",
+          "Python",
+          "Java",
+          "C#",
+          "MacOS X",
+          "Linux",
+          "Ubuntu",
+          "Debian",
+          "Raspbian",
+          "Android",
+          "iOS",
+          "Swift",
+          "Jquery",
+          "Bash",
+          "Ngnix",
+          "Docker",
+          "Git",
+          "Vmware",
+          "HTML 5",
+          "CSS",
+          "Unity 3D",
+          "Shockwave Flash",
+          "ECMAScript",
+          "Adobe AIR",
+          "MySQL",
+          "Linux Administrator",
+          "Virtualization",
+          "Containerization"
+        ],
+        "work_summaries": [
+          {
+            "name": "Literacysoft",
+            "position": "Software Developer",
+            "summary": "Developed the popular mobile App 'Phonics and Reading with McGuffey' under my own initiative. Achieved top category status in education with over 950k downloads between android and iOS app stores.",
+            "highlights": [
+              "Developed the popular mobile App 'Phonics and Reading with McGuffey'",
+              "Achieved top category status in education with over 950k downloads",
+              "Currently researching Linux administration, containerization, and virtualization",
+              "Focus on repeatability, security, and ease of use my deployment tools"
+            ]
+          },
+          {
+            "name": "PPG",
+            "position": "Technician II",
+            "summary": "Improved paint color formulation by 30% using computer based spectrophotometer tools. Made uncommon paint formations using iterative techniques even when the source was a non-paint derived color.",
+            "highlights": [
+              "Improved paint color formulation by 30%",
+              "Made uncommon paint formations using iterative techniques"
+            ]
+          },
+          {
+            "name": "PPG Industries",
+            "position": "Technician I",
+            "summary": "Lab work focusing on preparing samples for a colorist to use for iterative formulation of automotive paint. Performed cleaning of utensils and maintaining lab according to 5S principles.",
+            "highlights": [
+              "Lab work focusing on preparing samples for a colorist",
+              "Performed cleaning of utensils and maintaining lab according to 5S principles"
+            ]
+          }
+        ]
+      },
+      "resume": {
+        "basics": {
+          "name": "OhioVR",
+          "email": null,
+          "phone": null,
+          "url": null,
+          "summary": null,
+          "location": {
+            "address": null,
+            "postalCode": null,
+            "city": "Marion",
+            "countryCode": "US",
+            "region": null
+          },
+          "profiles": [
+            {
+              "network": "Stack Overflow",
+              "username": "ohiovr",
+              "url": "https://stackoverflow.com/users/1839484/ohiovr"
+            },
+            {
+              "network": "GitHub",
+              "username": "OhioVR",
+              "url": "https://github.com/OhioVR?tab=repositories"
+            },
+            {
+              "network": "YouTube",
+              "username": null,
+              "url": "https://youtu.be/oCKpYrmDbV4"
+            },
+            {
+              "network": "GitHub",
+              "username": "OhioVR",
+              "url": "https://github.com/OhioVR?tab=repositories"
+            }
+          ]
+        },
+        "work": [
+          {
+            "name": "Literacysoft",
+            "position": "Software Developer",
+            "url": null,
+            "startDate": "January 2012",
+            "endDate": null,
+            "summary": "Developed the popular mobile App 'Phonics and Reading with McGuffey' under my own initiative. Achieved top category status in education with over 950k downloads between android and iOS app stores.",
+            "highlights": [
+              "Developed the popular mobile App 'Phonics and Reading with McGuffey'",
+              "Achieved top category status in education with over 950k downloads",
+              "Currently researching Linux administration, containerization, and virtualization",
+              "Focus on repeatability, security, and ease of use my deployment tools"
+            ]
+          },
+          {
+            "name": "PPG",
+            "position": "Technician II",
+            "url": null,
+            "startDate": "October 2009",
+            "endDate": null,
+            "summary": "Improved paint color formulation by 30% using computer based spectrophotometer tools. Made uncommon paint formations using iterative techniques even when the source was a non-paint derived color.",
+            "highlights": [
+              "Improved paint color formulation by 30%",
+              "Made uncommon paint formations using iterative techniques"
+            ]
+          },
+          {
+            "name": "PPG Industries",
+            "position": "Technician I",
+            "url": null,
+            "startDate": "February 2007",
+            "endDate": null,
+            "summary": "Lab work focusing on preparing samples for a colorist to use for iterative formulation of automotive paint. Performed cleaning of utensils and maintaining lab according to 5S principles.",
+            "highlights": [
+              "Lab work focusing on preparing samples for a colorist",
+              "Performed cleaning of utensils and maintaining lab according to 5S principles"
+            ]
+          }
+        ],
+        "volunteer": null,
+        "education": [
+          {
+            "institution": "Hocking College",
+            "url": null,
+            "area": "Electronics",
+            "studyType": "Associate",
+            "startDate": "1995-09",
+            "endDate": "1997-05",
+            "score": null,
+            "courses": null
+          }
+        ],
+        "awards": [
+          {
+            "title": "PPG Bucket Award",
+            "date": null,
+            "awarder": "PPG",
+            "summary": null
+          },
+          {
+            "title": "ACTV Pyramid Award",
+            "date": null,
+            "awarder": "ACTV",
+            "summary": null
+          },
+          {
+            "title": "Dean's List",
+            "date": null,
+            "awarder": "Hocking College",
+            "summary": null
+          }
+        ],
+        "certificates": null,
+        "publications": null,
+        "skills": [
+          {
+            "name": "Programming Languages",
+            "level": null,
+            "keywords": [
+              "MySQL",
+              "PHP",
+              "Javascript",
+              "Python",
+              "Java",
+              "C#"
+            ]
+          },
+          {
+            "name": "Operating Systems",
+            "level": null,
+            "keywords": [
+              "MacOS X",
+              "Linux",
+              "Ubuntu",
+              "Debian",
+              "Raspbian"
+            ]
+          },
+          {
+            "name": "Development Tools",
+            "level": null,
+            "keywords": [
+              "Android",
+              "iOS",
+              "Swift",
+              "Jquery",
+              "Bash",
+              "Ngnix",
+              "Docker",
+              "Git",
+              "Vmware"
+            ]
+          },
+          {
+            "name": "Frameworks and Libraries",
+            "level": null,
+            "keywords": [
+              "HTML 5",
+              "CSS",
+              "Unity 3D",
+              "Shockwave Flash",
+              "ECMAScript",
+              "Adobe AIR"
+            ]
+          },
+          {
+            "name": "Database Management",
+            "level": null,
+            "keywords": [
+              "MySQL"
+            ]
+          },
+          {
+            "name": "Virtualization and Containerization",
+            "level": null,
+            "keywords": [
+              "Linux Administrator",
+              "Virtualization",
+              "Containerization"
+            ]
+          }
+        ],
+        "languages": null,
+        "interests": null,
+        "references": null,
+        "projects": [
+          {
+            "name": "Phonics and Reading with McGuffey",
+            "startDate": null,
+            "endDate": null,
+            "description": "",
+            "highlights": [],
+            "url": "https://play.google.com/store/apps/details?id=air.com.literacysoft.PhonicsAndReadingWithMcGuffeyLite&hl=en_US",
+            "technologies": [],
+            "skills": []
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "22992",
+      "ok": true,
+      "elapsed_sec": 13.555448532104492,
+      "summary": {
+        "work_count": 3,
+        "projects_count": 3,
+        "skills_count": 7,
+        "projects": [
+          {
+            "name": "UHIP-State of Rhode Island: Integrated Eligibility Systems",
+            "description": "Worked on the Software and Database components of State of Rhode Island Service Web portal that identified Individual or household Eligibility for government benefits using Java, Oracle and Rules Engine.",
+            "url": "",
+            "technologies": [
+              "Java",
+              "Oracle"
+            ],
+            "skills": [
+              "Java",
+              "Oracle"
+            ]
+          },
+          {
+            "name": "Discover Financial Services: Core Banking Application ATLAS(DSL)",
+            "description": "Developed Discover Student Loan UI screens for the Banking application, made code enhancements, and bug fixing of various defects that arose in the application post production. The project was done using SWT following MVP architecture.",
+            "url": "",
+            "technologies": [
+              "SWT",
+              "MVP"
+            ],
+            "skills": [
+              "SWT",
+              "MVP"
+            ]
+          },
+          {
+            "name": "Discover Financial Services: Core Banking Application ATLAS(DPL)",
+            "description": "Developed Core Banking Back Office CRM application using Java (MVP Framework), integrated backend service using RESTful webservice to consume data from 3rd party banking product (Finacle).",
+            "url": "",
+            "technologies": [
+              "Java",
+              "RESTful"
+            ],
+            "skills": [
+              "Java",
+              "RESTful"
+            ]
+          }
+        ],
+        "skill_names": [
+          "Java",
+          "Oracle",
+          "Rules Engine",
+          "SWT",
+          "MVP architecture",
+          "RESTful webservice",
+          "Finacle"
+        ],
+        "skill_keywords": [
+          "Java",
+          "Oracle",
+          "Rules Engine",
+          "SWT",
+          "MVP architecture",
+          "RESTful webservice",
+          "Finacle"
+        ],
+        "work_summaries": [
+          {
+            "name": "Deloitte",
+            "position": "SOFTWARE DEVELOPER",
+            "summary": "Worked on the Software and Database components of State of Rhode Island Service Web portal that identified Individual or household Eligibility for government benefits using Java, Oracle and Rules Engine.",
+            "highlights": [
+              "75% reduction in defect inflow by analyzing the root cause of the defect and providing bug fixes in the existing modules",
+              "Contributed to all the stages of software development from design hands off to implementation, enhancements and testing",
+              "Developed Technical Design Documents from the requirements which included Sequence Diagram, UML diagrams and Class diagrams"
+            ]
+          },
+          {
+            "name": "Capgemini",
+            "position": "SOFTWARE ENGINEER II",
+            "summary": "Developed Discover Student Loan UI screens for the Banking application, made code enhancements, and bug fixing of various defects that arose in the application post production.",
+            "highlights": [
+              "Proactively created a batch script to automate reports to find delinquent/fraud accounts which reduced manual data extraction by 80%",
+              "Was responsible for end to end delivery of CRs (Change Request/New features) by client"
+            ]
+          },
+          {
+            "name": "Capgemini",
+            "position": "SOFTWARE ENGINEER",
+            "summary": "Developed Core Banking Back Office CRM application using Java (MVP Framework), integrated backend service using RESTful webservice to consume data from 3rd party banking product (Finacle).",
+            "highlights": [
+              "Online customers had to request for verification each time they wanted to see their statement details. I developed a feature to retrieve and view statements in a .pdf format for correspondence module.",
+              "Performed requirement gathering and analysis, design, coding, testing, performance tuning, reviews etc. Well versed with software development lifecycle (Waterfall Model, Agile methodologies)"
+            ]
+          }
+        ]
+      },
+      "resume": {
+        "basics": {
+          "name": "Deepa Choudhary",
+          "email": null,
+          "phone": null,
+          "url": null,
+          "summary": null,
+          "location": {
+            "address": null,
+            "postalCode": null,
+            "city": "San Francisco Bay Area",
+            "countryCode": "CA",
+            "region": null
+          },
+          "profiles": [
+            {
+              "network": "GitHub",
+              "username": "deepcie",
+              "url": "https://github.com/deepcie"
+            },
+            {
+              "network": "LinkedIn",
+              "username": "deepachoudhary1",
+              "url": "http://www.linkedin.com/in/deepachoudhary1"
+            },
+            {
+              "network": "Portfolio",
+              "username": null,
+              "url": "https://github.com/deepcie/deepa"
+            }
+          ]
+        },
+        "work": [
+          {
+            "name": "Deloitte",
+            "position": "SOFTWARE DEVELOPER",
+            "url": null,
+            "startDate": "2017-07",
+            "endDate": "2018-08",
+            "summary": "Worked on the Software and Database components of State of Rhode Island Service Web portal that identified Individual or household Eligibility for government benefits using Java, Oracle and Rules Engine.",
+            "highlights": [
+              "75% reduction in defect inflow by analyzing the root cause of the defect and providing bug fixes in the existing modules",
+              "Contributed to all the stages of software development from design hands off to implementation, enhancements and testing",
+              "Developed Technical Design Documents from the requirements which included Sequence Diagram, UML diagrams and Class diagrams"
+            ]
+          },
+          {
+            "name": "Capgemini",
+            "position": "SOFTWARE ENGINEER II",
+            "url": null,
+            "startDate": "2015-12",
+            "endDate": "2017-06",
+            "summary": "Developed Discover Student Loan UI screens for the Banking application, made code enhancements, and bug fixing of various defects that arose in the application post production.",
+            "highlights": [
+              "Proactively created a batch script to automate reports to find delinquent/fraud accounts which reduced manual data extraction by 80%",
+              "Was responsible for end to end delivery of CRs (Change Request/New features) by client"
+            ]
+          },
+          {
+            "name": "Capgemini",
+            "position": "SOFTWARE ENGINEER",
+            "url": null,
+            "startDate": "2014-08",
+            "endDate": "2015-11",
+            "summary": "Developed Core Banking Back Office CRM application using Java (MVP Framework), integrated backend service using RESTful webservice to consume data from 3rd party banking product (Finacle).",
+            "highlights": [
+              "Online customers had to request for verification each time they wanted to see their statement details. I developed a feature to retrieve and view statements in a .pdf format for correspondence module.",
+              "Performed requirement gathering and analysis, design, coding, testing, performance tuning, reviews etc. Well versed with software development lifecycle (Waterfall Model, Agile methodologies)"
+            ]
+          }
+        ],
+        "volunteer": null,
+        "education": [
+          {
+            "institution": "Santa Clara University",
+            "url": null,
+            "area": "Science and Engineering",
+            "studyType": "Master's",
+            "startDate": "September 2018",
+            "endDate": "Present",
+            "score": null,
+            "courses": null
+          }
+        ],
+        "awards": [],
+        "certificates": null,
+        "publications": null,
+        "skills": [
+          {
+            "name": "Java",
+            "level": null,
+            "keywords": [
+              "Java"
+            ]
+          },
+          {
+            "name": "Oracle",
+            "level": null,
+            "keywords": [
+              "Oracle"
+            ]
+          },
+          {
+            "name": "Rules Engine",
+            "level": null,
+            "keywords": [
+              "Rules Engine"
+            ]
+          },
+          {
+            "name": "SWT",
+            "level": null,
+            "keywords": [
+              "SWT"
+            ]
+          },
+          {
+            "name": "MVP architecture",
+            "level": null,
+            "keywords": [
+              "MVP architecture"
+            ]
+          },
+          {
+            "name": "RESTful webservice",
+            "level": null,
+            "keywords": [
+              "RESTful webservice"
+            ]
+          },
+          {
+            "name": "Finacle",
+            "level": null,
+            "keywords": [
+              "Finacle"
+            ]
+          }
+        ],
+        "languages": null,
+        "interests": null,
+        "references": null,
+        "projects": [
+          {
+            "name": "UHIP-State of Rhode Island: Integrated Eligibility Systems",
+            "startDate": null,
+            "endDate": null,
+            "description": "Worked on the Software and Database components of State of Rhode Island Service Web portal that identified Individual or household Eligibility for government benefits using Java, Oracle and Rules Engine.",
+            "highlights": [],
+            "url": "",
+            "technologies": [
+              "Java",
+              "Oracle"
+            ],
+            "skills": [
+              "Java",
+              "Oracle"
+            ]
+          },
+          {
+            "name": "Discover Financial Services: Core Banking Application ATLAS(DSL)",
+            "startDate": null,
+            "endDate": null,
+            "description": "Developed Discover Student Loan UI screens for the Banking application, made code enhancements, and bug fixing of various defects that arose in the application post production. The project was done using SWT following MVP architecture.",
+            "highlights": [],
+            "url": "",
+            "technologies": [
+              "SWT",
+              "MVP"
+            ],
+            "skills": [
+              "SWT",
+              "MVP"
+            ]
+          },
+          {
+            "name": "Discover Financial Services: Core Banking Application ATLAS(DPL)",
+            "startDate": null,
+            "endDate": null,
+            "description": "Developed Core Banking Back Office CRM application using Java (MVP Framework), integrated backend service using RESTful webservice to consume data from 3rd party banking product (Finacle).",
+            "highlights": [],
+            "url": "",
+            "technologies": [
+              "Java",
+              "RESTful"
+            ],
+            "skills": [
+              "Java",
+              "RESTful"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "23030",
+      "ok": true,
+      "elapsed_sec": 9.509157657623291,
+      "summary": {
+        "work_count": 3,
+        "projects_count": 0,
+        "skills_count": 5,
+        "projects": [],
+        "skill_names": [
+          "Service Desk",
+          "Desktop Support",
+          "Help Desk",
+          "Tech Support",
+          "Active Directory"
+        ],
+        "skill_keywords": [],
+        "work_summaries": [
+          {
+            "name": "Clearent",
+            "position": "Software Developer",
+            "summary": "Administer and maintain systems support for software, hardware and servers: test, troubleshoot, diagnose, and resolve issues. Assist with PowerShell scripting for production automation efforts utilizing Visual Studio Code and Git.",
+            "highlights": [
+              "Troubleshoot and resolve system issues",
+              "Develop software using agile methodology",
+              "Use TDD extensively",
+              "Work with latest .NET frameworks"
+            ]
+          },
+          {
+            "name": "MasterCard",
+            "position": "Network Technician",
+            "summary": "Troubleshoot all types of network and peripheral issues. Collect the specifications of each system and maintain a record to increase efficiency of future troubleshooting.",
+            "highlights": [
+              "Troubleshoot network and peripheral issues",
+              "Collect and maintain system specifications"
+            ]
+          },
+          {
+            "name": "Retail Technology Group",
+            "position": "Support Analyst",
+            "summary": "Provide front-line technical support to end users on various software and hardware issues. Responsible for tracking, updating and responding to support tickets.",
+            "highlights": [
+              "Provide technical support to end users",
+              "Track and respond to support tickets"
+            ]
+          }
+        ]
+      },
+      "resume": {
+        "basics": {
+          "name": "Ashley Hudgens",
+          "email": null,
+          "phone": null,
+          "url": null,
+          "summary": null,
+          "location": {
+            "address": null,
+            "postalCode": null,
+            "city": "Saint Peters",
+            "countryCode": "MO",
+            "region": null
+          },
+          "profiles": [
+            {
+              "network": "GitHub",
+              "username": "ashleyhudgens",
+              "url": "https://github.com/ashleyhudgens"
+            }
+          ]
+        },
+        "work": [
+          {
+            "name": "Clearent",
+            "position": "Software Developer",
+            "url": null,
+            "startDate": "2016-12",
+            "endDate": "Present",
+            "summary": "Administer and maintain systems support for software, hardware and servers: test, troubleshoot, diagnose, and resolve issues. Assist with PowerShell scripting for production automation efforts utilizing Visual Studio Code and Git.",
+            "highlights": [
+              "Troubleshoot and resolve system issues",
+              "Develop software using agile methodology",
+              "Use TDD extensively",
+              "Work with latest .NET frameworks"
+            ]
+          },
+          {
+            "name": "MasterCard",
+            "position": "Network Technician",
+            "url": null,
+            "startDate": "2015-08",
+            "endDate": "2015-08",
+            "summary": "Troubleshoot all types of network and peripheral issues. Collect the specifications of each system and maintain a record to increase efficiency of future troubleshooting.",
+            "highlights": [
+              "Troubleshoot network and peripheral issues",
+              "Collect and maintain system specifications"
+            ]
+          },
+          {
+            "name": "Retail Technology Group",
+            "position": "Support Analyst",
+            "url": null,
+            "startDate": "2015-02",
+            "endDate": "2015-08",
+            "summary": "Provide front-line technical support to end users on various software and hardware issues. Responsible for tracking, updating and responding to support tickets.",
+            "highlights": [
+              "Provide technical support to end users",
+              "Track and respond to support tickets"
+            ]
+          }
+        ],
+        "volunteer": null,
+        "education": [
+          {
+            "institution": "Saint Louis Community College",
+            "url": null,
+            "area": "Information Technology",
+            "studyType": "A.A.S.",
+            "startDate": "August 2011",
+            "endDate": "May 2014",
+            "score": null,
+            "courses": null
+          }
+        ],
+        "awards": [],
+        "certificates": null,
+        "publications": null,
+        "skills": [
+          {
+            "name": "Service Desk",
+            "level": null,
+            "keywords": []
+          },
+          {
+            "name": "Desktop Support",
+            "level": null,
+            "keywords": []
+          },
+          {
+            "name": "Help Desk",
+            "level": null,
+            "keywords": []
+          },
+          {
+            "name": "Tech Support",
+            "level": null,
+            "keywords": []
+          },
+          {
+            "name": "Active Directory",
+            "level": null,
+            "keywords": []
+          }
+        ],
+        "languages": null,
+        "interests": null,
+        "references": null,
+        "projects": []
+      }
+    },
+    {
+      "candidate_id": "23372",
+      "ok": true,
+      "elapsed_sec": 11.359158992767334,
+      "summary": {
+        "work_count": 4,
+        "projects_count": 3,
+        "skills_count": 5,
+        "projects": [
+          {
+            "name": "Web application",
+            "description": "Designed and developed the web application reflecting the organization's image.",
+            "url": "",
+            "technologies": [
+              "Javascript",
+              "MYSQL",
+              "Git",
+              "CSS",
+              "ASP",
+              "Jquery",
+              "HTML 5"
+            ],
+            "skills": [
+              "Javascript",
+              "MYSQL",
+              "Git",
+              "CSS",
+              "ASP",
+              "Jquery",
+              "HTML 5"
+            ]
+          },
+          {
+            "name": "Project from ground up",
+            "description": "Built project from the ground up accurately based on clients' demands.",
+            "url": "",
+            "technologies": [
+              "Javascript",
+              "MYSQL",
+              "Git",
+              "CSS",
+              "ASP",
+              "Jquery",
+              "HTML 5"
+            ],
+            "skills": [
+              "Javascript",
+              "MYSQL",
+              "Git",
+              "CSS",
+              "ASP",
+              "Jquery",
+              "HTML 5"
+            ]
+          },
+          {
+            "name": "Web development project",
+            "description": "Debugged and solved fatal errors in the application. Integrated ads to produce unprecedented revenue for the client.",
+            "url": "",
+            "technologies": [
+              "Javascript",
+              "MYSQL",
+              "Git",
+              "CSS",
+              "ASP",
+              "Jquery",
+              "HTML 5"
+            ],
+            "skills": [
+              "Javascript",
+              "MYSQL",
+              "Git",
+              "CSS",
+              "ASP",
+              "Jquery",
+              "HTML 5"
+            ]
+          }
+        ],
+        "skill_names": [
+          "Web Development",
+          "Database Management",
+          "Version Control",
+          "Mobile App Development",
+          "Server-Side Programming"
+        ],
+        "skill_keywords": [
+          "HTML 5",
+          "CSS",
+          "Jquery",
+          "Javascript",
+          "MYSQL",
+          "Git",
+          "Android",
+          "ASP"
+        ],
+        "work_summaries": [
+          {
+            "name": "Freelance/Contractor",
+            "position": "Software Developer",
+            "summary": "Designed and developed the web application reflecting the organization's image. Maintained a simple UI while also applying a unique design.",
+            "highlights": [
+              "Web application development",
+              "Unique design implementation"
+            ]
+          },
+          {
+            "name": "Freelance/Contractor",
+            "position": "Software Developer",
+            "summary": "Built project from the ground up accurately based on clients' demands. Increased application running efficiency by 75% by reducing CPU intensive methods and applying other optimizing code.",
+            "highlights": [
+              "Project development from scratch",
+              "Efficiency improvement (75%)"
+            ]
+          },
+          {
+            "name": "Camillus House",
+            "position": "Residential Assistant",
+            "summary": "Assist homeless, addicts, mentally ill, and traumatized clients in rebuilding their lives. Provide clients with any daily supplies they need.",
+            "highlights": [
+              "Client support and assistance",
+              "Daily supply provision"
+            ]
+          },
+          {
+            "name": "Freelance/Contractor",
+            "position": "Web development",
+            "summary": "Debugged and solved fatal errors in the application. Integrated ads to produce unprecedented revenue for the client.",
+            "highlights": [
+              "Error debugging and resolution",
+              "Ad integration and revenue increase"
+            ]
+          }
+        ]
+      },
+      "resume": {
+        "basics": {
+          "name": "Sherlin Antoine",
+          "email": null,
+          "phone": null,
+          "url": null,
+          "summary": null,
+          "location": {
+            "address": null,
+            "postalCode": null,
+            "city": "North Lauderdale",
+            "countryCode": "US",
+            "region": null
+          },
+          "profiles": [
+            {
+              "network": "LinkedIn",
+              "username": "sherlin",
+              "url": "https://www.linkedin.com/in/sherlin"
+            },
+            {
+              "network": "GitHub",
+              "username": "sherlinthb",
+              "url": "https://github.com/sherlinthb"
+            },
+            {
+              "network": "Portfolio",
+              "username": null,
+              "url": "https://sherlinantoine.com"
+            }
+          ]
+        },
+        "work": [
+          {
+            "name": "Freelance/Contractor",
+            "position": "Software Developer",
+            "url": null,
+            "startDate": "2018-04",
+            "endDate": "Present",
+            "summary": "Designed and developed the web application reflecting the organization's image. Maintained a simple UI while also applying a unique design.",
+            "highlights": [
+              "Web application development",
+              "Unique design implementation"
+            ]
+          },
+          {
+            "name": "Freelance/Contractor",
+            "position": "Software Developer",
+            "url": null,
+            "startDate": "2017-08",
+            "endDate": "Present",
+            "summary": "Built project from the ground up accurately based on clients' demands. Increased application running efficiency by 75% by reducing CPU intensive methods and applying other optimizing code.",
+            "highlights": [
+              "Project development from scratch",
+              "Efficiency improvement (75%)"
+            ]
+          },
+          {
+            "name": "Camillus House",
+            "position": "Residential Assistant",
+            "url": null,
+            "startDate": "2012-01",
+            "endDate": "Present",
+            "summary": "Assist homeless, addicts, mentally ill, and traumatized clients in rebuilding their lives. Provide clients with any daily supplies they need.",
+            "highlights": [
+              "Client support and assistance",
+              "Daily supply provision"
+            ]
+          },
+          {
+            "name": "Freelance/Contractor",
+            "position": "Web development",
+            "url": null,
+            "startDate": "2017-07",
+            "endDate": "2017-08",
+            "summary": "Debugged and solved fatal errors in the application. Integrated ads to produce unprecedented revenue for the client.",
+            "highlights": [
+              "Error debugging and resolution",
+              "Ad integration and revenue increase"
+            ]
+          }
+        ],
+        "volunteer": null,
+        "education": [
+          {
+            "institution": "High school or equivalent",
+            "url": null,
+            "area": "",
+            "studyType": "High school or equivalent",
+            "startDate": "",
+            "endDate": "",
+            "score": "",
+            "courses": null
+          }
+        ],
+        "awards": [],
+        "certificates": null,
+        "publications": null,
+        "skills": [
+          {
+            "name": "Web Development",
+            "level": null,
+            "keywords": [
+              "HTML 5",
+              "CSS",
+              "Jquery",
+              "Javascript"
+            ]
+          },
+          {
+            "name": "Database Management",
+            "level": null,
+            "keywords": [
+              "MYSQL"
+            ]
+          },
+          {
+            "name": "Version Control",
+            "level": null,
+            "keywords": [
+              "Git"
+            ]
+          },
+          {
+            "name": "Mobile App Development",
+            "level": null,
+            "keywords": [
+              "Android"
+            ]
+          },
+          {
+            "name": "Server-Side Programming",
+            "level": null,
+            "keywords": [
+              "ASP"
+            ]
+          }
+        ],
+        "languages": null,
+        "interests": null,
+        "references": null,
+        "projects": [
+          {
+            "name": "Web application",
+            "startDate": null,
+            "endDate": null,
+            "description": "Designed and developed the web application reflecting the organization's image.",
+            "highlights": [],
+            "url": "",
+            "technologies": [
+              "Javascript",
+              "MYSQL",
+              "Git",
+              "CSS",
+              "ASP",
+              "Jquery",
+              "HTML 5"
+            ],
+            "skills": [
+              "Javascript",
+              "MYSQL",
+              "Git",
+              "CSS",
+              "ASP",
+              "Jquery",
+              "HTML 5"
+            ]
+          },
+          {
+            "name": "Project from ground up",
+            "startDate": null,
+            "endDate": null,
+            "description": "Built project from the ground up accurately based on clients' demands.",
+            "highlights": [],
+            "url": "",
+            "technologies": [
+              "Javascript",
+              "MYSQL",
+              "Git",
+              "CSS",
+              "ASP",
+              "Jquery",
+              "HTML 5"
+            ],
+            "skills": [
+              "Javascript",
+              "MYSQL",
+              "Git",
+              "CSS",
+              "ASP",
+              "Jquery",
+              "HTML 5"
+            ]
+          },
+          {
+            "name": "Web development project",
+            "startDate": null,
+            "endDate": null,
+            "description": "Debugged and solved fatal errors in the application. Integrated ads to produce unprecedented revenue for the client.",
+            "highlights": [],
+            "url": "",
+            "technologies": [
+              "Javascript",
+              "MYSQL",
+              "Git",
+              "CSS",
+              "ASP",
+              "Jquery",
+              "HTML 5"
+            ],
+            "skills": [
+              "Javascript",
+              "MYSQL",
+              "Git",
+              "CSS",
+              "ASP",
+              "Jquery",
+              "HTML 5"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "ok_count": 6
+}

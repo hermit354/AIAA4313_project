@@ -1,0 +1,4 @@
+Additional ATS skills:
+Programming languages: Python, TypeScript, Go.
+Backend and data: FastAPI, REST APIs, Pydantic, JWT, Celery, Kafka, Redis, PostgreSQL query tuning.
+Infrastructure and quality: Docker, GitHub Actions, AWS ECS, Terraform, Prometheus, Grafana, OpenTelemetry, pytest, integration testing, load-test notes.

@@ -1,0 +1,6 @@
+## Portfolio Appendix
+Repository feature map:
+- Flashdrive Watcher: USB device monitoring, folder synchronization, WPF interface, ADO.NET, LINQ, asynchronous task handling.
+- Base64 Toolkit: local file encoding and decoding utility.
+- Cryptography Demo: XOR, RC4, Base64, and Huffman-style compression demonstrations.
+- Skills already visible: C Sharp, DotNET Framework, WPF, Windows Forms, SQL, LINQ, ADO.NET, Entity Framework.

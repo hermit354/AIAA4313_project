@@ -1,0 +1,202 @@
+[
+  {
+    "name": "issueflow-lite",
+    "description": "FastAPI issue tracker with JWT login, PostgreSQL search, comments, labels, Docker Compose, and integration tests.",
+    "html_url": "https://github.com/fixture-borderline-01/issueflow-lite",
+    "homepage": null,
+    "language": "Python",
+    "fork": false,
+    "forks_count": 1,
+    "stargazers_count": 13,
+    "created_at": "2022-03-01T00:00:00Z",
+    "updated_at": "2026-01-12T00:00:00Z",
+    "topics": [
+      "fastapi",
+      "postgresql",
+      "jwt",
+      "pytest"
+    ],
+    "open_issues_count": 0,
+    "size": 900,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "queue-watch",
+    "description": "Redis queue monitoring dashboard with filters, retry count inspection, CSV export, and lightweight alerting scripts.",
+    "html_url": "https://github.com/fixture-borderline-01/queue-watch",
+    "homepage": null,
+    "language": "Python",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 9,
+    "created_at": "2023-03-01T00:00:00Z",
+    "updated_at": "2026-02-12T00:00:00Z",
+    "topics": [
+      "redis",
+      "dashboard",
+      "ops"
+    ],
+    "open_issues_count": 1,
+    "size": 1080,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "markdown-support-bot",
+    "description": "Documentation Q&A prototype using Markdown chunks, embeddings, and a small FastAPI wrapper.",
+    "html_url": "https://github.com/fixture-borderline-01/markdown-support-bot",
+    "homepage": null,
+    "language": "Python",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 7,
+    "created_at": "2024-03-01T00:00:00Z",
+    "updated_at": "2026-03-12T00:00:00Z",
+    "topics": [
+      "rag",
+      "fastapi",
+      "markdown"
+    ],
+    "open_issues_count": 2,
+    "size": 1260,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "sql-migrations-playground",
+    "description": "PostgreSQL migration examples, seed data, and rollback notes.",
+    "html_url": "https://github.com/fixture-borderline-01/sql-migrations-playground",
+    "homepage": null,
+    "language": "SQL",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 6,
+    "created_at": "2025-03-01T00:00:00Z",
+    "updated_at": "2026-04-12T00:00:00Z",
+    "topics": [
+      "postgresql",
+      "migrations"
+    ],
+    "open_issues_count": 0,
+    "size": 1440,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "oauth-lab",
+    "description": "Small OAuth2 login experiment for Flask and GitHub OAuth.",
+    "html_url": "https://github.com/fixture-borderline-01/oauth-lab",
+    "homepage": null,
+    "language": "Python",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 5,
+    "created_at": "2022-03-01T00:00:00Z",
+    "updated_at": "2026-05-12T00:00:00Z",
+    "topics": [
+      "oauth",
+      "flask"
+    ],
+    "open_issues_count": 1,
+    "size": 1620,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "flask-snippets",
+    "description": "Reusable Flask snippets for forms, sessions, and file uploads.",
+    "html_url": "https://github.com/fixture-borderline-01/flask-snippets",
+    "homepage": null,
+    "language": "Python",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 4,
+    "created_at": "2023-03-01T00:00:00Z",
+    "updated_at": "2026-06-12T00:00:00Z",
+    "topics": [
+      "flask"
+    ],
+    "open_issues_count": 2,
+    "size": 1800,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "weather-worker",
+    "description": "Simple scheduled worker that stores weather API responses.",
+    "html_url": "https://github.com/fixture-borderline-01/weather-worker",
+    "homepage": null,
+    "language": "Python",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 3,
+    "created_at": "2024-03-01T00:00:00Z",
+    "updated_at": "2026-07-12T00:00:00Z",
+    "topics": [
+      "cron",
+      "api"
+    ],
+    "open_issues_count": 0,
+    "size": 1980,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "notes-cli",
+    "description": "Basic command-line note manager with tags and JSON storage.",
+    "html_url": "https://github.com/fixture-borderline-01/notes-cli",
+    "homepage": null,
+    "language": "Python",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 2,
+    "created_at": "2025-03-01T00:00:00Z",
+    "updated_at": "2026-08-12T00:00:00Z",
+    "topics": [
+      "cli"
+    ],
+    "open_issues_count": 1,
+    "size": 2160,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "pytest-fixtures-demo",
+    "description": "Small repository demonstrating pytest fixtures and parametrized tests.",
+    "html_url": "https://github.com/fixture-borderline-01/pytest-fixtures-demo",
+    "homepage": null,
+    "language": "Python",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 2,
+    "created_at": "2022-03-01T00:00:00Z",
+    "updated_at": "2026-09-12T00:00:00Z",
+    "topics": [
+      "pytest"
+    ],
+    "open_issues_count": 2,
+    "size": 2340,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "docker-compose-recipes",
+    "description": "Personal notes for local Docker Compose services.",
+    "html_url": "https://github.com/fixture-borderline-01/docker-compose-recipes",
+    "homepage": null,
+    "language": "Shell",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 1,
+    "created_at": "2023-03-01T00:00:00Z",
+    "updated_at": "2026-10-12T00:00:00Z",
+    "topics": [
+      "docker"
+    ],
+    "open_issues_count": 0,
+    "size": 2520,
+    "archived": false,
+    "default_branch": "main"
+  }
+]

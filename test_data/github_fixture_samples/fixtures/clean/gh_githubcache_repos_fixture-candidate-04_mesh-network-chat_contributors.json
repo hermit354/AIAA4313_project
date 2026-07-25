@@ -1,0 +1,14 @@
+[
+  {
+    "login": "fixture-candidate-04",
+    "contributions": 18
+  },
+  {
+    "login": "fixture-collaborator-a",
+    "contributions": 6
+  },
+  {
+    "login": "fixture-collaborator-b",
+    "contributions": 2
+  }
+]

@@ -1,0 +1,48 @@
+# Candidate 02
+fixture-candidate-02@example.test | Remote
+GitHub: https://github.com/fixture-candidate-02
+
+## Target Role
+Junior .Net Developer
+
+## Profile
+-	C# and .NET Framework, including LINQ, ADO.NET and the Entity Framework, Task Parallel Library and Task-Based Async Model, 
+Windows Forms, WPF, ASP.NET MVC;  
+-	C, C++, including STL, Windows API;
+-	SQL, including Transact-SQL;
+-	R (using RStudio for statistical computing and graphics);
+-	JavaScript (active learning stage); 
+-	MS Visual Studio, ReSharper, WebStorm;
+-	MS SQL Server, MySQL Workbench;  
+-	Git, SourceTree;
+-	Understanding objective-oriented programming paradigm, design patterns, principles of algorithm creation and analysis, UML; 
+-	Understanding Continuous Integration, Version Control System practices.
+
+## Highlights
+PROJECTS ON GITHUB:
+https://github.com/fixture-candidate-02/flashdrive-watcher: Application runs on background and waiting for new USB-device. When it is connected application will synchronize specified directory on your HDD with current USB-device. GUI was created using WPF, database environment – using ADO.NET and LINQ, work with files – using TPL and Async model; 
+https://github.com/fixture-candidate-02/base64-toolkit, https://github.com/fixture-candidate-02/huffman-archiver, https://github.com/fixture-candidate-02/cryptography-demo - Applications support encryption for files using different algorithms: XOR, RC4, Base64 and Huffmann’s algorithm.
+https://github.com/fixture-candidate-02/cryptography-demo - Simplified TaskManager
+
+## Resume Content
+PROJECTS ON GITHUB:
+https://github.com/fixture-candidate-02/flashdrive-watcher: Application runs on background and waiting for new USB-device. When it is connected application will synchronize specified directory on your HDD with current USB-device. GUI was created using WPF, database environment – using ADO.NET and LINQ, work with files – using TPL and Async model; 
+https://github.com/fixture-candidate-02/base64-toolkit, https://github.com/fixture-candidate-02/huffman-archiver, https://github.com/fixture-candidate-02/cryptography-demo - Applications support encryption for files using different algorithms: XOR, RC4, Base64 and Huffmann’s algorithm.
+https://github.com/fixture-candidate-02/cryptography-demo - Simplified TaskManager
+-	C# and .NET Framework, including LINQ, ADO.NET and the Entity Framework, Task Parallel Library and Task-Based Async Model, 
+Windows Forms, WPF, ASP.NET MVC;  
+-	C, C++, including STL, Windows API;
+-	SQL, including Transact-SQL;
+-	R (using RStudio for statistical computing and graphics);
+-	JavaScript (active learning stage); 
+-	MS Visual Studio, ReSharper, WebStorm;
+-	MS SQL Server, MySQL Workbench;  
+-	Git, SourceTree;
+-	Understanding objective-oriented programming paradigm, design patterns, principles of algorithm creation and analysis, UML; 
+-	Understanding Continuous Integration, Version Control System practices.
+
+## Preferences
+Open to software engineering opportunities.
+
+## Skills
+Primary specialization: .NET; English level: intermediate; Experience: 0 years.

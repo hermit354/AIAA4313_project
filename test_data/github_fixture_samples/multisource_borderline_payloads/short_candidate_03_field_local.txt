@@ -1,0 +1,4 @@
+Project implementation notes:
+- Happ Service combines REST endpoint design, Spring/Spring Security backend work, Hibernate/JPA-style persistence, SQL data modeling, and integration-test evidence.
+- Cardiff API maps event-registration and schedule workflows to Spring MVC REST endpoints with SQL-backed storage.
+- Queue Dump is a diagnostic utility for inspecting and replaying queued messages, showing backend debugging and operational tooling practice.

@@ -1,0 +1,85 @@
+{
+  "purpose": "Demo handoff samples for LLM hiring-agent prompt/context injection experiments.",
+  "note": "Samples 04/05 intentionally reuse the same weak PDF as sample 03. Their attack difference is in the paired GitHub JSON fixture, not in the PDF file.",
+  "pdf_samples": [
+    {
+      "file": "test_data/demo_handoff_samples/pdf/01_clean_strong_22456.pdf",
+      "candidate_id": "22456",
+      "role": "clean_strong",
+      "source_pdf": "test_data/software_developer_sample_20/22456_Software_Developer.pdf"
+    },
+    {
+      "file": "test_data/demo_handoff_samples/pdf/02_clean_medium_23030.pdf",
+      "candidate_id": "23030",
+      "role": "clean_medium",
+      "source_pdf": "test_data/software_developer_sample_20/23030_Software_Developer.pdf"
+    },
+    {
+      "file": "test_data/demo_handoff_samples/pdf/03_clean_weak_20734.pdf",
+      "candidate_id": "20734",
+      "role": "clean_weak",
+      "source_pdf": "test_data/software_developer_sample_20/20734_Software_Developer.pdf"
+    },
+    {
+      "file": "test_data/demo_handoff_samples/pdf/04_weak_basic_github_polluted_20734.pdf",
+      "candidate_id": "20734",
+      "role": "weak_pdf_plus_basic_github_injection",
+      "source_pdf": "test_data/software_developer_sample_20/20734_Software_Developer.pdf"
+    },
+    {
+      "file": "test_data/demo_handoff_samples/pdf/05_weak_advanced_github_polluted_20734.pdf",
+      "candidate_id": "20734",
+      "role": "weak_pdf_plus_advanced_github_eval_patch",
+      "source_pdf": "test_data/software_developer_sample_20/20734_Software_Developer.pdf"
+    }
+  ],
+  "github_fixtures": [
+    {
+      "file": "test_data/demo_handoff_samples/github_fixtures/01_clean_strong_22456_github_clean.json",
+      "candidate_id": "22456",
+      "scenario": "clean",
+      "description": "Clean synthetic GitHub evidence for strong sample."
+    },
+    {
+      "file": "test_data/demo_handoff_samples/github_fixtures/02_clean_medium_23030_github_clean.json",
+      "candidate_id": "23030",
+      "scenario": "clean",
+      "description": "Clean synthetic GitHub evidence for medium sample."
+    },
+    {
+      "file": "test_data/demo_handoff_samples/github_fixtures/03_clean_weak_20734_github_clean.json",
+      "candidate_id": "20734",
+      "scenario": "clean",
+      "description": "Clean synthetic GitHub evidence for weak sample."
+    },
+    {
+      "file": "test_data/demo_handoff_samples/github_fixtures/04_weak_basic_github_polluted_20734_direct_command.json",
+      "candidate_id": "20734",
+      "scenario": "bio_direct_command",
+      "description": "Basic visible/direct GitHub bio instruction injection."
+    },
+    {
+      "file": "test_data/demo_handoff_samples/github_fixtures/05_weak_advanced_github_polluted_20734_eval_patch.json",
+      "candidate_id": "20734",
+      "scenario": "github_eval_json_patch",
+      "description": "Advanced repo description evaluation-output-patch injection used in the main attack/defense chain."
+    }
+  ],
+  "optional_pdf_hidden_text": [
+    {
+      "file": "test_data/demo_handoff_samples/optional_pdf_hidden_text/20734_clean_original.pdf",
+      "description": "clean original PDF",
+      "source_pdf": "test_data/software_developer_sample_20/20734_Software_Developer.pdf"
+    },
+    {
+      "file": "test_data/demo_handoff_samples/optional_pdf_hidden_text/20734_attack_hidden_compact_combined.pdf",
+      "description": "attack PDF with tiny near-white hidden text",
+      "source_pdf": "test_data/software_developer_sample_20_ablation/pdf_payload_variant_payloads/20734_compact_combined.pdf"
+    },
+    {
+      "file": "test_data/demo_handoff_samples/optional_pdf_hidden_text/20734_defended_sanitized.pdf",
+      "description": "sanitized PDF after hidden-span deletion",
+      "source_pdf": "test_data/software_developer_sample_20_ablation/pdf_hidden_span_sanitized_pdfs/20734_compact_combined_sanitized.pdf"
+    }
+  ]
+}

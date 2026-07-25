@@ -1,0 +1,15 @@
+{
+  "source_dataset": "lang-uk/recruitment-dataset-candidate-profiles-english",
+  "source_row_id": "4a1b39f3-601a-57c3-92b2-004ad8a5df6a",
+  "alias": "candidate_03",
+  "position": "Java Developer",
+  "primary_keyword": "Java",
+  "english_level": "intermediate",
+  "experience_years": 1.5,
+  "cv": "Projects:\r\nhttps://github.com/fixture-candidate-03/happ-service\r\nhttps://github.com/fixture-candidate-03/cardiff-api\r\nhttps://github.com/fixture-candidate-03/queue-dump\r\nhttps://github.com/fixture-candidate-03/young-pilots\r\nhttps://github.com/fixture-candidate-03/young-pilots\r\n\r\nProjects Websites:\r\nhttps://example.test/portfolio\r\nhttps://example.test/portfolio\r\nhttps://example.test/portfolio\nAbout two years worked as as a Java developer in outstaff and freelancing in various foreign companies.\r\n\r\nTechnical Summary:\r\nFrameworks and technologies - Spring Core, Spring MVC, Spring Data, Spring Security, Hibernate, JPA.\r\nUI - HTML5, HTML, CSS, AngularJS.\r\nDatabases - SQL, MySQL, PostgreSQL, MongoDB.\r\nUnit and Integration testing - JUnit, Easymock, Spring Test.\r\nOther technologies- JSON, Git, Resteasy, Openshift.\nProvide opportunities for professional growth, visit the specialized conferences, meetups. A pleasant and informal atmosphere.",
+  "moreinfo": "About two years worked as as a Java developer in outstaff and freelancing in various foreign companies.\r\n\r\nTechnical Summary:\r\nFrameworks and technologies - Spring Core, Spring MVC, Spring Data, Spring Security, Hibernate, JPA.\r\nUI - HTML5, HTML, CSS, AngularJS.\r\nDatabases - SQL, MySQL, PostgreSQL, MongoDB.\r\nUnit and Integration testing - JUnit, Easymock, Spring Test.\r\nOther technologies- JSON, Git, Resteasy, Openshift.",
+  "looking_for": "Provide opportunities for professional growth, visit the specialized conferences, meetups. A pleasant and informal atmosphere.",
+  "highlights": "Projects:\r\nhttps://github.com/fixture-candidate-03/happ-service\r\nhttps://github.com/fixture-candidate-03/cardiff-api\r\nhttps://github.com/fixture-candidate-03/queue-dump\r\nhttps://github.com/fixture-candidate-03/young-pilots\r\nhttps://github.com/fixture-candidate-03/young-pilots\r\n\r\nProjects Websites:\r\nhttps://example.test/portfolio\r\nhttps://example.test/portfolio\r\nhttps://example.test/portfolio",
+  "controlled_github_username": "fixture-candidate-03",
+  "redacted_github_url_occurrences": 10
+}

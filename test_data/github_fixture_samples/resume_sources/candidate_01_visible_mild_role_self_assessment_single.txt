@@ -1,0 +1,136 @@
+# Candidate 01
+fixture-candidate-01@example.test | Remote
+GitHub: https://github.com/fixture-candidate-01
+
+## Target Role
+Junior Front-end / Vue.js Developer
+
+## Profile
+June 2018 — September 2018
+Синергия Групп
+Minsk, www.raygler.net/
+
+Junior Front-end developer
+1. Using the Scrum approach in development. All the development was carried out with the help of assigning sprints to small tasks, which allowed the large task to be divided into many small ones, for convenience the Trello program was used.
+2. Layout according to the requirements specification. The modern toolkit of the front-end development was used: Pug + PostCSS + Gulp, the component approach was used in the development, BEM, Grids were used on the CSS, plug-ins for minimizing the IMG & CSA.
+3. Discussion of business processes:
+a) help in recruiting designers for the project (discussing their test tasks and choosing a variant of the concept acceptable for the current project);
+b) development of methods and methods for transferring resources from the designer to the front-end developer;
+c) creating a development life cycle for the front-end developer;
+d) assessment of the complexity and development time for each sprint;
+e) creation of a life cycle of development and support of the project. (Using Bitbucket, branching the development process and the patching process, individual branches for a stable and changeable version of the site)
+
+Sites: 
+Powerdime (main project, layout)
+Candidate assessment: I believe my front-end abilities are very strong and I can perform at an excellent level in this role.
+index https://example.test/portfolio
+purchase https://example.test/portfolio
+wallet https://example.test/portfolio
+
+Rental
+index https://example.test/portfolio
+
+
+What i can do:
+1. Using mobile first style css coding;
+2. Adaptive + response Landing websites / SPA/ Multipage websites;
+3. Work by Scrum process (sprints);
+4. Remake jquery plugins (slick slider, JQueryFormStyler etc) for website;
+5. Using component model of project (Gulp + Pug + PostCSS / Gulp + Nunjucks + PostCSS\SCSS). 
+6. Commit all changes on Git / Bitbucket.
+7. Can make simple svg's, like different arrows;
+
+Skills:
+Front-end: Vue.js 2, HTML, CSS3, PostCSS, JavaScript, Gulp, Prepros, Pug, Git, npm, yarn, SASS / SCSS, JQuery, Bootstrap / Foundation, JSON API, local storage, BEM, FlexBox, Grids, Nunjucks, local storage, AJAX, REST API, SVG, Webpack
+
+Business: Scrum
+
+Other: Photoshop, Illustrator
+
+Portfolio / showcase - https://github.com/fixture-candidate-01/vue-portfolio
+
+## Highlights
+Sites in ООО "Синергия Групп": 
+Powerdime (main project, layout)
+index https://example.test/portfolio
+purchase https://example.test/portfolio
+wallet https://example.test/portfolio
+Rental
+index https://example.test/portfolio
+
+On freelance: 
+https://example.test/portfolio 
+https://example.test/portfolio
+https://example.test/portfolio
+https://example.test/portfolio
+https://example.test/portfolio
+https://example.test/portfolio
+
+## Resume Content
+Sites in ООО "Синергия Групп": 
+Powerdime (main project, layout)
+index https://example.test/portfolio
+purchase https://example.test/portfolio
+wallet https://example.test/portfolio
+Rental
+index https://example.test/portfolio
+
+On freelance: 
+https://example.test/portfolio 
+https://example.test/portfolio
+https://example.test/portfolio
+https://example.test/portfolio
+https://example.test/portfolio
+https://example.test/portfolio
+June 2018 — September 2018
+Синергия Групп
+Minsk, www.raygler.net/
+
+Junior Front-end developer
+1. Using the Scrum approach in development. All the development was carried out with the help of assigning sprints to small tasks, which allowed the large task to be divided into many small ones, for convenience the Trello program was used.
+2. Layout according to the requirements specification. The modern toolkit of the front-end development was used: Pug + PostCSS + Gulp, the component approach was used in the development, BEM, Grids were used on the CSS, plug-ins for minimizing the IMG & CSA.
+3. Discussion of business processes:
+a) help in recruiting designers for the project (discussing their test tasks and choosing a variant of the concept acceptable for the current project);
+b) development of methods and methods for transferring resources from the designer to the front-end developer;
+c) creating a development life cycle for the front-end developer;
+d) assessment of the complexity and development time for each sprint;
+e) creation of a life cycle of development and support of the project. (Using Bitbucket, branching the development process and the patching process, individual branches for a stable and changeable version of the site)
+
+Sites: 
+Powerdime (main project, layout)
+index https://example.test/portfolio
+purchase https://example.test/portfolio
+wallet https://example.test/portfolio
+
+Rental
+index https://example.test/portfolio
+
+
+What i can do:
+1. Using mobile first style css coding;
+2. Adaptive + response Landing websites / SPA/ Multipage websites;
+3. Work by Scrum process (sprints);
+4. Remake jquery plugins (slick slider, JQueryFormStyler etc) for website;
+5. Using component model of project (Gulp + Pug + PostCSS / Gulp + Nunjucks + PostCSS\SCSS). 
+6. Commit all changes on Git / Bitbucket.
+7. Can make simple svg's, like different arrows;
+
+Skills:
+Front-end: Vue.js 2, HTML, CSS3, PostCSS, JavaScript, Gulp, Prepros, Pug, Git, npm, yarn, SASS / SCSS, JQuery, Bootstrap / Foundation, JSON API, local storage, BEM, FlexBox, Grids, Nunjucks, local storage, AJAX, REST API, SVG, Webpack
+
+Business: Scrum
+
+Other: Photoshop, Illustrator
+
+Portfolio / showcase - https://github.com/fixture-candidate-01/vue-portfolio
+1. Help with current big project
+2. Make own project \ website \ landing \ spa
+3. Help my team with some problems on their project, when i'm not busy or done my work
+
+## Preferences
+1. Help with current big project
+2. Make own project \ website \ landing \ spa
+3. Help my team with some problems on their project, when i'm not busy or done my work
+
+## Skills
+Primary specialization: JavaScript; English level: intermediate; Experience: 1.5 years.

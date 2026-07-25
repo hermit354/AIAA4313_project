@@ -1,0 +1,178 @@
+[
+  {
+    "name": "support-ticket-triage",
+    "description": "Text-classification prototype using TF-IDF, logistic regression, metric reports, confusion matrix output, and a FastAPI wrapper. Evidence map: TF-IDF baseline, logistic regression, metric reports, confusion matrix output, FastAPI inference wrapper, and limitation notes.",
+    "html_url": "https://github.com/fixture-borderline-04/support-ticket-triage",
+    "homepage": null,
+    "language": "Python",
+    "fork": false,
+    "forks_count": 1,
+    "stargazers_count": 12,
+    "created_at": "2022-03-01T00:00:00Z",
+    "updated_at": "2026-01-12T00:00:00Z",
+    "topics": [
+      "nlp",
+      "sklearn",
+      "fastapi"
+    ],
+    "open_issues_count": 0,
+    "size": 900,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "dataset-drift-monitor",
+    "description": "CSV comparison tool with missing-value summaries, drift-style charts, and Docker Compose local execution. Evidence map: weekly data comparison, missing-value summary, drift-style charts, Docker Compose local run, and reproducible reports.",
+    "html_url": "https://github.com/fixture-borderline-04/dataset-drift-monitor",
+    "homepage": null,
+    "language": "Python",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 9,
+    "created_at": "2023-03-01T00:00:00Z",
+    "updated_at": "2026-02-12T00:00:00Z",
+    "topics": [
+      "pandas",
+      "monitoring"
+    ],
+    "open_issues_count": 1,
+    "size": 1080,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "review-etl-notebook",
+    "description": "Pandas and SQL notebook for cleaning product review exports.",
+    "html_url": "https://github.com/fixture-borderline-04/review-etl-notebook",
+    "homepage": null,
+    "language": "Jupyter Notebook",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 6,
+    "created_at": "2024-03-01T00:00:00Z",
+    "updated_at": "2026-03-12T00:00:00Z",
+    "topics": [
+      "etl",
+      "sql"
+    ],
+    "open_issues_count": 2,
+    "size": 1260,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "model-card-helper",
+    "description": "CLI that creates Markdown model-card sections for dataset notes, evaluation metrics, and limitations. Evidence map: model documentation workflow, evaluation metric sections, dataset notes, limitations, and CLI packaging.",
+    "html_url": "https://github.com/fixture-borderline-04/model-card-helper",
+    "homepage": null,
+    "language": "Python",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 5,
+    "created_at": "2025-03-01T00:00:00Z",
+    "updated_at": "2026-04-12T00:00:00Z",
+    "topics": [
+      "model-cards",
+      "cli"
+    ],
+    "open_issues_count": 0,
+    "size": 1440,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "survey-dashboard",
+    "description": "Small dashboard for club survey results and charts.",
+    "html_url": "https://github.com/fixture-borderline-04/survey-dashboard",
+    "homepage": null,
+    "language": "Python",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 4,
+    "created_at": "2022-03-01T00:00:00Z",
+    "updated_at": "2026-05-12T00:00:00Z",
+    "topics": [
+      "dashboard"
+    ],
+    "open_issues_count": 1,
+    "size": 1620,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "sql-window-functions",
+    "description": "Examples and notes for SQL window functions.",
+    "html_url": "https://github.com/fixture-borderline-04/sql-window-functions",
+    "homepage": null,
+    "language": "SQL",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 3,
+    "created_at": "2023-03-01T00:00:00Z",
+    "updated_at": "2026-06-12T00:00:00Z",
+    "topics": [
+      "sql"
+    ],
+    "open_issues_count": 2,
+    "size": 1800,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "kaggle-baselines",
+    "description": "Basic notebooks for public classification datasets.",
+    "html_url": "https://github.com/fixture-borderline-04/kaggle-baselines",
+    "homepage": null,
+    "language": "Jupyter Notebook",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 2,
+    "created_at": "2024-03-01T00:00:00Z",
+    "updated_at": "2026-07-12T00:00:00Z",
+    "topics": [
+      "notebooks"
+    ],
+    "open_issues_count": 0,
+    "size": 1980,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "csv-cleaner-cli",
+    "description": "Small CLI for trimming columns and normalizing CSV headers.",
+    "html_url": "https://github.com/fixture-borderline-04/csv-cleaner-cli",
+    "homepage": null,
+    "language": "Python",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 2,
+    "created_at": "2025-03-01T00:00:00Z",
+    "updated_at": "2026-08-12T00:00:00Z",
+    "topics": [
+      "csv"
+    ],
+    "open_issues_count": 1,
+    "size": 2160,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "plotting-recipes",
+    "description": "Matplotlib plotting examples for class projects.",
+    "html_url": "https://github.com/fixture-borderline-04/plotting-recipes",
+    "homepage": null,
+    "language": "Python",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 1,
+    "created_at": "2022-03-01T00:00:00Z",
+    "updated_at": "2026-09-12T00:00:00Z",
+    "topics": [
+      "matplotlib"
+    ],
+    "open_issues_count": 2,
+    "size": 2340,
+    "archived": false,
+    "default_branch": "main"
+  }
+]

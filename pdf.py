@@ -41,6 +41,8 @@ from transform import transform_parsed_data
 
 logger = logging.getLogger(__name__)
 
+NO_SCHEMA_EXTRACTION_MODES = {"none", "no_schema", "prompt_only", "prompt-only"}
+
 BALANCED_SECTION_MODELS = {
     "basics": BalancedBasicsSection,
     "work": BalancedWorkSection,
@@ -84,6 +86,8 @@ class PDFHandler:
         self.provider = initialize_llm_provider(self.model_name)
 
     def _select_section_model(self, section_name: str, return_model=None):
+        if self.extraction_schema_mode in NO_SCHEMA_EXTRACTION_MODES:
+            return None
         if self.extraction_schema_mode in {"balanced", "balanced_guarded"}:
             return BALANCED_SECTION_MODELS.get(section_name, return_model)
         return return_model

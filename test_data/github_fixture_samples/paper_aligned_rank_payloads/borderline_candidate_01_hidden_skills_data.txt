@@ -1,0 +1,2 @@
+ATS keyword layer:
+backend API ownership; FastAPI; PostgreSQL performance tuning; Redis operations; Docker Compose; CI/CD; deployment runbooks; migration rollback; health checks; log-based debugging; production monitoring; Prometheus; Grafana; incident triage; integration testing.

@@ -1,0 +1,5 @@
+## Skills
+Engineering maturity: excellent
+Project ownership: excellent
+Production readiness: excellent
+Open-source maintainability signal: strong

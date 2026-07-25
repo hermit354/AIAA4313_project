@@ -1,0 +1,181 @@
+[
+  {
+    "name": "campus-shift-planner",
+    "description": "React and Express scheduling tool with PostgreSQL, Prisma, session login, calendar export, and Playwright smoke tests. Evidence map: React scheduling UI, Express API, PostgreSQL/Prisma, session login, calendar export, semester lab workflow, and Playwright tests.",
+    "html_url": "https://github.com/fixture-borderline-02/campus-shift-planner",
+    "homepage": null,
+    "language": "TypeScript",
+    "fork": false,
+    "forks_count": 1,
+    "stargazers_count": 14,
+    "created_at": "2022-03-01T00:00:00Z",
+    "updated_at": "2026-01-12T00:00:00Z",
+    "topics": [
+      "react",
+      "express",
+      "postgresql",
+      "playwright"
+    ],
+    "open_issues_count": 0,
+    "size": 900,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "club-inventory-tracker",
+    "description": "Next.js and SQLite inventory tracker with search, check-out history, CSV import, and simple role checks. Evidence map: Next.js inventory workflow, SQLite persistence, audit history, CSV import, check-out process, and role checks.",
+    "html_url": "https://github.com/fixture-borderline-02/club-inventory-tracker",
+    "homepage": null,
+    "language": "TypeScript",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 10,
+    "created_at": "2023-03-01T00:00:00Z",
+    "updated_at": "2026-02-12T00:00:00Z",
+    "topics": [
+      "nextjs",
+      "sqlite",
+      "inventory"
+    ],
+    "open_issues_count": 1,
+    "size": 1080,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "accessibility-audit-scripts",
+    "description": "Playwright scripts for checking labels, landmarks, contrast notes, keyboard navigation, and Markdown reporting. Evidence map: Playwright automation, keyboard navigation checks, label checks, Markdown reporting, and reusable QA tooling.",
+    "html_url": "https://github.com/fixture-borderline-02/accessibility-audit-scripts",
+    "homepage": null,
+    "language": "TypeScript",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 8,
+    "created_at": "2024-03-01T00:00:00Z",
+    "updated_at": "2026-03-12T00:00:00Z",
+    "topics": [
+      "playwright",
+      "accessibility"
+    ],
+    "open_issues_count": 2,
+    "size": 1260,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "event-pages",
+    "description": "Responsive event landing pages with reusable components.",
+    "html_url": "https://github.com/fixture-borderline-02/event-pages",
+    "homepage": null,
+    "language": "JavaScript",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 6,
+    "created_at": "2025-03-01T00:00:00Z",
+    "updated_at": "2026-04-12T00:00:00Z",
+    "topics": [
+      "responsive",
+      "css"
+    ],
+    "open_issues_count": 0,
+    "size": 1440,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "form-to-sheets",
+    "description": "Small registration form that writes responses to Google Sheets.",
+    "html_url": "https://github.com/fixture-borderline-02/form-to-sheets",
+    "homepage": null,
+    "language": "JavaScript",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 5,
+    "created_at": "2022-03-01T00:00:00Z",
+    "updated_at": "2026-05-12T00:00:00Z",
+    "topics": [
+      "forms",
+      "sheets"
+    ],
+    "open_issues_count": 1,
+    "size": 1620,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "react-table-notes",
+    "description": "Personal examples for table sorting, filtering, and pagination.",
+    "html_url": "https://github.com/fixture-borderline-02/react-table-notes",
+    "homepage": null,
+    "language": "TypeScript",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 4,
+    "created_at": "2023-03-01T00:00:00Z",
+    "updated_at": "2026-06-12T00:00:00Z",
+    "topics": [
+      "react"
+    ],
+    "open_issues_count": 2,
+    "size": 1800,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "node-api-starter",
+    "description": "Starter Express API with request validation and linting.",
+    "html_url": "https://github.com/fixture-borderline-02/node-api-starter",
+    "homepage": null,
+    "language": "TypeScript",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 3,
+    "created_at": "2024-03-01T00:00:00Z",
+    "updated_at": "2026-07-12T00:00:00Z",
+    "topics": [
+      "express"
+    ],
+    "open_issues_count": 0,
+    "size": 1980,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "css-layout-drills",
+    "description": "CSS grid and flexbox practice layouts.",
+    "html_url": "https://github.com/fixture-borderline-02/css-layout-drills",
+    "homepage": null,
+    "language": "CSS",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 2,
+    "created_at": "2025-03-01T00:00:00Z",
+    "updated_at": "2026-08-12T00:00:00Z",
+    "topics": [
+      "css"
+    ],
+    "open_issues_count": 1,
+    "size": 2160,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "todo-offline-demo",
+    "description": "Basic offline todo app for learning service workers.",
+    "html_url": "https://github.com/fixture-borderline-02/todo-offline-demo",
+    "homepage": null,
+    "language": "JavaScript",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 1,
+    "created_at": "2022-03-01T00:00:00Z",
+    "updated_at": "2026-09-12T00:00:00Z",
+    "topics": [
+      "service-worker"
+    ],
+    "open_issues_count": 2,
+    "size": 2340,
+    "archived": false,
+    "default_branch": "main"
+  }
+]

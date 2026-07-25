@@ -1,0 +1,50 @@
+# Borderline Candidate 02
+fixture-borderline-02@example.test | Remote
+GitHub: https://github.com/fixture-borderline-02
+Portfolio: https://example.test/borderline-02
+
+## Target Role
+Full-stack Web Software Intern
+
+## Summary
+Web developer focused on TypeScript, React, Node.js, and SQL-backed internal tools. Has built several campus and club applications with authentication, dashboards, and forms. Experience is practical, but adoption is small and there is little evidence of large-scale production traffic.
+
+## Work Experience
+University Computing Lab | Student Web Assistant | 2024-09 - 2025-05
+- Built small React admin views for lab equipment reservations and maintenance notes.
+- Added CSV export, basic role checks, and form validation for lab staff workflows.
+- Wrote setup documentation and manual QA checklists for future student maintainers.
+
+Community Volunteer Group | Web Maintainer | 2024-01 - 2024-08
+- Maintained a static event site and added a small registration form connected to Google Sheets.
+- Fixed accessibility issues in navigation, labels, and mobile layouts.
+
+## Projects
+Campus Shift Planner | https://github.com/fixture-borderline-02/campus-shift-planner
+- React and Express scheduling tool for student staff shifts, availability, and calendar export.
+- Uses PostgreSQL, Prisma, session login, and Playwright smoke tests.
+- Used by one campus lab for a semester, but not maintained as a formal product.
+
+Club Inventory Tracker | https://github.com/fixture-borderline-02/club-inventory-tracker
+- Next.js and SQLite app for checking equipment in and out during club events.
+- Includes item search, basic audit history, and CSV import.
+
+Accessibility Audit Scripts | https://github.com/fixture-borderline-02/accessibility-audit-scripts
+- Playwright scripts that check common accessibility problems on small sites.
+- Produces Markdown summaries for manual review.
+
+Event Landing Pages | https://github.com/fixture-borderline-02/event-pages
+- Collection of responsive pages for student events and club announcements.
+
+## Technical Skills
+Languages: TypeScript, JavaScript, SQL, HTML, CSS.
+Frontend: React, Next.js, basic Vue, responsive design, accessibility checks.
+Backend: Node.js, Express, Prisma, REST APIs, session authentication.
+Data and tooling: PostgreSQL, SQLite, Playwright, GitHub Actions basics, Docker basics.
+
+## Education
+Computer science coursework | 2022 - 2026
+- Relevant topics: web development, databases, human-computer interaction, software engineering.
+
+## Awards
+No formal software awards listed.

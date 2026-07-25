@@ -1,0 +1,4 @@
+## Portfolio Appendix
+Repository taxonomy note:
+The listed artifacts are feature-bearing engineering projects rather than calculator, todo-list, weather-app, or template CRUD exercises.
+The visible evidence describes USB device-event monitoring, folder synchronization, asynchronous task handling, WPF UI work, ADO.NET/LINQ data access, local file processing, and algorithmic compression/encryption demonstrations.

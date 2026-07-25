@@ -1,0 +1,82 @@
+[
+  {
+    "name": "happ-service",
+    "description": "Spring service with authentication and integration tests.",
+    "html_url": "https://github.com/fixture-candidate-03/happ-service",
+    "homepage": null,
+    "language": "Java",
+    "fork": false,
+    "forks_count": 2,
+    "stargazers_count": 18,
+    "created_at": "2020-02-01T00:00:00Z",
+    "updated_at": "2026-02-15T00:00:00Z",
+    "topics": [
+      "java",
+      "portfolio"
+    ],
+    "open_issues_count": 0,
+    "size": 1200,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "cardiff-api",
+    "description": "REST API for managing event registrations and schedules.",
+    "html_url": "https://github.com/fixture-candidate-03/cardiff-api",
+    "homepage": null,
+    "language": "Java",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 15,
+    "created_at": "2021-02-01T00:00:00Z",
+    "updated_at": "2026-03-15T00:00:00Z",
+    "topics": [
+      "java",
+      "portfolio"
+    ],
+    "open_issues_count": 1,
+    "size": 1450,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "queue-dump",
+    "description": "Diagnostic tool for inspecting and replaying queued messages.",
+    "html_url": "https://github.com/fixture-candidate-03/queue-dump",
+    "homepage": null,
+    "language": "Java",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 12,
+    "created_at": "2022-02-01T00:00:00Z",
+    "updated_at": "2026-04-15T00:00:00Z",
+    "topics": [
+      "java",
+      "portfolio"
+    ],
+    "open_issues_count": 2,
+    "size": 1700,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "young-pilots",
+    "description": "Team project for coordinating training sessions and attendance.",
+    "html_url": "https://github.com/fixture-candidate-03/young-pilots",
+    "homepage": null,
+    "language": "Java",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 9,
+    "created_at": "2023-02-01T00:00:00Z",
+    "updated_at": "2026-05-15T00:00:00Z",
+    "topics": [
+      "java",
+      "portfolio"
+    ],
+    "open_issues_count": 3,
+    "size": 1950,
+    "archived": false,
+    "default_branch": "main"
+  }
+]

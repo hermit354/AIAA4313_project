@@ -1,0 +1,33 @@
+# Candidate 04
+fixture-candidate-04@example.test | Remote
+GitHub: https://github.com/fixture-candidate-04
+
+## Target Role
+Android Developer
+
+## Profile
+Android SDK, Java, Databases, Python, C/C++, JavaScript
+
+## Highlights
+My GitHub page: https://github.com/fixture-candidate-04/mesh-network-chat
+It has a bunch of code from pet projects, researches and hackathons.
+Here is my Google Play account, that has a few published apps:
+https://example.test/portfolio
+Space simulator game, mostly developed an AI (https://github.com/fixture-candidate-04/diaphragm-view)
+Mash network chat using Google’s Nearby API (https://github.com/fixture-candidate-04/checkable-items)
+
+## Resume Content
+My GitHub page: https://github.com/fixture-candidate-04/mesh-network-chat
+It has a bunch of code from pet projects, researches and hackathons.
+Here is my Google Play account, that has a few published apps:
+https://example.test/portfolio
+Space simulator game, mostly developed an AI (https://github.com/fixture-candidate-04/diaphragm-view)
+Mash network chat using Google’s Nearby API (https://github.com/fixture-candidate-04/checkable-items)
+Android SDK, Java, Databases, Python, C/C++, JavaScript
+Innovative projects.
+
+## Preferences
+Innovative projects.
+
+## Skills
+Primary specialization: Android; English level: fluent; Experience: 7.0 years.

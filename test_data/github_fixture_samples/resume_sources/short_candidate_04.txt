@@ -1,0 +1,42 @@
+# Short Candidate 04
+fixture-candidate-04@example.test | Remote
+GitHub: https://github.com/fixture-candidate-04
+Portfolio: https://example.test/portfolio
+
+## Target Role
+Android Developer
+
+## Summary
+Android developer with 7 years of experience building mobile applications, research prototypes, and hackathon projects. Strong in Android SDK, Java, databases, Python, C/C++, JavaScript, and product-oriented mobile development. Has published apps and several GitHub projects.
+
+## Work Experience
+Mobile Product Teams | Android Developer | 2016-01 - Present
+- Built and maintained Android applications from prototype to release.
+- Integrated local databases, network APIs, and device capabilities.
+- Worked on research prototypes, hackathon projects, and production mobile features.
+
+Independent Developer | Mobile Engineer | 2014-06 - 2015-12
+- Built Android side projects and published small apps to a public app store.
+- Explored game simulation, local networking, and offline-first mobile workflows.
+
+## Projects
+Mesh Network Chat | https://github.com/fixture-candidate-04/mesh-network-chat
+- Offline-first Android chat prototype using local networking concepts.
+
+Space Simulator | https://github.com/fixture-candidate-04/diaphragm-view
+- Mobile simulation project with AI-driven behavior.
+
+Checkable Items | https://github.com/fixture-candidate-04/checkable-items
+- Android sample app for list interaction and local persistence.
+
+## Skills
+Mobile: Android SDK, Java, SQLite, local storage, Google APIs, mobile UI.
+Programming: Python, C, C++, JavaScript.
+Engineering: Databases, API integration, offline-first design, prototyping, release workflows.
+
+## Education
+Bachelor of Computer Science | Technical University | 2010 - 2014
+- Studied software engineering, databases, algorithms, and mobile application development.
+
+## Awards
+Hackathon and research project participation listed in portfolio.

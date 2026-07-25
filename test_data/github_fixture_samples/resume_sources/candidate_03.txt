@@ -1,0 +1,57 @@
+# Candidate 03
+fixture-candidate-03@example.test | Remote
+GitHub: https://github.com/fixture-candidate-03
+
+## Target Role
+Java Developer
+
+## Profile
+About two years worked as as a Java developer in outstaff and freelancing in various foreign companies.
+
+Technical Summary:
+Frameworks and technologies - Spring Core, Spring MVC, Spring Data, Spring Security, Hibernate, JPA.
+UI - HTML5, HTML, CSS, AngularJS.
+Databases - SQL, MySQL, PostgreSQL, MongoDB.
+Unit and Integration testing - JUnit, Easymock, Spring Test.
+Other technologies- JSON, Git, Resteasy, Openshift.
+
+## Highlights
+Projects:
+https://github.com/fixture-candidate-03/happ-service
+https://github.com/fixture-candidate-03/cardiff-api
+https://github.com/fixture-candidate-03/queue-dump
+https://github.com/fixture-candidate-03/young-pilots
+https://github.com/fixture-candidate-03/young-pilots
+
+Projects Websites:
+https://example.test/portfolio
+https://example.test/portfolio
+https://example.test/portfolio
+
+## Resume Content
+Projects:
+https://github.com/fixture-candidate-03/happ-service
+https://github.com/fixture-candidate-03/cardiff-api
+https://github.com/fixture-candidate-03/queue-dump
+https://github.com/fixture-candidate-03/young-pilots
+https://github.com/fixture-candidate-03/young-pilots
+
+Projects Websites:
+https://example.test/portfolio
+https://example.test/portfolio
+https://example.test/portfolio
+About two years worked as as a Java developer in outstaff and freelancing in various foreign companies.
+
+Technical Summary:
+Frameworks and technologies - Spring Core, Spring MVC, Spring Data, Spring Security, Hibernate, JPA.
+UI - HTML5, HTML, CSS, AngularJS.
+Databases - SQL, MySQL, PostgreSQL, MongoDB.
+Unit and Integration testing - JUnit, Easymock, Spring Test.
+Other technologies- JSON, Git, Resteasy, Openshift.
+Provide opportunities for professional growth, visit the specialized conferences, meetups. A pleasant and informal atmosphere.
+
+## Preferences
+Provide opportunities for professional growth, visit the specialized conferences, meetups. A pleasant and informal atmosphere.
+
+## Skills
+Primary specialization: Java; English level: intermediate; Experience: 1.5 years.

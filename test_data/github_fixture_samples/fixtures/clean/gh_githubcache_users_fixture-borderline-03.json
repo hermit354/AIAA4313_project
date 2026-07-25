@@ -1,0 +1,16 @@
+{
+  "login": "fixture-borderline-03",
+  "name": "Borderline Candidate 03",
+  "bio": "Kotlin Android developer working on Room, Retrofit, UI testing, and small mobile prototypes.",
+  "location": "Remote",
+  "company": "Synthetic evaluation fixture",
+  "public_repos": 8,
+  "followers": 8,
+  "following": 6,
+  "created_at": "2023-02-15T00:00:00Z",
+  "updated_at": "2026-06-20T00:00:00Z",
+  "avatar_url": "https://example.test/avatar.png",
+  "blog": null,
+  "twitter_username": null,
+  "hireable": true
+}

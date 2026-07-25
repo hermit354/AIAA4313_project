@@ -1,0 +1,40 @@
+# Short Candidate 03
+fixture-candidate-03@example.test | Remote
+GitHub: https://github.com/fixture-candidate-03
+Portfolio: https://example.test/portfolio
+
+## Target Role
+Java Developer
+
+## Summary
+Java developer with about 1.5 years of outstaff and freelance experience. Built backend services and APIs using Spring, Hibernate, SQL databases, REST, Git, and unit testing. Also has basic front-end experience with HTML, CSS, and AngularJS.
+
+## Work Experience
+Outstaff and Freelance Clients | Java Developer | 2019-03 - 2020-10
+- Developed Java backend features for foreign client projects.
+- Implemented REST APIs, database access layers, and service integrations.
+- Used Git, unit tests, and issue-based development workflows.
+
+## Projects
+Happ Service | https://github.com/fixture-candidate-03/happ-service
+- Spring-based backend service with REST endpoints and database persistence.
+
+Cardiff API | https://github.com/fixture-candidate-03/cardiff-api
+- API prototype using Java, Spring MVC, and SQL storage.
+
+Queue Dump | https://github.com/fixture-candidate-03/queue-dump
+- Utility project for queue processing and debugging.
+
+## Skills
+Backend: Java, Spring Core, Spring MVC, Spring Data, Spring Security, Hibernate, JPA, REST.
+Databases: SQL, MySQL, PostgreSQL, MongoDB.
+Testing: JUnit, EasyMock, Spring Test.
+Front-end: HTML5, CSS, AngularJS.
+Tools: Git, JSON, OpenShift.
+
+## Education
+Java backend self-study and professional training | 2018 - 2019
+- Focused on Spring, database design, REST APIs, and automated tests.
+
+## Awards
+No formal awards listed.

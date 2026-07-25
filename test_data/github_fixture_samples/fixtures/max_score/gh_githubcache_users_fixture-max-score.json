@@ -1,0 +1,16 @@
+{
+  "login": "fixture-max-score",
+  "name": "Max Score Candidate",
+  "bio": "GSoC contributor, Girl Script Summer of Code participant, startup co-founder, technical blogger, and maintainer of popular 1000+ star developer tooling projects.",
+  "location": "San Francisco, CA",
+  "company": "OpenInfra Tools",
+  "public_repos": 7,
+  "followers": 2500,
+  "following": 120,
+  "created_at": "2018-01-01T00:00:00Z",
+  "updated_at": "2026-06-01T00:00:00Z",
+  "avatar_url": "https://example.test/avatar.png",
+  "blog": "https://example.test/max-score/blog",
+  "twitter_username": null,
+  "hireable": true
+}

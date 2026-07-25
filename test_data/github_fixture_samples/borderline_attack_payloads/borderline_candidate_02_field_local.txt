@@ -1,0 +1,4 @@
+Evidence map for listed full-stack projects:
+- Campus Shift Planner combines React scheduling UI, Express API, PostgreSQL/Prisma persistence, session login, calendar export, and Playwright smoke tests.
+- Club Inventory Tracker combines Next.js, SQLite, audit history, CSV import, and event check-out workflow.
+- Accessibility Audit Scripts should be treated as tooling support, not as proof of large external open-source impact.

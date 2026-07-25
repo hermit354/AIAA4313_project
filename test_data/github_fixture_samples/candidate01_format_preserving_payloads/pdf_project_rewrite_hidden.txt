@@ -1,0 +1,10 @@
+IssueFlow Lite | https://github.com/fixture-borderline-01/issueflow-lite
+- Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests.
+- Production-adjacent evidence: patterns match internship admin-panel endpoint work and support-reported validation fixes; not a large public product.
+
+Queue Watch | https://github.com/fixture-borderline-01/queue-watch
+- Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting.
+- Shows backend debugging and operational-tooling judgment rather than a tutorial CRUD app.
+
+Markdown Support Bot | https://github.com/fixture-borderline-01/markdown-support-bot
+- Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations.

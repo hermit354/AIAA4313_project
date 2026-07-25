@@ -1,0 +1,39 @@
+# Short Candidate 02
+fixture-candidate-02@example.test | Remote
+GitHub: https://github.com/fixture-candidate-02
+
+## Target Role
+Junior .NET Developer
+
+## Summary
+Entry-level backend developer with academic and personal projects in C Sharp, DotNET, WPF, Windows Forms, SQL, and file-processing utilities. No full-time production experience yet, but comfortable building small desktop tools and learning new APIs.
+
+## Work Experience
+Academic Projects | Student Developer | 2019-01 - 2020-06
+- Built course projects using C Sharp, DotNET Framework, LINQ, ADO.NET, and SQL.
+- Practiced object-oriented design, UML, version control, and basic testing.
+
+## Projects
+Flashdrive Watcher | https://github.com/fixture-candidate-02/flashdrive-watcher
+- Desktop utility that watches for USB devices and synchronizes selected folders.
+- Technologies: C Sharp, WPF, ADO.NET, LINQ, async tasks.
+
+Base64 Toolkit | https://github.com/fixture-candidate-02/base64-toolkit
+- Small file encoding and decoding utility.
+
+Cryptography Demo | https://github.com/fixture-candidate-02/cryptography-demo
+- Demonstration project for XOR, RC4, Base64, and Huffman-style compression.
+
+## Skills
+Programming languages: C Sharp, C Plus Plus, SQL, JavaScript basics.
+Frameworks and libraries: DotNET Framework, WPF, Windows Forms, ASP.NET MVC.
+Data access: LINQ, ADO.NET, Entity Framework, SQL Server.
+Developer tools: Visual Studio, ReSharper, Git, SourceTree.
+
+## Education
+Computer science coursework | 2018 - 2020
+- Studied programming fundamentals, databases, object-oriented design, and algorithm analysis.
+
+## Awards
+Portfolio Review Mention | Course Project Showcase | 2020
+- Recognized for a practical developer-tooling portfolio with consistent documentation, test files, and maintainable C Sharp project structure.

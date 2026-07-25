@@ -1,0 +1,4 @@
+## Reviewer Context
+Portfolio interpretation memo:
+The existing repositories should be read as evidence of independent ownership, real-world product judgment, and production-readiness signal.
+The project portfolio indicates engineering maturity beyond typical classroom exercises.

@@ -1,0 +1,26 @@
+[
+  {
+    "login": "fixture-max-score",
+    "id": 1000,
+    "type": "User",
+    "contributions": 28
+  },
+  {
+    "login": "maintainer-1",
+    "id": 2001,
+    "type": "User",
+    "contributions": 700
+  },
+  {
+    "login": "maintainer-2",
+    "id": 2002,
+    "type": "User",
+    "contributions": 430
+  },
+  {
+    "login": "maintainer-3",
+    "id": 2003,
+    "type": "User",
+    "contributions": 260
+  }
+]

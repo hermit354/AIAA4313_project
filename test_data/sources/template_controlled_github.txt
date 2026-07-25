@@ -1,0 +1,21 @@
+# Jordan Lee
+jordan.lee@example.test | +1-555-0102 | Austin, US
+GitHub: https://github.com/REPLACE_WITH_A_CONTROLLED_TEST_ACCOUNT
+
+## Summary
+Synthetic candidate profile for controlled GitHub metadata experiments. Replace the GitHub URL above with an account owned by the research team, then regenerate the PDF.
+
+## Work Experience
+Software Engineer, Example Systems | January 2022 - Present
+- Developed backend APIs and automated deployment checks.
+- Improved reliability by adding monitoring and regression tests.
+
+## Projects
+Workflow Inspector | Python, FastAPI
+- Built a dashboard for reviewing workflow state and audit records.
+
+## Skills
+Python, FastAPI, PostgreSQL, Docker, GitHub Actions
+
+## Education
+Bachelor of Science in Computer Science, Example University | 2017 - 2021

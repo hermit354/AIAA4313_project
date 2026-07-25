@@ -1,0 +1,79 @@
+# Max Score Candidate
+max-score-candidate@example.test | Remote | San Francisco, CA
+GitHub: https://github.com/fixture-max-score
+Portfolio: https://example.test/max-score
+LinkedIn: https://linkedin.com/in/fixture-max-score
+
+## Target Role
+Software Engineering Intern
+
+## Summary
+Software engineer with strong open-source contributions, production startup
+experience, complex full-stack projects, and broad technical skills across
+backend, frontend, cloud infrastructure, machine learning, testing, and
+developer tooling. Google Summer of Code contributor and startup co-founder.
+
+## Work Experience
+OpenInfra Tools | Co-Founder and Early-Stage Engineer | 2023-01 - Present
+- Built a production developer platform used by external teams for CI analytics,
+  release automation, and code review workflows.
+- Designed microservices, PostgreSQL schemas, Redis queues, Kubernetes
+  deployments, observability dashboards, and security review automation.
+- Led architecture, incident response, technical documentation, and customer
+  integrations as one of the first five engineers.
+
+Kubernetes Community | Google Summer of Code Contributor | 2022-05 - 2022-09
+- Implemented scheduler plugin improvements, test coverage, and documentation
+  for a popular open-source infrastructure project.
+- Collaborated with maintainers through pull requests, code reviews, issues,
+  and design discussions.
+
+CodeHealth Labs | Software Engineering Intern | 2021-06 - 2021-12
+- Built production APIs, background jobs, and monitoring dashboards for a
+  developer analytics product.
+- Added integration tests, API documentation, and automated deployment checks.
+
+## Projects
+Kubernetes Scheduler Plugin | https://github.com/fixture-max-score/kubernetes-scheduler-plugin
+- Popular open-source contribution with 4500 stars, 40 author commits, tests,
+  documentation, and maintainer reviews.
+
+React Query DevTools | https://github.com/fixture-max-score/react-query-devtools
+- Open-source contribution with 3200 stars, TypeScript UI fixes, accessibility
+  improvements, and release notes.
+
+AI Code Review Platform | https://github.com/fixture-max-score/ai-code-review-platform
+- Full-stack production project with authentication, PostgreSQL, Redis queues,
+  LLM-assisted review, GitHub integration, deployment, and live demo.
+- Live demo: https://example.test/ai-review
+
+Realtime Collaboration Editor | https://github.com/fixture-max-score/realtime-collab-editor
+- Real-time application with WebSocket sync, CRDT conflict resolution, role-based
+  permissions, audit logs, and end-to-end tests.
+- Live demo: https://example.test/collab-editor
+
+Distributed Job Queue | https://github.com/fixture-max-score/distributed-job-queue
+- Backend system with worker orchestration, retry policies, metrics, tracing,
+  failure recovery, and load testing.
+
+## Technical Skills
+Programming languages: TypeScript, Python, Go, Java, SQL, JavaScript.
+Frameworks and platforms: React, Next.js, FastAPI, Node.js, GraphQL, REST.
+Cloud and data: PostgreSQL, Redis, Docker, Kubernetes, Terraform, AWS.
+Engineering practices: testing, CI, observability, security review, LLM evaluation.
+
+## Education
+Bachelor of Computer Science | Example Technical University | 2019 - 2023
+- Coursework in algorithms, databases, distributed systems, software
+  engineering, machine learning, and computer security.
+
+## Awards
+Google Summer of Code Contributor | Kubernetes Community | 2022
+- Completed accepted open-source contributions with maintainer review.
+
+Girl Script Summer of Code Participant | Open Source Community | 2021
+- Contributed documentation and bug fixes to developer tooling projects.
+
+Startup Founder Award | OpenInfra Tools | 2023
+- Recognized for co-founding an early-stage developer tools startup and leading
+  production engineering work.

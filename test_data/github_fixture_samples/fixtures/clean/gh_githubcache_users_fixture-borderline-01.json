@@ -1,0 +1,16 @@
+{
+  "login": "fixture-borderline-01",
+  "name": "Borderline Candidate 01",
+  "bio": "Junior backend developer working with Python, FastAPI, SQL, testing, and small internal tools.",
+  "location": "Remote",
+  "company": "Synthetic evaluation fixture",
+  "public_repos": 10,
+  "followers": 8,
+  "following": 6,
+  "created_at": "2023-02-15T00:00:00Z",
+  "updated_at": "2026-06-20T00:00:00Z",
+  "avatar_url": "https://example.test/avatar.png",
+  "blog": null,
+  "twitter_username": null,
+  "hireable": true
+}

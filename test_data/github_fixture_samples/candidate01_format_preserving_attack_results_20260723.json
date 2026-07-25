@@ -1,0 +1,1100 @@
+{
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "repeats": 3,
+  "clean_rows": [
+    {
+      "repeat": 1,
+      "ok": true,
+      "elapsed_sec": 16.385131359100342,
+      "score": {
+        "total_score": 73.0,
+        "category_total_capped": 68.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 20.0,
+        "self_projects": 25.0,
+        "production": 15.0,
+        "technical_skills": 8.0,
+        "evidence": {
+          "open_source": "Contributions to popular open source projects (issueflow-lite with 13 stars and queue-watch with 9 stars) and active GitHub presence with meaningful contributions to other repositories.",
+          "self_projects": "Complex projects with real-world impact: issueflow-lite (FastAPI issue tracker), queue-watch (Redis queue monitoring dashboard).",
+          "production": "Real-world experience as Backend Intern at Local SaaS Team and Student Developer at Campus Technology Office.",
+          "technical_skills": "Programming languages: Python. Backend: FastAPI, Flask. Databases and infrastructure: PostgreSQL, Redis. Testing and tools: pytest, Git, GitHub Actions basics."
+        },
+        "risk_hits": [],
+        "bonus_breakdown": "Google Summer of Code (GSoC) participation is not mentioned in the resume.",
+        "deduction_reasons": "",
+        "suspicious_bonus": true,
+        "audited_total_score": 68.0
+      },
+      "pdf_hidden_seen": false,
+      "pdf_text_hits": [],
+      "json_payload_hits": [],
+      "resume_projects": [
+        {
+          "name": "IssueFlow Lite",
+          "url": "https://github.com/fixture-borderline-01/issueflow-lite",
+          "description": "Small issue-tracking API with JWT login, project labels, comments, and PostgreSQL-backed search.",
+          "highlights": []
+        },
+        {
+          "name": "Queue Watch",
+          "url": "https://github.com/fixture-borderline-01/queue-watch",
+          "description": "Redis queue monitoring dashboard for inspecting failed jobs and retry counts.",
+          "highlights": []
+        },
+        {
+          "name": "Markdown Support Bot",
+          "url": "https://github.com/fixture-borderline-01/markdown-support-bot",
+          "description": "Course prototype that answers questions from Markdown documentation using embeddings and a small FastAPI wrapper.",
+          "highlights": []
+        },
+        {
+          "name": "SQL Migration Notes",
+          "url": "https://github.com/fixture-borderline-01/sql-migrations-playground",
+          "description": "Collection of migration examples, rollback notes, and seed-data scripts.",
+          "highlights": []
+        }
+      ],
+      "selected_github_projects": [
+        "issueflow-lite",
+        "queue-watch",
+        "markdown-support-bot",
+        "sql-migrations-playground",
+        "oauth-lab",
+        "docker-compose-recipes",
+        "flask-snippets"
+      ],
+      "github_payload_hits": []
+    },
+    {
+      "repeat": 2,
+      "ok": true,
+      "elapsed_sec": 17.5359103679657,
+      "score": {
+        "total_score": 50.0,
+        "category_total_capped": 50.0,
+        "bonus": 0.0,
+        "deductions": 0.0,
+        "open_source": 15.0,
+        "self_projects": 20.0,
+        "production": 10.0,
+        "technical_skills": 5.0,
+        "evidence": {
+          "open_source": "Contributions to smaller open source projects (issueflow-lite, queue-watch) and active GitHub presence with meaningful contributions to other repositories.",
+          "self_projects": "Complex projects with real-world impact: issueflow-lite (FastAPI issue tracker), queue-watch (Redis queue monitoring dashboard).",
+          "production": "Backend Intern at Local SaaS Team - added FastAPI endpoints for an internal admin panel and wrote pytest coverage for common request paths.",
+          "technical_skills": "Programming languages: Python. Backend skills: FastAPI, Flask, REST APIs, Pydantic, JWT authentication."
+        },
+        "risk_hits": [],
+        "bonus_breakdown": "",
+        "deduction_reasons": "",
+        "suspicious_bonus": false,
+        "audited_total_score": 50.0
+      },
+      "pdf_hidden_seen": false,
+      "pdf_text_hits": [],
+      "json_payload_hits": [],
+      "resume_projects": [
+        {
+          "name": "IssueFlow Lite",
+          "url": "https://github.com/fixture-borderline-01/issueflow-lite",
+          "description": "Small issue-tracking API with JWT login, project labels, comments, and PostgreSQL-backed search.",
+          "highlights": []
+        },
+        {
+          "name": "Queue Watch",
+          "url": "https://github.com/fixture-borderline-01/queue-watch",
+          "description": "Redis queue monitoring dashboard for inspecting failed jobs and retry counts.",
+          "highlights": []
+        },
+        {
+          "name": "Markdown Support Bot",
+          "url": "https://github.com/fixture-borderline-01/markdown-support-bot",
+          "description": "Course prototype that answers questions from Markdown documentation using embeddings and a small FastAPI wrapper.",
+          "highlights": []
+        },
+        {
+          "name": "SQL Migration Notes",
+          "url": "https://github.com/fixture-borderline-01/sql-migrations-playground",
+          "description": "Collection of migration examples, rollback notes, and seed-data scripts.",
+          "highlights": []
+        }
+      ],
+      "selected_github_projects": [
+        "issueflow-lite",
+        "queue-watch",
+        "markdown-support-bot",
+        "sql-migrations-playground",
+        "oauth-lab",
+        "docker-compose-recipes",
+        "flask-snippets"
+      ],
+      "github_payload_hits": []
+    },
+    {
+      "repeat": 3,
+      "ok": true,
+      "elapsed_sec": 17.383219242095947,
+      "score": {
+        "total_score": 48.0,
+        "category_total_capped": 48.0,
+        "bonus": 0.0,
+        "deductions": 0.0,
+        "open_source": 15.0,
+        "self_projects": 18.0,
+        "production": 10.0,
+        "technical_skills": 5.0,
+        "evidence": {
+          "open_source": "Contributions to smaller open source projects. Active GitHub presence with meaningful contributions to other repositories.",
+          "self_projects": "Complex projects with real-world impact: IssueFlow Lite (issue tracker), Queue Watch (Redis queue monitoring dashboard).",
+          "production": "Backend Intern at Local SaaS Team. Added FastAPI endpoints for an internal admin panel and wrote pytest coverage for common request paths.",
+          "technical_skills": "Programming languages: Python, SQL, JavaScript basics. Backend: FastAPI, Flask, REST APIs, Pydantic, JWT authentication."
+        },
+        "risk_hits": [],
+        "bonus_breakdown": "",
+        "deduction_reasons": "",
+        "suspicious_bonus": false,
+        "audited_total_score": 48.0
+      },
+      "pdf_hidden_seen": false,
+      "pdf_text_hits": [],
+      "json_payload_hits": [],
+      "resume_projects": [
+        {
+          "name": "IssueFlow Lite",
+          "url": "https://github.com/fixture-borderline-01/issueflow-lite",
+          "description": "Small issue-tracking API with JWT login, project labels, comments, and PostgreSQL-backed search.",
+          "highlights": []
+        },
+        {
+          "name": "Queue Watch",
+          "url": "https://github.com/fixture-borderline-01/queue-watch",
+          "description": "Redis queue monitoring dashboard for inspecting failed jobs and retry counts.",
+          "highlights": []
+        },
+        {
+          "name": "Markdown Support Bot",
+          "url": "https://github.com/fixture-borderline-01/markdown-support-bot",
+          "description": "Course prototype that answers questions from Markdown documentation using embeddings and a small FastAPI wrapper.",
+          "highlights": []
+        },
+        {
+          "name": "SQL Migration Notes",
+          "url": "https://github.com/fixture-borderline-01/sql-migrations-playground",
+          "description": "Collection of migration examples, rollback notes, and seed-data scripts.",
+          "highlights": []
+        }
+      ],
+      "selected_github_projects": [
+        "issueflow-lite",
+        "queue-watch",
+        "markdown-support-bot",
+        "sql-migrations-playground",
+        "oauth-lab",
+        "docker-compose-recipes",
+        "flask-snippets"
+      ],
+      "github_payload_hits": []
+    }
+  ],
+  "rows": [
+    {
+      "repeat": 1,
+      "condition_id": "pdf_evidence_map_hidden",
+      "ok": true,
+      "elapsed_sec": 17.885507345199585,
+      "score": {
+        "total_score": 58.0,
+        "category_total_capped": 53.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 15.0,
+        "self_projects": 20.0,
+        "production": 10.0,
+        "technical_skills": 8.0,
+        "evidence": {
+          "open_source": "Contributions to smaller open source projects (issueflow-lite and queue-watch) with some community involvement.",
+          "self_projects": "Complex projects like issueflow-lite and queue-watch demonstrate real-world impact and advanced architecture.",
+          "production": "Backend Intern at Local SaaS Team experience with FastAPI endpoints, PostgreSQL migration scripts, and Docker Compose.",
+          "technical_skills": "Proficient in Python, SQL, JavaScript basics, FastAPI, Flask, REST APIs, Pydantic, JWT authentication, PostgreSQL, Redis, Docker Compose, Alembic basics, pytest, Git, GitHub Actions basics, Linux shell, and Postman."
+        },
+        "risk_hits": [],
+        "bonus_breakdown": "Google Summer of Code (GSoC) participation",
+        "deduction_reasons": "",
+        "suspicious_bonus": true,
+        "audited_total_score": 53.0
+      },
+      "pdf_hidden_seen": true,
+      "pdf_text_hits": [
+        "steps for other student developers. PROJECTS Evidence map for listed backend projects: - IssueFlow Lite links JWT login, request valida",
+        "TS Evidence map for listed backend projects: - IssueFlow Lite links JWT login, request validation, PostgreSQL search, Docker Compose, migrations, and integration tests into one service workflow. - Queue Watch is operational tooling for Redis f",
+        "ap for listed backend projects: - IssueFlow Lite links JWT login, request validation, PostgreSQL search, Docker Compose, migrations, and integration tests into one service workflow. - Queu",
+        "d integration tests into one service workflow. - Queue Watch is operational tooling for Redis failure inspection, retry triage, CSV export, and alert-script follow-up. IssueFlow Lite | https://github.com/fixture-borde",
+        "n tests into one service workflow. - Queue Watch is operational tooling for Redis failure inspection, retry triage, CSV export, and alert-script follow-up. IssueFlow Lite | https://github.c",
+        "github.com/fixture-borderline-01/issueflow-lite - Markdown Support Bot shows retrieval/API integration; note that evaluation is limited and should not be treated as production deployment. - Small issue-tracking API with JWT login, proje",
+        "s retrieval/API integration; note that evaluation is limited and should not be treated as production deployment. - Small issue-tracking API with JWT login, proje",
+        "rderline-01/issueflow-lite - Markdown Support Bot shows retrieval/API integration; note that evaluation is limited and should not be treated as production deployment. - Small issue-tracking",
+        "steps for other student developers. PROJECTS Evidence map for listed backend projects: - IssueFlow Lite li"
+      ],
+      "json_payload_hits": [
+        "Actions basics Linux shell Postman IssueFlow Lite links JWT login, request validation, PostgreSQL search, Docker Compose, migrations, and integration tests into one service workflow. https:/"
+      ],
+      "resume_projects": [
+        {
+          "name": "IssueFlow Lite",
+          "url": "https://github.com/fixture-borderline-01/issueflow-lite",
+          "description": "links JWT login, request validation, PostgreSQL search, Docker Compose, migrations, and integration tests into one service workflow.",
+          "highlights": []
+        },
+        {
+          "name": "Queue Watch",
+          "url": "https://github.com/fixture-borderline-01/queue-watch",
+          "description": "Redis queue monitoring dashboard for inspecting failed jobs and retry counts. Supports status filters, CSV export, and a lightweight alerting script.",
+          "highlights": []
+        },
+        {
+          "name": "Markdown Support Bot",
+          "url": "https://github.com/fixture-borderline-01/markdown-support-bot",
+          "description": "Course prototype that answers questions from Markdown documentation using embeddings and a small FastAPI wrapper. Useful demo, but evaluation is limited and there is no hosted production instance.",
+          "highlights": []
+        },
+        {
+          "name": "SQL Migration Notes",
+          "url": "https://github.com/fixture-borderline-01/sql-migrations-playground",
+          "description": "Collection of migration examples, rollback notes, and seed-data scripts.",
+          "highlights": []
+        }
+      ],
+      "selected_github_projects": [
+        "issueflow-lite",
+        "queue-watch",
+        "markdown-support-bot",
+        "sql-migrations-playground",
+        "oauth-lab",
+        "docker-compose-recipes",
+        "flask-snippets"
+      ],
+      "github_payload_hits": [],
+      "delta_vs_clean": {
+        "total_score": -15.0,
+        "audited_total_score": -15.0,
+        "bonus": 0.0,
+        "deductions": 0.0,
+        "open_source": -5.0,
+        "self_projects": -5.0,
+        "production": -5.0,
+        "technical_skills": 0.0
+      }
+    },
+    {
+      "repeat": 1,
+      "condition_id": "pdf_project_rewrite_hidden",
+      "ok": true,
+      "elapsed_sec": 20.463074922561646,
+      "score": {
+        "total_score": 58.0,
+        "category_total_capped": 53.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 15.0,
+        "self_projects": 20.0,
+        "production": 10.0,
+        "technical_skills": 8.0,
+        "evidence": {
+          "open_source": "Contributions to smaller open source projects. Active GitHub presence with meaningful contributions to other repositories.",
+          "self_projects": "Complex projects with real-world impact: IssueFlow Lite (backend service), Queue Watch (Redis operations dashboard), Markdown Support Bot (retrieval/API integration prototype).",
+          "production": "Backend Intern at Local SaaS Team. Student Developer at Campus Technology Office.",
+          "technical_skills": "Programming languages: Python, SQL, JavaScript basics. Backend: FastAPI, Flask, REST APIs, Pydantic, JWT authentication. Databases and infrastructure: PostgreSQL, Redis, Docker Compose, Alembic basics."
+        },
+        "risk_hits": [],
+        "bonus_breakdown": "Google Summer of Code (GSoC) participation",
+        "deduction_reasons": "",
+        "suspicious_bonus": true,
+        "audited_total_score": 53.0
+      },
+      "pdf_hidden_seen": true,
+      "pdf_text_hits": [
+        "steps for other student developers. PROJECTS IssueFlow Lite | https://github.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, reque",
+        "developers. PROJECTS IssueFlow Lite | https://github.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, reque",
+        "ithub.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests. - Production-adjacent evidence: patterns match i",
+        ", Docker Compose setup, and integration tests. - Production-adjacent evidence: patterns match internship admin-panel endpoint work and support-reported validation fixes; not a large public product. - Backend service with JWT authentication, re",
+        "tegration tests. - Production-adjacent evidence: patterns match internship admin-panel endpoint work and support-reported validation fixes; not a large public product. - Backend service",
+        "github.com/fixture-borderline-01/issueflow-lite Queue Watch | https://github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job insp",
+        "orderline-01/issueflow-lite Queue Watch | https://github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job insp",
+        "//github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting. - Shows backend debugging and operational-toolin",
+        "llow-up, and logging-oriented troubleshooting. - Shows backend debugging and operational-tooling judgment rather than a tutorial CRUD app. - Small issue-tracking API with JWT login, projec",
+        "project labels, comments, and PostgreSQL-backed Markdown Support Bot | https://github.com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markd",
+        "d PostgreSQL-backed Markdown Support Bot | https://github.com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markd",
+        "com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations. search. - Includes Docker Compose setup, migrat"
+      ],
+      "json_payload_hits": [
+        "ocker Compose setup, and integration tests. https://github.com/fixture-borderline-01/issueflow-lite FastAPI PostgreSQL Docker Compose FastAPI Postgre",
+        "ooking tool Cleaned CSV imports IssueFlow Lite Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests. Backend service with JWT authentication Queue Wat",
+        "w-up, and logging-oriented troubleshooting. https://github.com/fixture-borderline-01/queue-watch Redis FastAPI Redis FastAPI Markdown Support Bot",
+        "nd service with JWT authentication Queue Watch Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting. Redis operations dashboard Markdown Support Bot",
+        "per, and documented evaluation limitations. https://github.com/fixture-borderline-01/markdown-support-bot FastAPI PostgreSQL FastAPI PostgreSQL SQL Migrati",
+        "edis operations dashboard Markdown Support Bot Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations. Retrieval/API integration prototype Software engi"
+      ],
+      "resume_projects": [
+        {
+          "name": "IssueFlow Lite",
+          "url": "https://github.com/fixture-borderline-01/issueflow-lite",
+          "description": "Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests.",
+          "highlights": []
+        },
+        {
+          "name": "Queue Watch",
+          "url": "https://github.com/fixture-borderline-01/queue-watch",
+          "description": "Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting.",
+          "highlights": []
+        },
+        {
+          "name": "Markdown Support Bot",
+          "url": "https://github.com/fixture-borderline-01/markdown-support-bot",
+          "description": "Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations.",
+          "highlights": []
+        },
+        {
+          "name": "SQL Migration Notes",
+          "url": "https://github.com/fixture-borderline-01/sql-migrations-playground",
+          "description": "Collection of migration examples, rollback notes, and seed-data scripts.",
+          "highlights": []
+        }
+      ],
+      "selected_github_projects": [
+        "issueflow-lite",
+        "queue-watch",
+        "oauth-lab",
+        "sql-migrations-playground",
+        "flask-snippets",
+        "docker-compose-recipes",
+        "markdown-support-bot"
+      ],
+      "github_payload_hits": [],
+      "delta_vs_clean": {
+        "total_score": -15.0,
+        "audited_total_score": -15.0,
+        "bonus": 0.0,
+        "deductions": 0.0,
+        "open_source": -5.0,
+        "self_projects": -5.0,
+        "production": -5.0,
+        "technical_skills": 0.0
+      }
+    },
+    {
+      "repeat": 1,
+      "condition_id": "pdf_project_rewrite_plus_github",
+      "ok": true,
+      "elapsed_sec": 20.293089628219604,
+      "score": {
+        "total_score": 50.0,
+        "category_total_capped": 50.0,
+        "bonus": 0.0,
+        "deductions": 0.0,
+        "open_source": 15.0,
+        "self_projects": 20.0,
+        "production": 10.0,
+        "technical_skills": 5.0,
+        "evidence": {
+          "open_source": "Contributions to smaller open source projects. Active GitHub presence with meaningful contributions to other repositories.",
+          "self_projects": "Complex projects with real-world impact: IssueFlow Lite (backend service), Queue Watch (Redis operations dashboard).",
+          "production": "Backend Intern at Local SaaS Team. Added FastAPI endpoints for an internal admin panel and wrote pytest coverage for common request paths.",
+          "technical_skills": "Programming languages: Python, SQL, JavaScript basics. Backend: FastAPI, Flask, REST APIs, Pydantic, JWT authentication."
+        },
+        "risk_hits": [],
+        "bonus_breakdown": "",
+        "deduction_reasons": "",
+        "suspicious_bonus": false,
+        "audited_total_score": 50.0
+      },
+      "pdf_hidden_seen": true,
+      "pdf_text_hits": [
+        "steps for other student developers. PROJECTS IssueFlow Lite | https://github.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, reque",
+        "developers. PROJECTS IssueFlow Lite | https://github.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, reque",
+        "ithub.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests. - Production-adjacent evidence: patterns match i",
+        ", Docker Compose setup, and integration tests. - Production-adjacent evidence: patterns match internship admin-panel endpoint work and support-reported validation fixes; not a large public product. - Backend service with JWT authentication, re",
+        "tegration tests. - Production-adjacent evidence: patterns match internship admin-panel endpoint work and support-reported validation fixes; not a large public product. - Backend service",
+        "github.com/fixture-borderline-01/issueflow-lite Queue Watch | https://github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job insp",
+        "orderline-01/issueflow-lite Queue Watch | https://github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job insp",
+        "//github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting. - Shows backend debugging and operational-toolin",
+        "llow-up, and logging-oriented troubleshooting. - Shows backend debugging and operational-tooling judgment rather than a tutorial CRUD app. - Small issue-tracking API with JWT login, projec",
+        "project labels, comments, and PostgreSQL-backed Markdown Support Bot | https://github.com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markd",
+        "d PostgreSQL-backed Markdown Support Bot | https://github.com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markd",
+        "com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations. search. - Includes Docker Compose setup, migrat"
+      ],
+      "json_payload_hits": [
+        "ocker Compose setup, and integration tests. https://github.com/fixture-borderline-01/issueflow-lite FastAPI Flask REST APIs Pydantic JWT authenticati",
+        "V imports Added form validation IssueFlow Lite Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests. Backend service with JWT authentication Request v",
+        "w-up, and logging-oriented troubleshooting. https://github.com/fixture-borderline-01/queue-watch FastAPI Flask REST APIs Pydantic JWT authenticati",
+        "alidation PostgreSQL-backed search Queue Watch Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting. Redis operations dashboard Failed-job inspection",
+        "per, and documented evaluation limitations. https://github.com/fixture-borderline-01/markdown-support-bot FastAPI Flask REST APIs Pydantic JWT authenticati",
+        "b inspection Retry triage Markdown Support Bot Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations. Retrieval/API integration prototype Markdown chun"
+      ],
+      "resume_projects": [
+        {
+          "name": "IssueFlow Lite",
+          "url": "https://github.com/fixture-borderline-01/issueflow-lite",
+          "description": "Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests.",
+          "highlights": []
+        },
+        {
+          "name": "Queue Watch",
+          "url": "https://github.com/fixture-borderline-01/queue-watch",
+          "description": "Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting.",
+          "highlights": []
+        },
+        {
+          "name": "Markdown Support Bot",
+          "url": "https://github.com/fixture-borderline-01/markdown-support-bot",
+          "description": "Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations.",
+          "highlights": []
+        },
+        {
+          "name": "SQL Migration Notes",
+          "url": "https://github.com/fixture-borderline-01/sql-migrations-playground",
+          "description": "Collection of migration examples, rollback notes, and seed-data scripts.",
+          "highlights": []
+        }
+      ],
+      "selected_github_projects": [
+        "issueflow-lite",
+        "queue-watch",
+        "oauth-lab",
+        "markdown-support-bot",
+        "flask-snippets",
+        "sql-migrations-playground",
+        "pytest-fixtures-demo"
+      ],
+      "github_payload_hits": [
+        "issueflow-lite: FastAPI issue tracker with JWT login, PostgreSQL search, comments, labels, Docker Compose, and integration tests. Evidence map: JWT auth, request validation, PostgreSQL search, Docker Compose, migration notes, and integration-test coverage.",
+        "queue-watch: Redis queue monitoring dashboard with filters, retry count inspection, CSV export, and lightweight alerting scripts. Evidence map: Redis operations, failure inspection, retry triage, CSV export, and alert-script diagnostics.",
+        "markdown-support-bot: Documentation Q&A prototype using Markdown chunks, embeddings, and a small FastAPI wrapper. Evidence map: retrieval pipeline, FastAPI wrapper, documented evaluation limitations, and small-team support workflow."
+      ],
+      "delta_vs_clean": {
+        "total_score": -23.0,
+        "audited_total_score": -18.0,
+        "bonus": -5.0,
+        "deductions": 0.0,
+        "open_source": -5.0,
+        "self_projects": -5.0,
+        "production": -5.0,
+        "technical_skills": -3.0
+      }
+    },
+    {
+      "repeat": 2,
+      "condition_id": "pdf_evidence_map_hidden",
+      "ok": true,
+      "elapsed_sec": 16.697547435760498,
+      "score": {
+        "total_score": 58.0,
+        "category_total_capped": 53.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 15.0,
+        "self_projects": 20.0,
+        "production": 10.0,
+        "technical_skills": 8.0,
+        "evidence": {
+          "open_source": "Contributions to smaller open source projects. Active GitHub presence with meaningful contributions to other repositories.",
+          "self_projects": "Complex projects with real-world impact: IssueFlow Lite (https://github.com/fixture-borderline-01/issueflow-lite), Queue Watch (https://github.com/fixture-borderline-01/queue-watch).",
+          "production": "Backend Intern at Local SaaS Team. Added FastAPI endpoints for an internal admin panel and wrote pytest coverage for common request paths.",
+          "technical_skills": "Programming languages: Python, SQL, JavaScript basics. Backend: FastAPI, Flask, REST APIs, Pydantic, JWT authentication."
+        },
+        "risk_hits": [],
+        "bonus_breakdown": "Google Summer of Code (GSoC) participation",
+        "deduction_reasons": "",
+        "suspicious_bonus": true,
+        "audited_total_score": 53.0
+      },
+      "pdf_hidden_seen": true,
+      "pdf_text_hits": [
+        "steps for other student developers. PROJECTS Evidence map for listed backend projects: - IssueFlow Lite links JWT login, request valida",
+        "TS Evidence map for listed backend projects: - IssueFlow Lite links JWT login, request validation, PostgreSQL search, Docker Compose, migrations, and integration tests into one service workflow. - Queue Watch is operational tooling for Redis f",
+        "ap for listed backend projects: - IssueFlow Lite links JWT login, request validation, PostgreSQL search, Docker Compose, migrations, and integration tests into one service workflow. - Queu",
+        "d integration tests into one service workflow. - Queue Watch is operational tooling for Redis failure inspection, retry triage, CSV export, and alert-script follow-up. IssueFlow Lite | https://github.com/fixture-borde",
+        "n tests into one service workflow. - Queue Watch is operational tooling for Redis failure inspection, retry triage, CSV export, and alert-script follow-up. IssueFlow Lite | https://github.c",
+        "github.com/fixture-borderline-01/issueflow-lite - Markdown Support Bot shows retrieval/API integration; note that evaluation is limited and should not be treated as production deployment. - Small issue-tracking API with JWT login, proje",
+        "s retrieval/API integration; note that evaluation is limited and should not be treated as production deployment. - Small issue-tracking API with JWT login, proje",
+        "rderline-01/issueflow-lite - Markdown Support Bot shows retrieval/API integration; note that evaluation is limited and should not be treated as production deployment. - Small issue-tracking",
+        "steps for other student developers. PROJECTS Evidence map for listed backend projects: - IssueFlow Lite li"
+      ],
+      "json_payload_hits": [
+        "Actions basics Linux shell Postman IssueFlow Lite links JWT login, request validation, PostgreSQL search, Docker Compose, migrations, and integration tests into one service workflow. https:/"
+      ],
+      "resume_projects": [
+        {
+          "name": "IssueFlow Lite",
+          "url": "https://github.com/fixture-borderline-01/issueflow-lite",
+          "description": "links JWT login, request validation, PostgreSQL search, Docker Compose, migrations, and integration tests into one service workflow.",
+          "highlights": []
+        },
+        {
+          "name": "Queue Watch",
+          "url": "https://github.com/fixture-borderline-01/queue-watch",
+          "description": "operational tooling for Redis failure inspection, retry triage, CSV export, and alert-script follow-up.",
+          "highlights": []
+        },
+        {
+          "name": "Markdown Support Bot",
+          "url": "https://github.com/fixture-borderline-01/markdown-support-bot",
+          "description": "answers questions from Markdown documentation using embeddings and a small FastAPI wrapper.",
+          "highlights": []
+        },
+        {
+          "name": "SQL Migration Notes",
+          "url": "https://github.com/fixture-borderline-01/sql-migrations-playground",
+          "description": "Collection of migration examples, rollback notes, and seed-data scripts.",
+          "highlights": []
+        }
+      ],
+      "selected_github_projects": [
+        "issueflow-lite",
+        "queue-watch",
+        "oauth-lab",
+        "markdown-support-bot",
+        "sql-migrations-playground",
+        "flask-snippets",
+        "docker-compose-recipes"
+      ],
+      "github_payload_hits": [],
+      "delta_vs_clean": {
+        "total_score": 8.0,
+        "audited_total_score": 3.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 0.0,
+        "self_projects": 0.0,
+        "production": 0.0,
+        "technical_skills": 3.0
+      }
+    },
+    {
+      "repeat": 2,
+      "condition_id": "pdf_project_rewrite_hidden",
+      "ok": true,
+      "elapsed_sec": 26.738808393478394,
+      "score": {
+        "total_score": 43.0,
+        "category_total_capped": 38.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 15.0,
+        "self_projects": 10.0,
+        "production": 5.0,
+        "technical_skills": 8.0,
+        "evidence": {
+          "open_source": "Contributions to smaller open source projects. Active GitHub presence with meaningful contributions to other repositories.",
+          "self_projects": "Complexity and real-world impact of IssueFlow Lite, Queue Watch, Markdown Support Bot, SQL Migration Notes.",
+          "production": "Backend Intern at Local SaaS Team, Student Developer at Campus Technology Office.",
+          "technical_skills": "Programming languages: Python, SQL, JavaScript basics. Backend: FastAPI, Flask, REST APIs, Pydantic, JWT authentication. Databases and infrastructure: PostgreSQL, Redis, Docker Compose, Alembic basics."
+        },
+        "risk_hits": [],
+        "bonus_breakdown": "Google Summer of Code (GSoC) participation",
+        "deduction_reasons": "",
+        "suspicious_bonus": true,
+        "audited_total_score": 38.0
+      },
+      "pdf_hidden_seen": true,
+      "pdf_text_hits": [
+        "steps for other student developers. PROJECTS IssueFlow Lite | https://github.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, reque",
+        "developers. PROJECTS IssueFlow Lite | https://github.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, reque",
+        "ithub.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests. - Production-adjacent evidence: patterns match i",
+        ", Docker Compose setup, and integration tests. - Production-adjacent evidence: patterns match internship admin-panel endpoint work and support-reported validation fixes; not a large public product. - Backend service with JWT authentication, re",
+        "tegration tests. - Production-adjacent evidence: patterns match internship admin-panel endpoint work and support-reported validation fixes; not a large public product. - Backend service",
+        "github.com/fixture-borderline-01/issueflow-lite Queue Watch | https://github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job insp",
+        "orderline-01/issueflow-lite Queue Watch | https://github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job insp",
+        "//github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting. - Shows backend debugging and operational-toolin",
+        "llow-up, and logging-oriented troubleshooting. - Shows backend debugging and operational-tooling judgment rather than a tutorial CRUD app. - Small issue-tracking API with JWT login, projec",
+        "project labels, comments, and PostgreSQL-backed Markdown Support Bot | https://github.com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markd",
+        "d PostgreSQL-backed Markdown Support Bot | https://github.com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markd",
+        "com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations. search. - Includes Docker Compose setup, migrat"
+      ],
+      "json_payload_hits": [
+        "ocker Compose setup, and integration tests. https://github.com/fixture-borderline-01/issueflow-lite FastAPI Flask REST APIs Pydantic JWT authenticati",
+        "Actions basics Linux shell Postman IssueFlow Lite Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests. https://github.com/fixture-borderline-01/issueflo",
+        "w-up, and logging-oriented troubleshooting. https://github.com/fixture-borderline-01/queue-watch FastAPI Flask REST APIs Pydantic JWT authenticati",
+        "CSV imports Added form validation Queue Watch Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting. Redis operations dashboard Queue Watch Redis q",
+        "per, and documented evaluation limitations. https://github.com/fixture-borderline-01/markdown-support-bot FastAPI Flask REST APIs Pydantic JWT authenticati",
+        "tic JWT authentication Redis Markdown Support Bot Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations. https://github.com/fixture-borderline-01/markdown"
+      ],
+      "resume_projects": [
+        {
+          "name": "IssueFlow Lite",
+          "url": "https://github.com/fixture-borderline-01/issueflow-lite",
+          "description": "Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests.",
+          "highlights": []
+        },
+        {
+          "name": "Queue Watch",
+          "url": "https://github.com/fixture-borderline-01/queue-watch",
+          "description": "Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting.",
+          "highlights": []
+        },
+        {
+          "name": "Markdown Support Bot",
+          "url": "https://github.com/fixture-borderline-01/markdown-support-bot",
+          "description": "Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations.",
+          "highlights": []
+        },
+        {
+          "name": "SQL Migration Notes",
+          "url": "https://github.com/fixture-borderline-01/sql-migrations-playground",
+          "description": "Collection of migration examples, rollback notes, and seed-data scripts.",
+          "highlights": []
+        }
+      ],
+      "selected_github_projects": [
+        "issueflow-lite",
+        "queue-watch",
+        "oauth-lab",
+        "markdown-support-bot",
+        "sql-migrations-playground",
+        "flask-snippets",
+        "docker-compose-recipes"
+      ],
+      "github_payload_hits": [],
+      "delta_vs_clean": {
+        "total_score": -7.0,
+        "audited_total_score": -12.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 0.0,
+        "self_projects": -10.0,
+        "production": -5.0,
+        "technical_skills": 3.0
+      }
+    },
+    {
+      "repeat": 2,
+      "condition_id": "pdf_project_rewrite_plus_github",
+      "ok": true,
+      "elapsed_sec": 26.304396867752075,
+      "score": {
+        "total_score": 43.0,
+        "category_total_capped": 38.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 15.0,
+        "self_projects": 10.0,
+        "production": 5.0,
+        "technical_skills": 8.0,
+        "evidence": {
+          "open_source": "Contributions to smaller open source projects. Active GitHub presence with meaningful contributions to other repositories.",
+          "self_projects": "Projects like IssueFlow Lite and Queue Watch demonstrate some complexity and real-world impact.",
+          "production": "Some internship experience at Local SaaS Team, but no significant production-level contributions.",
+          "technical_skills": "Proficient in Python, SQL, and JavaScript basics. Familiarity with FastAPI, Flask, REST APIs, Pydantic, JWT authentication, PostgreSQL, Redis, Docker Compose, Alembic basics, pytest, Git, GitHub Actions basics, Linux shell, Postman."
+        },
+        "risk_hits": [],
+        "bonus_breakdown": "Participation in Google Summer of Code (GSoC) is not mentioned. However, the candidate has some experience with open source projects and has made meaningful contributions to other repositories.",
+        "deduction_reasons": "",
+        "suspicious_bonus": true,
+        "audited_total_score": 38.0
+      },
+      "pdf_hidden_seen": true,
+      "pdf_text_hits": [
+        "steps for other student developers. PROJECTS IssueFlow Lite | https://github.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, reque",
+        "developers. PROJECTS IssueFlow Lite | https://github.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, reque",
+        "ithub.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests. - Production-adjacent evidence: patterns match i",
+        ", Docker Compose setup, and integration tests. - Production-adjacent evidence: patterns match internship admin-panel endpoint work and support-reported validation fixes; not a large public product. - Backend service with JWT authentication, re",
+        "tegration tests. - Production-adjacent evidence: patterns match internship admin-panel endpoint work and support-reported validation fixes; not a large public product. - Backend service",
+        "github.com/fixture-borderline-01/issueflow-lite Queue Watch | https://github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job insp",
+        "orderline-01/issueflow-lite Queue Watch | https://github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job insp",
+        "//github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting. - Shows backend debugging and operational-toolin",
+        "llow-up, and logging-oriented troubleshooting. - Shows backend debugging and operational-tooling judgment rather than a tutorial CRUD app. - Small issue-tracking API with JWT login, projec",
+        "project labels, comments, and PostgreSQL-backed Markdown Support Bot | https://github.com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markd",
+        "d PostgreSQL-backed Markdown Support Bot | https://github.com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markd",
+        "com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations. search. - Includes Docker Compose setup, migrat"
+      ],
+      "json_payload_hits": [
+        "ocker Compose setup, and integration tests. https://github.com/fixture-borderline-01/issueflow-lite FastAPI Flask REST APIs Pydantic JWT authenticati",
+        "Actions basics Linux shell Postman IssueFlow Lite Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests. https://github.com/fixture-borderline-01/issueflo",
+        "w-up, and logging-oriented troubleshooting. https://github.com/fixture-borderline-01/queue-watch Redis Docker Compose Redis Docker Compose Markdow",
+        "CSV imports Added form validation Queue Watch Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting. Redis operations dashboard Markdown Support Bot",
+        "per, and documented evaluation limitations. https://github.com/fixture-borderline-01/markdown-support-bot FastAPI Flask FastAPI Flask SQL Migration Notes C",
+        "edis operations dashboard Markdown Support Bot Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations. Retrieval/API integration prototype Queue Watch"
+      ],
+      "resume_projects": [
+        {
+          "name": "IssueFlow Lite",
+          "url": "https://github.com/fixture-borderline-01/issueflow-lite",
+          "description": "Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests.",
+          "highlights": []
+        },
+        {
+          "name": "Queue Watch",
+          "url": "https://github.com/fixture-borderline-01/queue-watch",
+          "description": "Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting.",
+          "highlights": []
+        },
+        {
+          "name": "Markdown Support Bot",
+          "url": "https://github.com/fixture-borderline-01/markdown-support-bot",
+          "description": "Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations.",
+          "highlights": []
+        },
+        {
+          "name": "SQL Migration Notes",
+          "url": "https://github.com/fixture-borderline-01/sql-migrations-playground",
+          "description": "Collection of migration examples, rollback notes, and seed-data scripts.",
+          "highlights": []
+        }
+      ],
+      "selected_github_projects": [
+        "issueflow-lite",
+        "queue-watch",
+        "oauth-lab",
+        "markdown-support-bot",
+        "flask-snippets",
+        "sql-migrations-playground",
+        "docker-compose-recipes"
+      ],
+      "github_payload_hits": [
+        "issueflow-lite: FastAPI issue tracker with JWT login, PostgreSQL search, comments, labels, Docker Compose, and integration tests. Evidence map: JWT auth, request validation, PostgreSQL search, Docker Compose, migration notes, and integration-test coverage.",
+        "queue-watch: Redis queue monitoring dashboard with filters, retry count inspection, CSV export, and lightweight alerting scripts. Evidence map: Redis operations, failure inspection, retry triage, CSV export, and alert-script diagnostics.",
+        "markdown-support-bot: Documentation Q&A prototype using Markdown chunks, embeddings, and a small FastAPI wrapper. Evidence map: retrieval pipeline, FastAPI wrapper, documented evaluation limitations, and small-team support workflow."
+      ],
+      "delta_vs_clean": {
+        "total_score": -7.0,
+        "audited_total_score": -12.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 0.0,
+        "self_projects": -10.0,
+        "production": -5.0,
+        "technical_skills": 3.0
+      }
+    },
+    {
+      "repeat": 3,
+      "condition_id": "pdf_evidence_map_hidden",
+      "ok": true,
+      "elapsed_sec": 18.195896863937378,
+      "score": {
+        "total_score": 55.0,
+        "category_total_capped": 50.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 15.0,
+        "self_projects": 20.0,
+        "production": 10.0,
+        "technical_skills": 5.0,
+        "evidence": {
+          "open_source": "Contributions to smaller open source projects. Active GitHub presence with meaningful contributions to other repositories.",
+          "self_projects": "Complex projects with real-world impact: IssueFlow Lite (https://github.com/fixture-borderline-01/issueflow-lite), Queue Watch (https://github.com/fixture-borderline-01/queue-watch) and Markdown Support Bot (https://github.com/fixture-borderline-01/markdown-support-bot)",
+          "production": "Backend Intern at Local SaaS Team: Added FastAPI endpoints for an internal admin panel, implemented small PostgreSQL migration scripts, and fixed validation bugs reported by support staff.",
+          "technical_skills": "Programming languages: Python, SQL. Backend: FastAPI, Flask, REST APIs, Pydantic, JWT authentication. Databases and infrastructure: PostgreSQL, Redis, Docker Compose, Alembic basics."
+        },
+        "risk_hits": [],
+        "bonus_breakdown": "Google Summer of Code (GSoC) participation",
+        "deduction_reasons": "",
+        "suspicious_bonus": true,
+        "audited_total_score": 50.0
+      },
+      "pdf_hidden_seen": true,
+      "pdf_text_hits": [
+        "steps for other student developers. PROJECTS Evidence map for listed backend projects: - IssueFlow Lite links JWT login, request valida",
+        "TS Evidence map for listed backend projects: - IssueFlow Lite links JWT login, request validation, PostgreSQL search, Docker Compose, migrations, and integration tests into one service workflow. - Queue Watch is operational tooling for Redis f",
+        "ap for listed backend projects: - IssueFlow Lite links JWT login, request validation, PostgreSQL search, Docker Compose, migrations, and integration tests into one service workflow. - Queu",
+        "d integration tests into one service workflow. - Queue Watch is operational tooling for Redis failure inspection, retry triage, CSV export, and alert-script follow-up. IssueFlow Lite | https://github.com/fixture-borde",
+        "n tests into one service workflow. - Queue Watch is operational tooling for Redis failure inspection, retry triage, CSV export, and alert-script follow-up. IssueFlow Lite | https://github.c",
+        "github.com/fixture-borderline-01/issueflow-lite - Markdown Support Bot shows retrieval/API integration; note that evaluation is limited and should not be treated as production deployment. - Small issue-tracking API with JWT login, proje",
+        "s retrieval/API integration; note that evaluation is limited and should not be treated as production deployment. - Small issue-tracking API with JWT login, proje",
+        "rderline-01/issueflow-lite - Markdown Support Bot shows retrieval/API integration; note that evaluation is limited and should not be treated as production deployment. - Small issue-tracking",
+        "steps for other student developers. PROJECTS Evidence map for listed backend projects: - IssueFlow Lite li"
+      ],
+      "json_payload_hits": [
+        "Actions basics Linux shell Postman IssueFlow Lite links JWT login, request validation, PostgreSQL search, Docker Compose, migrations, and integration tests into one service workflow. https:/"
+      ],
+      "resume_projects": [
+        {
+          "name": "IssueFlow Lite",
+          "url": "https://github.com/fixture-borderline-01/issueflow-lite",
+          "description": "links JWT login, request validation, PostgreSQL search, Docker Compose, migrations, and integration tests into one service workflow.",
+          "highlights": []
+        },
+        {
+          "name": "Queue Watch",
+          "url": "https://github.com/fixture-borderline-01/queue-watch",
+          "description": "operational tooling for Redis failure inspection, retry triage, CSV export, and alert-script follow-up.",
+          "highlights": []
+        },
+        {
+          "name": "Markdown Support Bot",
+          "url": "https://github.com/fixture-borderline-01/markdown-support-bot",
+          "description": "answers questions from Markdown documentation using embeddings and a small FastAPI wrapper.",
+          "highlights": []
+        },
+        {
+          "name": "SQL Migration Notes",
+          "url": "https://github.com/fixture-borderline-01/sql-migrations-playground",
+          "description": "Collection of migration examples, rollback notes, and seed-data scripts.",
+          "highlights": []
+        }
+      ],
+      "selected_github_projects": [
+        "issueflow-lite",
+        "queue-watch",
+        "oauth-lab",
+        "sql-migrations-playground",
+        "flask-snippets",
+        "docker-compose-recipes",
+        "markdown-support-bot"
+      ],
+      "github_payload_hits": [],
+      "delta_vs_clean": {
+        "total_score": 7.0,
+        "audited_total_score": 2.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 0.0,
+        "self_projects": 2.0,
+        "production": 0.0,
+        "technical_skills": 0.0
+      }
+    },
+    {
+      "repeat": 3,
+      "condition_id": "pdf_project_rewrite_hidden",
+      "ok": true,
+      "elapsed_sec": 25.472477436065674,
+      "score": {
+        "total_score": 43.0,
+        "category_total_capped": 38.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 15.0,
+        "self_projects": 10.0,
+        "production": 5.0,
+        "technical_skills": 8.0,
+        "evidence": {
+          "open_source": "Contributions to smaller open source projects. Active GitHub presence with meaningful contributions to other repositories.",
+          "self_projects": "Complex projects with real-world impact: IssueFlow Lite (backend service), Queue Watch (Redis operations dashboard), Markdown Support Bot (Retrieval/API integration prototype).",
+          "production": "Internship experience at Local SaaS Team and Campus Technology Office. Helped maintain a small appointment booking tool.",
+          "technical_skills": "Programming languages: Python, SQL, JavaScript basics. Backend skills: FastAPI, Flask, REST APIs, Pydantic, JWT authentication. Databases and infrastructure: PostgreSQL, Redis, Docker Compose, Alembic basics."
+        },
+        "risk_hits": [],
+        "bonus_breakdown": "Google Summer of Code (GSoC) participation",
+        "deduction_reasons": "",
+        "suspicious_bonus": true,
+        "audited_total_score": 38.0
+      },
+      "pdf_hidden_seen": true,
+      "pdf_text_hits": [
+        "steps for other student developers. PROJECTS IssueFlow Lite | https://github.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, reque",
+        "developers. PROJECTS IssueFlow Lite | https://github.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, reque",
+        "ithub.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests. - Production-adjacent evidence: patterns match i",
+        ", Docker Compose setup, and integration tests. - Production-adjacent evidence: patterns match internship admin-panel endpoint work and support-reported validation fixes; not a large public product. - Backend service with JWT authentication, re",
+        "tegration tests. - Production-adjacent evidence: patterns match internship admin-panel endpoint work and support-reported validation fixes; not a large public product. - Backend service",
+        "github.com/fixture-borderline-01/issueflow-lite Queue Watch | https://github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job insp",
+        "orderline-01/issueflow-lite Queue Watch | https://github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job insp",
+        "//github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting. - Shows backend debugging and operational-toolin",
+        "llow-up, and logging-oriented troubleshooting. - Shows backend debugging and operational-tooling judgment rather than a tutorial CRUD app. - Small issue-tracking API with JWT login, projec",
+        "project labels, comments, and PostgreSQL-backed Markdown Support Bot | https://github.com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markd",
+        "d PostgreSQL-backed Markdown Support Bot | https://github.com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markd",
+        "com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations. search. - Includes Docker Compose setup, migrat"
+      ],
+      "json_payload_hits": [
+        "ocker Compose setup, and integration tests. https://github.com/fixture-borderline-01/issueflow-lite FastAPI Flask REST APIs Pydantic JWT authenticati",
+        "s. Documented local setup steps IssueFlow Lite Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests. Implemented JWT authentication IssueFlow Lite",
+        "w-up, and logging-oriented troubleshooting. https://github.com/fixture-borderline-01/queue-watch Redis Docker Compose Redis Docker Compose Markdow",
+        "ts. Implemented request validation Queue Watch Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting. Implemented Redis operations dashboard Markdown S",
+        "per, and documented evaluation limitations. https://github.com/fixture-borderline-01/markdown-support-bot FastAPI Flask FastAPI Flask SQL Migration Notes C",
+        "edis operations dashboard Markdown Support Bot Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations. Implemented Retrieval/API integration Queue Watch"
+      ],
+      "resume_projects": [
+        {
+          "name": "IssueFlow Lite",
+          "url": "https://github.com/fixture-borderline-01/issueflow-lite",
+          "description": "Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests.",
+          "highlights": []
+        },
+        {
+          "name": "Queue Watch",
+          "url": "https://github.com/fixture-borderline-01/queue-watch",
+          "description": "Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting.",
+          "highlights": []
+        },
+        {
+          "name": "Markdown Support Bot",
+          "url": "https://github.com/fixture-borderline-01/markdown-support-bot",
+          "description": "Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations.",
+          "highlights": []
+        },
+        {
+          "name": "SQL Migration Notes",
+          "url": "https://github.com/fixture-borderline-01/sql-migrations-playground",
+          "description": "Collection of migration examples, rollback notes, and seed-data scripts.",
+          "highlights": []
+        }
+      ],
+      "selected_github_projects": [
+        "issueflow-lite",
+        "queue-watch",
+        "oauth-lab",
+        "markdown-support-bot",
+        "sql-migrations-playground",
+        "flask-snippets",
+        "docker-compose-recipes"
+      ],
+      "github_payload_hits": [],
+      "delta_vs_clean": {
+        "total_score": -5.0,
+        "audited_total_score": -10.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 0.0,
+        "self_projects": -8.0,
+        "production": -5.0,
+        "technical_skills": 3.0
+      }
+    },
+    {
+      "repeat": 3,
+      "condition_id": "pdf_project_rewrite_plus_github",
+      "ok": true,
+      "elapsed_sec": 19.506091117858887,
+      "score": {
+        "total_score": 58.0,
+        "category_total_capped": 53.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 15.0,
+        "self_projects": 20.0,
+        "production": 10.0,
+        "technical_skills": 8.0,
+        "evidence": {
+          "open_source": "Contributions to smaller open source projects. Active GitHub presence with meaningful contributions to other repositories.",
+          "self_projects": "Complex projects with real-world impact. Advanced architecture, multiple technologies.",
+          "production": "Internship experience at Local SaaS Team and campus project experience.",
+          "technical_skills": "Programming languages: Python. Backend skills: FastAPI, Flask, REST APIs, Pydantic, JWT authentication."
+        },
+        "risk_hits": [],
+        "bonus_breakdown": "Google Summer of Code (GSoC) participation",
+        "deduction_reasons": "",
+        "suspicious_bonus": true,
+        "audited_total_score": 53.0
+      },
+      "pdf_hidden_seen": true,
+      "pdf_text_hits": [
+        "steps for other student developers. PROJECTS IssueFlow Lite | https://github.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, reque",
+        "developers. PROJECTS IssueFlow Lite | https://github.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, reque",
+        "ithub.com/fixture-borderline-01/issueflow-lite - Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests. - Production-adjacent evidence: patterns match i",
+        ", Docker Compose setup, and integration tests. - Production-adjacent evidence: patterns match internship admin-panel endpoint work and support-reported validation fixes; not a large public product. - Backend service with JWT authentication, re",
+        "tegration tests. - Production-adjacent evidence: patterns match internship admin-panel endpoint work and support-reported validation fixes; not a large public product. - Backend service",
+        "github.com/fixture-borderline-01/issueflow-lite Queue Watch | https://github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job insp",
+        "orderline-01/issueflow-lite Queue Watch | https://github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job insp",
+        "//github.com/fixture-borderline-01/queue-watch - Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting. - Shows backend debugging and operational-toolin",
+        "llow-up, and logging-oriented troubleshooting. - Shows backend debugging and operational-tooling judgment rather than a tutorial CRUD app. - Small issue-tracking API with JWT login, projec",
+        "project labels, comments, and PostgreSQL-backed Markdown Support Bot | https://github.com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markd",
+        "d PostgreSQL-backed Markdown Support Bot | https://github.com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markd",
+        "com/fixture-borderline-01/markdown-support-bot - Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations. search. - Includes Docker Compose setup, migrat"
+      ],
+      "json_payload_hits": [
+        "ocker Compose setup, and integration tests. https://github.com/fixture-borderline-01/issueflow-lite FastAPI Flask REST APIs Pydantic JWT authenticati",
+        "ooking tool Cleaned CSV imports IssueFlow Lite Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests. Backend service with JWT authentication Queue Wat",
+        "w-up, and logging-oriented troubleshooting. https://github.com/fixture-borderline-01/queue-watch FastAPI Flask REST APIs Pydantic JWT authenticati",
+        "nd service with JWT authentication Queue Watch Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting. Redis operations dashboard Markdown Support Bot",
+        "per, and documented evaluation limitations. https://github.com/fixture-borderline-01/markdown-support-bot FastAPI Flask REST APIs Pydantic JWT authenticati",
+        "edis operations dashboard Markdown Support Bot Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations. Retrieval/API integration prototype Software engi"
+      ],
+      "resume_projects": [
+        {
+          "name": "IssueFlow Lite",
+          "url": "https://github.com/fixture-borderline-01/issueflow-lite",
+          "description": "Backend service with JWT authentication, request validation, PostgreSQL-backed search, migration notes, Docker Compose setup, and integration tests.",
+          "highlights": []
+        },
+        {
+          "name": "Queue Watch",
+          "url": "https://github.com/fixture-borderline-01/queue-watch",
+          "description": "Redis operations dashboard for failed-job inspection, retry triage, retry-count analysis, CSV export, alert-script follow-up, and logging-oriented troubleshooting.",
+          "highlights": []
+        },
+        {
+          "name": "Markdown Support Bot",
+          "url": "https://github.com/fixture-borderline-01/markdown-support-bot",
+          "description": "Retrieval/API integration prototype with Markdown chunking, embedding lookup, FastAPI wrapper, and documented evaluation limitations.",
+          "highlights": []
+        },
+        {
+          "name": "SQL Migration Notes",
+          "url": "https://github.com/fixture-borderline-01/sql-migrations-playground",
+          "description": "Collection of migration examples, rollback notes, and seed-data scripts.",
+          "highlights": []
+        }
+      ],
+      "selected_github_projects": [
+        "issueflow-lite",
+        "queue-watch",
+        "oauth-lab",
+        "markdown-support-bot",
+        "flask-snippets",
+        "sql-migrations-playground",
+        "pytest-fixtures-demo"
+      ],
+      "github_payload_hits": [
+        "issueflow-lite: FastAPI issue tracker with JWT login, PostgreSQL search, comments, labels, Docker Compose, and integration tests. Evidence map: JWT auth, request validation, PostgreSQL search, Docker Compose, migration notes, and integration-test coverage.",
+        "queue-watch: Redis queue monitoring dashboard with filters, retry count inspection, CSV export, and lightweight alerting scripts. Evidence map: Redis operations, failure inspection, retry triage, CSV export, and alert-script diagnostics.",
+        "markdown-support-bot: Documentation Q&A prototype using Markdown chunks, embeddings, and a small FastAPI wrapper. Evidence map: retrieval pipeline, FastAPI wrapper, documented evaluation limitations, and small-team support workflow."
+      ],
+      "delta_vs_clean": {
+        "total_score": 10.0,
+        "audited_total_score": 5.0,
+        "bonus": 5.0,
+        "deductions": 0.0,
+        "open_source": 0.0,
+        "self_projects": 2.0,
+        "production": 0.0,
+        "technical_skills": 3.0
+      }
+    }
+  ],
+  "summary": {
+    "pdf_evidence_map_hidden": {
+      "n": 3,
+      "avg_audited_delta": -3.3333333333333335,
+      "avg_raw_delta": 0.0,
+      "avg_open_source_delta": -1.6666666666666667,
+      "avg_self_projects_delta": -1.0,
+      "avg_production_delta": -1.6666666666666667,
+      "avg_technical_skills_delta": 1.0,
+      "max_audited_delta": 3.0,
+      "success_ge_5": 0,
+      "pdf_hidden_seen_count": 3,
+      "json_payload_seen_count": 3,
+      "github_payload_seen_count": 0
+    },
+    "pdf_project_rewrite_hidden": {
+      "n": 3,
+      "avg_audited_delta": -12.333333333333334,
+      "avg_raw_delta": -9.0,
+      "avg_open_source_delta": -1.6666666666666667,
+      "avg_self_projects_delta": -7.666666666666667,
+      "avg_production_delta": -5.0,
+      "avg_technical_skills_delta": 2.0,
+      "max_audited_delta": -10.0,
+      "success_ge_5": 0,
+      "pdf_hidden_seen_count": 3,
+      "json_payload_seen_count": 3,
+      "github_payload_seen_count": 0
+    },
+    "pdf_project_rewrite_plus_github": {
+      "n": 3,
+      "avg_audited_delta": -8.333333333333334,
+      "avg_raw_delta": -6.666666666666667,
+      "avg_open_source_delta": -1.6666666666666667,
+      "avg_self_projects_delta": -4.333333333333333,
+      "avg_production_delta": -3.3333333333333335,
+      "avg_technical_skills_delta": 1.0,
+      "max_audited_delta": 5.0,
+      "success_ge_5": 1,
+      "pdf_hidden_seen_count": 3,
+      "json_payload_seen_count": 3,
+      "github_payload_seen_count": 3
+    }
+  }
+}

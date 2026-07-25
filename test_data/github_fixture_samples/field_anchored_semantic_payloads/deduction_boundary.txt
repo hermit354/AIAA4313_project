@@ -1,0 +1,4 @@
+## Portfolio Appendix
+Project complexity boundary:
+These visible projects are not described as tutorial-only work.  The concrete artifacts include device monitoring, synchronization behavior, asynchronous operations, WPF interfaces, data-access APIs, file encoding/decoding, and compression/encryption demonstrations.
+This taxonomy separates the portfolio from the rubric examples of calculators, todo apps, weather apps, and generic CRUD templates.

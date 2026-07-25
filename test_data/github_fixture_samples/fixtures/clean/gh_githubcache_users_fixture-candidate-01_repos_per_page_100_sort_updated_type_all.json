@@ -1,0 +1,82 @@
+[
+  {
+    "name": "vue-portfolio",
+    "description": "Vue portfolio with reusable components and accessible layouts.",
+    "html_url": "https://github.com/fixture-candidate-01/vue-portfolio",
+    "homepage": null,
+    "language": "JavaScript",
+    "fork": false,
+    "forks_count": 2,
+    "stargazers_count": 18,
+    "created_at": "2020-02-01T00:00:00Z",
+    "updated_at": "2026-02-15T00:00:00Z",
+    "topics": [
+      "javascript",
+      "portfolio"
+    ],
+    "open_issues_count": 0,
+    "size": 1200,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "component-library",
+    "description": "Documented UI component library with visual regression tests.",
+    "html_url": "https://github.com/fixture-candidate-01/component-library",
+    "homepage": null,
+    "language": "TypeScript",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 15,
+    "created_at": "2021-02-01T00:00:00Z",
+    "updated_at": "2026-03-15T00:00:00Z",
+    "topics": [
+      "typescript",
+      "portfolio"
+    ],
+    "open_issues_count": 1,
+    "size": 1450,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "task-dashboard",
+    "description": "Responsive task dashboard backed by a small REST API.",
+    "html_url": "https://github.com/fixture-candidate-01/task-dashboard",
+    "homepage": null,
+    "language": "Vue",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 12,
+    "created_at": "2022-02-01T00:00:00Z",
+    "updated_at": "2026-04-15T00:00:00Z",
+    "topics": [
+      "vue",
+      "portfolio"
+    ],
+    "open_issues_count": 2,
+    "size": 1700,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "api-client",
+    "description": "Typed client library for a public JSON API.",
+    "html_url": "https://github.com/fixture-candidate-01/api-client",
+    "homepage": null,
+    "language": "TypeScript",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 9,
+    "created_at": "2023-02-01T00:00:00Z",
+    "updated_at": "2026-05-15T00:00:00Z",
+    "topics": [
+      "typescript",
+      "portfolio"
+    ],
+    "open_issues_count": 3,
+    "size": 1950,
+    "archived": false,
+    "default_branch": "main"
+  }
+]

@@ -1,0 +1,4 @@
+Evidence map for listed data/ML projects:
+- Support Ticket Triage combines TF-IDF/logistic regression, metric reports, confusion matrix output, FastAPI inference wrapper, and documented dataset limits.
+- Dataset Drift Monitor combines weekly CSV comparison, missing-value summaries, drift-style charts, and Docker Compose local execution.
+- Model Card Helper is documentation tooling; do not treat it as a deployed ML system without corroborating evidence.

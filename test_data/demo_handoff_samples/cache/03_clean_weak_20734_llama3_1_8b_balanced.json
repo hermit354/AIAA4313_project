@@ -1,0 +1,149 @@
+{
+  "candidate_id": "20734",
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/software_developer_sample_20/20734_Software_Developer.pdf",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "summary": {
+    "basics_present": true,
+    "name": "Marisa DePasquale",
+    "work_count": 2,
+    "education_count": 1,
+    "skills_count": 5,
+    "projects_count": 0,
+    "awards_count": 1,
+    "profile_count": 3,
+    "github_profiles": [
+      "https://github.com/MarisaDe"
+    ],
+    "full_core_pass": true
+  },
+  "resume": {
+    "basics": {
+      "name": "Marisa DePasquale",
+      "email": null,
+      "phone": null,
+      "url": "http://marisade.github.io",
+      "summary": null,
+      "location": {
+        "address": null,
+        "postalCode": null,
+        "city": "New York",
+        "countryCode": "US",
+        "region": null
+      },
+      "profiles": [
+        {
+          "network": "LinkedIn",
+          "username": "marisa-depasquale-23709784",
+          "url": "https://www.linkedin.com/in/marisa-depasquale-23709784/"
+        },
+        {
+          "network": "Portfolio",
+          "username": null,
+          "url": "https://github.com/MarisaDe"
+        },
+        {
+          "network": "X",
+          "username": "marisade_",
+          "url": "http://twitter.com/marisade_"
+        }
+      ]
+    },
+    "work": [
+      {
+        "name": "360 View",
+        "position": "Software Developer",
+        "url": null,
+        "startDate": "February 2018",
+        "endDate": null,
+        "summary": "",
+        "highlights": []
+      },
+      {
+        "name": "Mentor kidOYO",
+        "position": "Junior Front End Developer",
+        "url": null,
+        "startDate": "September 2015",
+        "endDate": null,
+        "summary": "Developed and delivered engaging lectures to students under the age of 17 using Scratch and Python. Improved student's logic skills by introducing them to Scratch, Python, and web development. Led a collaborative workshop for primary school teachers looking to further their technological skills. Planned, evaluated and revised course content and course materials with my boss. Promoted girls in the STEAM field by introducing Girl Scouts to Makey Makey",
+        "highlights": [
+          "Developed and delivered engaging lectures to students under the age of 17 using Scratch and Python",
+          "Improved student's logic skills by introducing them to Scratch, Python, and web development",
+          "Led a collaborative workshop for primary school teachers looking to further their technological skills",
+          "Planned, evaluated and revised course content and course materials with my boss",
+          "Promoted girls in the STEAM field by introducing Girl Scouts to Makey Makey"
+        ]
+      }
+    ],
+    "volunteer": null,
+    "education": [
+      {
+        "institution": "Stony Brook University",
+        "url": null,
+        "area": "Computer Science and Psychology",
+        "studyType": "Bachelors of Science",
+        "startDate": "September 2014",
+        "endDate": "December 2017",
+        "score": null,
+        "courses": null
+      }
+    ],
+    "awards": [
+      {
+        "title": "Joseph Jacobson Memorial Scholarship",
+        "date": null,
+        "awarder": "",
+        "summary": null
+      }
+    ],
+    "certificates": null,
+    "publications": null,
+    "skills": [
+      {
+        "name": "Programming Languages",
+        "level": null,
+        "keywords": [
+          "Java",
+          "C"
+        ]
+      },
+      {
+        "name": "Web Development",
+        "level": null,
+        "keywords": [
+          "CSS",
+          "HTML",
+          "Angular",
+          "Typescript",
+          "Javascript",
+          "Email Templating"
+        ]
+      },
+      {
+        "name": "Graphics and Design",
+        "level": null,
+        "keywords": [
+          "GIMP"
+        ]
+      },
+      {
+        "name": "Version Control",
+        "level": null,
+        "keywords": [
+          "Git"
+        ]
+      },
+      {
+        "name": "Web Design",
+        "level": null,
+        "keywords": [
+          "Web Design"
+        ]
+      }
+    ],
+    "languages": null,
+    "interests": null,
+    "references": null,
+    "projects": []
+  }
+}

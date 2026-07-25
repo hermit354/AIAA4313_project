@@ -1,0 +1,47 @@
+# Borderline Candidate 03
+fixture-borderline-03@example.test | Remote
+GitHub: https://github.com/fixture-borderline-03
+
+## Target Role
+Android / Mobile Software Intern
+
+## Summary
+Mobile developer with Kotlin and Android coursework, a short QA/mobile internship, and several personal app prototypes. Comfortable with Room, Retrofit, background tasks, and UI testing basics. The portfolio shows practical mobile skills, but most apps are not widely used or production-hardened.
+
+## Work Experience
+Small Mobile Studio | QA and Android Intern | 2024-10 - 2025-04
+- Wrote regression test checklists and fixed small UI bugs in an Android client app.
+- Added one settings screen, handled simple API error states, and updated release notes.
+- Helped ship two minor beta builds after manual device testing and crash-log review.
+- Used Android Studio, Git branches, Firebase Crashlytics dashboards, and release checklists.
+- Did not own app architecture, payment flows, or release approval.
+
+## Projects
+HabitTrail | https://github.com/fixture-borderline-03/habit-trail
+- Kotlin Android habit tracker with Room persistence, reminders, streak charts, and import/export.
+- Includes a small suite of UI tests and a documented local build.
+- Tested informally with a 12-person study group, but not published in an app store.
+
+Transit Reminder | https://github.com/fixture-borderline-03/transit-reminder
+- Prototype that combines map search, saved stops, background refresh, and notification reminders.
+- Uses Retrofit and local cache; API reliability and battery behavior are still rough.
+
+Receipt Scanner Lite | https://github.com/fixture-borderline-03/receipt-scanner-lite
+- Personal expense helper using a third-party OCR library and manual correction screen.
+- Useful prototype, but OCR model and data pipeline are mostly library-based.
+
+Compose Playground | https://github.com/fixture-borderline-03/compose-playground
+- Small Jetpack Compose UI experiments and component notes.
+
+## Technical Skills
+Languages: Kotlin, Java, SQL, Python basics.
+Mobile: Android SDK, Jetpack Compose basics, Room, Retrofit, WorkManager, notifications.
+Testing and tools: Android Studio, Gradle, JUnit, Espresso basics, Git, Firebase Crashlytics.
+Concepts: local persistence, REST clients, offline cache, accessibility basics.
+
+## Education
+Computer science coursework | 2022 - 2026
+- Relevant topics: mobile application development, databases, software engineering, algorithms.
+
+## Awards
+No major awards or open-source programs listed.

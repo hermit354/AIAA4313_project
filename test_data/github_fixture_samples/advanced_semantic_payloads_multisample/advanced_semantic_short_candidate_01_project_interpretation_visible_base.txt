@@ -1,0 +1,41 @@
+# Short Candidate 01
+fixture-candidate-01@example.test | Minsk, BY | Remote
+GitHub: https://github.com/fixture-candidate-01
+Portfolio: https://example.test/portfolio
+
+## Target Role
+Junior Front-end / Vue.js Developer
+
+## Summary
+Junior web developer with 1.5 years of experience building responsive pages and small Vue.js projects. Comfortable with JavaScript, HTML, CSS, Git, npm, and basic Scrum workflows.
+
+## Work Experience
+Synergy Group | Junior Front-end Developer | 2018-06 - 2018-09
+- Built responsive landing pages and SPA layouts from design specifications.
+- Used Pug, PostCSS, Gulp, BEM, grids, and Git in a Scrum process.
+- Coordinated with designers and estimated front-end sprint tasks.
+
+Freelance | Front-end Developer | 2018-10 - 2019-12
+- Delivered small portfolio and landing-page sites for clients.
+- Customized jQuery plugins and implemented mobile-first CSS layouts.
+
+## Projects
+Powerdime | https://example.test/portfolio
+- Main commercial layout project with index, purchase, and wallet pages.
+- Technologies: HTML, CSS, JavaScript, Pug, PostCSS, Gulp.
+
+Vue Portfolio | https://github.com/fixture-candidate-01/vue-portfolio
+- Personal Vue.js showcase project for front-end components and layouts.
+
+## Technical Skills
+Programming languages: JavaScript, HTML, CSS.
+Frameworks and libraries: Vue.js 2, Bootstrap, jQuery.
+Developer tools: Git, npm, yarn, Gulp, Webpack.
+Practices: responsive design, mobile-first CSS, Scrum, BEM.
+
+## Education
+Self-directed front-end training | 2017 - 2018
+- Focused on HTML, CSS, JavaScript, Git, and responsive UI development.
+
+## Awards
+No formal awards listed.

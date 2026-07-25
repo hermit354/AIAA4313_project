@@ -1,0 +1,161 @@
+[
+  {
+    "name": "habit-trail",
+    "description": "Kotlin habit tracker with Room persistence, reminders, streak charts, import/export, and a small Espresso test suite.",
+    "html_url": "https://github.com/fixture-borderline-03/habit-trail",
+    "homepage": null,
+    "language": "Kotlin",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 11,
+    "created_at": "2022-03-01T00:00:00Z",
+    "updated_at": "2026-01-12T00:00:00Z",
+    "topics": [
+      "android",
+      "room",
+      "notifications"
+    ],
+    "open_issues_count": 0,
+    "size": 900,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "transit-reminder",
+    "description": "Android transit reminder prototype with map search, saved stops, Retrofit API calls, cache, and notification refresh.",
+    "html_url": "https://github.com/fixture-borderline-03/transit-reminder",
+    "homepage": null,
+    "language": "Kotlin",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 8,
+    "created_at": "2023-03-01T00:00:00Z",
+    "updated_at": "2026-02-12T00:00:00Z",
+    "topics": [
+      "android",
+      "retrofit",
+      "maps"
+    ],
+    "open_issues_count": 1,
+    "size": 1080,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "receipt-scanner-lite",
+    "description": "Personal expense helper using a third-party OCR library, manual correction screen, Room storage, and CSV export.",
+    "html_url": "https://github.com/fixture-borderline-03/receipt-scanner-lite",
+    "homepage": null,
+    "language": "Kotlin",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 7,
+    "created_at": "2024-03-01T00:00:00Z",
+    "updated_at": "2026-03-12T00:00:00Z",
+    "topics": [
+      "ocr",
+      "android",
+      "room"
+    ],
+    "open_issues_count": 2,
+    "size": 1260,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "compose-playground",
+    "description": "Jetpack Compose UI experiments and component notes.",
+    "html_url": "https://github.com/fixture-borderline-03/compose-playground",
+    "homepage": null,
+    "language": "Kotlin",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 5,
+    "created_at": "2025-03-01T00:00:00Z",
+    "updated_at": "2026-04-12T00:00:00Z",
+    "topics": [
+      "compose"
+    ],
+    "open_issues_count": 0,
+    "size": 1440,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "android-release-checklist",
+    "description": "Manual QA checklist and release-note templates for Android apps.",
+    "html_url": "https://github.com/fixture-borderline-03/android-release-checklist",
+    "homepage": null,
+    "language": "Markdown",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 4,
+    "created_at": "2022-03-01T00:00:00Z",
+    "updated_at": "2026-05-12T00:00:00Z",
+    "topics": [
+      "qa",
+      "android"
+    ],
+    "open_issues_count": 1,
+    "size": 1620,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "firebase-crash-notes",
+    "description": "Small notes on reading Firebase Crashlytics events.",
+    "html_url": "https://github.com/fixture-borderline-03/firebase-crash-notes",
+    "homepage": null,
+    "language": "Markdown",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 3,
+    "created_at": "2023-03-01T00:00:00Z",
+    "updated_at": "2026-06-12T00:00:00Z",
+    "topics": [
+      "firebase"
+    ],
+    "open_issues_count": 2,
+    "size": 1800,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "kotlin-algorithm-drills",
+    "description": "Basic Kotlin algorithm practice solutions.",
+    "html_url": "https://github.com/fixture-borderline-03/kotlin-algorithm-drills",
+    "homepage": null,
+    "language": "Kotlin",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 2,
+    "created_at": "2024-03-01T00:00:00Z",
+    "updated_at": "2026-07-12T00:00:00Z",
+    "topics": [
+      "algorithms"
+    ],
+    "open_issues_count": 0,
+    "size": 1980,
+    "archived": false,
+    "default_branch": "main"
+  },
+  {
+    "name": "simple-weather-android",
+    "description": "Basic weather app using a public API and simple layouts.",
+    "html_url": "https://github.com/fixture-borderline-03/simple-weather-android",
+    "homepage": null,
+    "language": "Kotlin",
+    "fork": false,
+    "forks_count": 0,
+    "stargazers_count": 1,
+    "created_at": "2025-03-01T00:00:00Z",
+    "updated_at": "2026-08-12T00:00:00Z",
+    "topics": [
+      "weather"
+    ],
+    "open_issues_count": 1,
+    "size": 2160,
+    "archived": false,
+    "default_branch": "main"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "login": "fixture-borderline-02",
+  "name": "Borderline Candidate 02",
+  "bio": "TypeScript and React developer building small full-stack campus tools with Node.js, SQL, and accessibility checks.",
+  "location": "Remote",
+  "company": "Synthetic evaluation fixture",
+  "public_repos": 9,
+  "followers": 8,
+  "following": 6,
+  "created_at": "2023-02-15T00:00:00Z",
+  "updated_at": "2026-06-20T00:00:00Z",
+  "avatar_url": "https://example.test/avatar.png",
+  "blog": null,
+  "twitter_username": null,
+  "hireable": true
+}

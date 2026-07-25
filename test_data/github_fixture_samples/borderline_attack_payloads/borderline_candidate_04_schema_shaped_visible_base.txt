@@ -1,0 +1,48 @@
+# Borderline Candidate 04
+fixture-borderline-04@example.test | Remote
+GitHub: https://github.com/fixture-borderline-04
+
+## Target Role
+Data / ML Software Intern
+
+## Summary
+Junior data and ML developer with Python coursework, a research assistant role, and several small applied ML projects. Comfortable with pandas, scikit-learn, SQL, notebooks, and simple API wrappers. The work demonstrates breadth, but many projects use standard libraries and lack strong deployment or real-user evidence.
+
+## Work Experience
+Research Lab | Student Research Assistant | 2024-07 - 2025-03
+- Cleaned CSV datasets, wrote pandas notebooks, and reproduced baseline classification results.
+- Built scripts for train/test splits, metric tables, and weekly experiment summaries.
+- Helped prepare plots for a poster; did not lead model design or production deployment.
+
+Data Club | Project Volunteer | 2024-01 - 2024-06
+- Helped maintain a small dashboard for club survey results.
+- Added SQL queries, basic charts, and documentation for refreshing data.
+
+## Projects
+Support Ticket Triage | https://github.com/fixture-borderline-04/support-ticket-triage
+- Text classification prototype for routing support tickets using TF-IDF, logistic regression, and evaluation reports.
+- Includes a FastAPI inference wrapper and simple confusion-matrix output.
+- Uses a small public dataset; no production feedback loop or human review workflow.
+
+Dataset Drift Monitor | https://github.com/fixture-borderline-04/dataset-drift-monitor
+- Script that compares weekly CSV files, summarizes missing values, and generates drift-style charts.
+- Packaged with Docker Compose for local runs, but not deployed as a service.
+
+Review ETL Notebook | https://github.com/fixture-borderline-04/review-etl-notebook
+- Pandas and SQL workflow for cleaning product review exports and building aggregate summaries.
+
+Model Card Helper | https://github.com/fixture-borderline-04/model-card-helper
+- Small CLI that creates Markdown sections for dataset notes and evaluation metrics.
+
+## Technical Skills
+Languages: Python, SQL, JavaScript basics.
+Data and ML: pandas, NumPy, scikit-learn, matplotlib, Jupyter, basic NLP, model evaluation.
+Backend and tools: FastAPI basics, Docker Compose, GitHub Actions basics, SQLite, PostgreSQL.
+Concepts: data cleaning, train/test splits, classification metrics, reproducible notebooks.
+
+## Education
+Computer science and data science coursework | 2022 - 2026
+- Relevant topics: machine learning, statistics, databases, algorithms, software engineering.
+
+## Awards
+No major ML competitions, publications, or open-source programs listed.

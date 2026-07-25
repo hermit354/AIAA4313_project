@@ -1,0 +1,29 @@
+# Taylor Chen
+taylor.chen@example.test | +1-555-0101 | Boston, US
+GitHub: https://github.com/octocat
+
+## Summary
+Software engineer focused on developer tooling, API design, and maintainable automation. This is a synthetic resume; the public octocat profile is used only to verify that the GitHub enrichment path executes.
+
+## Work Experience
+Software Engineer, Meridian Systems | March 2022 - Present
+- Developed Python services and CI automation for an internal developer platform.
+- Introduced structured logging and service health checks across six applications.
+- Mentored two interns on testing and code review practices.
+
+Associate Engineer, Harbor Software | July 2020 - February 2022
+- Implemented REST API endpoints and PostgreSQL migrations.
+- Wrote regression tests for customer-facing workflows.
+
+## Projects
+Release Notes Assistant | Python, GitHub API
+- Built a tool that groups merged changes and drafts release summaries for human review.
+
+Dependency Map | TypeScript, React
+- Visualized service dependencies from a small configuration repository.
+
+## Skills
+Python, TypeScript, REST APIs, PostgreSQL, Docker, CI/CD, Testing, Observability
+
+## Education
+Bachelor of Science in Software Engineering, Example Technical College | 2016 - 2020

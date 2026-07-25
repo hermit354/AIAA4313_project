@@ -1,0 +1,15 @@
+{
+  "source_dataset": "lang-uk/recruitment-dataset-candidate-profiles-english",
+  "source_row_id": "7f3f2e4a-0a3e-5e77-a90c-0516b005ade5",
+  "alias": "candidate_04",
+  "position": "Android Developer",
+  "primary_keyword": "Android",
+  "english_level": "fluent",
+  "experience_years": 7.0,
+  "cv": "My GitHub page: https://github.com/fixture-candidate-04/mesh-network-chat\r\nIt has a bunch of code from pet projects, researches and hackathons.\r\nHere is my Google Play account, that has a few published apps:\r\nhttps://example.test/portfolio\r\nSpace simulator game, mostly developed an AI (https://github.com/fixture-candidate-04/diaphragm-view)\r\nMash network chat using Google’s Nearby API (https://github.com/fixture-candidate-04/checkable-items)\nAndroid SDK, Java, Databases, Python, C/C++, JavaScript\nInnovative projects.",
+  "moreinfo": "Android SDK, Java, Databases, Python, C/C++, JavaScript",
+  "looking_for": "Innovative projects.",
+  "highlights": "My GitHub page: https://github.com/fixture-candidate-04/mesh-network-chat\r\nIt has a bunch of code from pet projects, researches and hackathons.\r\nHere is my Google Play account, that has a few published apps:\r\nhttps://example.test/portfolio\r\nSpace simulator game, mostly developed an AI (https://github.com/fixture-candidate-04/diaphragm-view)\r\nMash network chat using Google’s Nearby API (https://github.com/fixture-candidate-04/checkable-items)",
+  "controlled_github_username": "fixture-candidate-04",
+  "redacted_github_url_occurrences": 6
+}

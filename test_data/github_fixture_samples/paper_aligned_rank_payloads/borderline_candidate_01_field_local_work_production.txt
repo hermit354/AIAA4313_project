@@ -1,0 +1,5 @@
+Reliability support notes:
+- Participated in staging release checklists for backend API changes.
+- Wrote rollback notes for PostgreSQL migrations and validation fixes.
+- Used logs, Redis retry counts, and support tickets during incident triage.
+- Documented health-check and monitoring handoff notes for maintainers.
