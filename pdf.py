@@ -41,8 +41,6 @@ from transform import transform_parsed_data
 
 logger = logging.getLogger(__name__)
 
-EXTRACTION_SCHEMA_MODE = os.getenv("EXTRACTION_SCHEMA_MODE", "balanced").lower()
-
 BALANCED_SECTION_MODELS = {
     "basics": BalancedBasicsSection,
     "work": BalancedWorkSection,
@@ -65,16 +63,28 @@ HIGH_RISK_INSTRUCTION_PATTERNS = [
 
 
 class PDFHandler:
-    def __init__(self):
+    def __init__(
+        self,
+        model_name: str = DEFAULT_MODEL,
+        model_params: dict = None,
+        extraction_schema_mode: str = None,
+    ):
+        self.model_name = model_name
+        self.model_params = model_params or MODEL_PARAMETERS.get(
+            model_name, {"temperature": 0.1, "top_p": 0.9}
+        )
+        self.extraction_schema_mode = (
+            extraction_schema_mode or os.getenv("EXTRACTION_SCHEMA_MODE", "balanced")
+        ).lower()
         self.template_manager = TemplateManager()
         self._initialize_llm_provider()
 
     def _initialize_llm_provider(self):
         """Initialize the appropriate LLM provider based on the model."""
-        self.provider = initialize_llm_provider(DEFAULT_MODEL)
+        self.provider = initialize_llm_provider(self.model_name)
 
     def _select_section_model(self, section_name: str, return_model=None):
-        if EXTRACTION_SCHEMA_MODE in {"balanced", "balanced_guarded"}:
+        if self.extraction_schema_mode in {"balanced", "balanced_guarded"}:
             return BALANCED_SECTION_MODELS.get(section_name, return_model)
         return return_model
 
@@ -93,7 +103,9 @@ class PDFHandler:
 
         collect(parsed_data)
         text = "\n".join(text_parts).lower()
-        return any(re.search(pattern, text) for pattern in HIGH_RISK_INSTRUCTION_PATTERNS)
+        return any(
+            re.search(pattern, text) for pattern in HIGH_RISK_INSTRUCTION_PATTERNS
+        )
 
     def _is_empty_awards_placeholder(self, parsed_data: Any) -> bool:
         if not isinstance(parsed_data, dict):
@@ -151,11 +163,7 @@ class PDFHandler:
         try:
             start_time = time.time()
             logger.debug(
-                f"🔄 Extracting {section_name} section using {DEFAULT_MODEL}..."
-            )
-
-            model_params = MODEL_PARAMETERS.get(
-                DEFAULT_MODEL, {"temperature": 0.1, "top_p": 0.9}
+                f"🔄 Extracting {section_name} section using {self.model_name}..."
             )
 
             section_system_message = self.template_manager.render_template(
@@ -168,20 +176,22 @@ class PDFHandler:
                 return None
 
             chat_params = {
-                "model": DEFAULT_MODEL,
+                "model": self.model_name,
                 "messages": [
                     {"role": "system", "content": section_system_message},
                     {"role": "user", "content": prompt},
                 ],
                 "options": {
                     "stream": False,
-                    "temperature": model_params["temperature"],
-                    "top_p": model_params["top_p"],
+                    "temperature": self.model_params.get("temperature", 0.1),
+                    "top_p": self.model_params.get("top_p", 0.9),
                 },
             }
 
             kwargs = {}
-            selected_return_model = self._select_section_model(section_name, return_model)
+            selected_return_model = self._select_section_model(
+                section_name, return_model
+            )
             if selected_return_model:
                 kwargs["format"] = selected_return_model.model_json_schema()
 
@@ -200,7 +210,7 @@ class PDFHandler:
                 logger.debug(f"✅ Successfully extracted {section_name} section")
 
                 if (
-                    EXTRACTION_SCHEMA_MODE == "balanced_guarded"
+                    self.extraction_schema_mode == "balanced_guarded"
                     and self._contains_high_risk_instruction(parsed_data)
                 ):
                     logger.warning(

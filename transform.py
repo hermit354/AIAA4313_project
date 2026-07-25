@@ -898,7 +898,9 @@ def convert_json_resume_to_text(resume_data: JSONResume) -> str:
     return "\n".join(text_parts)
 
 
-def convert_github_data_to_text(github_data: dict) -> str:
+def convert_github_data_to_text(
+    github_data: dict, sanitize_mode: Optional[str] = None
+) -> str:
     github_text = "\n\n=== GITHUB DATA ===\n"
 
     if "profile" in github_data:
@@ -906,9 +908,7 @@ def convert_github_data_to_text(github_data: dict) -> str:
         github_text += f"GitHub Profile:\n"
         github_text += f"- Username: {profile.get('username', 'N/A')}\n"
         github_text += f"- Name: {profile.get('name', 'N/A')}\n"
-        github_text += (
-            f"- Bio: {sanitize_untrusted_github_text(profile.get('bio', 'N/A'))}\n"
-        )
+        github_text += f"- Bio: {sanitize_untrusted_github_text(profile.get('bio', 'N/A'), sanitize_mode)}\n"
         github_text += f"- Public Repositories: {profile.get('public_repos', 'N/A')}\n"
         github_text += f"- Followers: {profile.get('followers', 'N/A')}\n"
         github_text += f"- Following: {profile.get('following', 'N/A')}\n"
@@ -920,7 +920,7 @@ def convert_github_data_to_text(github_data: dict) -> str:
         github_text += f"\nGitHub Projects ({len(projects)} total):\n"
         for i, project in enumerate(projects[:10], 1):
             github_text += f"{i}. {project.get('name', 'N/A')}\n"
-            github_text += f"   Description: {sanitize_untrusted_github_text(project.get('description', 'N/A'))}\n"
+            github_text += f"   Description: {sanitize_untrusted_github_text(project.get('description', 'N/A'), sanitize_mode)}\n"
             github_text += f"   URL: {project.get('github_url', 'N/A')}\n"
             if "github_details" in project:
                 details = project["github_details"]
@@ -932,9 +932,11 @@ def convert_github_data_to_text(github_data: dict) -> str:
     return github_text
 
 
-def sanitize_untrusted_github_text(value: Optional[str]) -> str:
+def sanitize_untrusted_github_text(
+    value: Optional[str], mode: Optional[str] = None
+) -> str:
     text = "N/A" if value is None else str(value)
-    mode = os.getenv("GITHUB_SANITIZE_MODE", "off").lower()
+    mode = (mode or os.getenv("GITHUB_SANITIZE_MODE", "off")).lower()
     if mode not in {"instruction_filter", "redact"}:
         return text
 

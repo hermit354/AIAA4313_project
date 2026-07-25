@@ -387,7 +387,11 @@ def generate_profile_json(profile: GitHubProfile) -> Dict:
     return profile_data
 
 
-def generate_projects_json(projects: List[Dict]) -> List[Dict]:
+def generate_projects_json(
+    projects: List[Dict],
+    model_name: str = DEFAULT_MODEL,
+    model_params: dict = None,
+) -> List[Dict]:
     if not projects:
         return []
 
@@ -430,16 +434,16 @@ def generate_projects_json(projects: List[Dict]) -> List[Dict]:
         )
 
         # Initialize the LLM provider
-        provider = initialize_llm_provider(DEFAULT_MODEL)
+        provider = initialize_llm_provider(model_name)
 
         # Get model parameters
-        model_params = MODEL_PARAMETERS.get(
-            DEFAULT_MODEL, {"temperature": 0.1, "top_p": 0.9}
+        model_params = model_params or MODEL_PARAMETERS.get(
+            model_name, {"temperature": 0.1, "top_p": 0.9}
         )
 
         # Prepare chat parameters
         chat_params = {
-            "model": DEFAULT_MODEL,
+            "model": model_name,
             "messages": [
                 {
                     "role": "system",
@@ -470,7 +474,11 @@ def generate_projects_json(projects: List[Dict]) -> List[Dict]:
 
             for project in selected_projects:
                 project_name = project.get("name", "")
-                if project_name and project_name in allowed_projects and project_name not in seen_names:
+                if (
+                    project_name
+                    and project_name in allowed_projects
+                    and project_name not in seen_names
+                ):
                     canonical_project = dict(allowed_projects[project_name])
                     reason = project.get("reason_for_project_selection")
                     if reason:
@@ -529,7 +537,11 @@ def generate_projects_json(projects: List[Dict]) -> List[Dict]:
         return projects_data
 
 
-def fetch_and_display_github_info(github_url: str) -> Dict:
+def fetch_and_display_github_info(
+    github_url: str,
+    model_name: str = DEFAULT_MODEL,
+    model_params: dict = None,
+) -> Dict:
     logger.info(f"{github_url}")
     github_profile = fetch_github_profile(github_url)
     if not github_profile:
@@ -543,7 +555,9 @@ def fetch_and_display_github_info(github_url: str) -> Dict:
         print("\n❌ No repositories found or failed to fetch repository details.")
 
     profile_json = generate_profile_json(github_profile)
-    projects_json = generate_projects_json(projects)
+    projects_json = generate_projects_json(
+        projects, model_name=model_name, model_params=model_params
+    )
 
     result = {
         "profile": profile_json,
