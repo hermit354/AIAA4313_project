@@ -1,5 +1,10 @@
 # 完整链路攻击泛化实验（software_developer_sample_20）
 
+> ⚠️ 历史结果：本报告基于旧评分维度 `open_source / self_projects / production / technical_skills` 生成。
+> 当前 main 已切换到 `SCORING_RUBRIC.md` 的新 Software Developer rubric：
+> `relevant_experience / project_system_evidence / technical_skills_match / evidence_quality_impact`。
+> 新实验请优先阅读 `FULL_CHAIN_GENERALIZATION_PROBE_NEW_RUBRIC_CN.md`。
+
 生成时间：2026-07-24T15:28:58.340170+00:00
 
 ## 1. 实验范围

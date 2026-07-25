@@ -13,11 +13,14 @@
 
 然后再根据需要阅读具体实验报告：
 
-- **最新完整链路泛化实验（当前主报告）**：[FULL_CHAIN_GENERALIZATION_PROBE_CN.md](test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_CN.md)
+- **最新完整链路泛化实验（当前主报告，新 Software Developer rubric）**：[FULL_CHAIN_GENERALIZATION_PROBE_NEW_RUBRIC_CN.md](test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_NEW_RUBRIC_CN.md)
+- **新 rubric 下的 PDF hidden-span 防御闭环实验（demo 重点）**：[PDF_HIDDEN_SPAN_DEFENSE_PROBE_NEW_RUBRIC_CN.md](test_data/software_developer_sample_20_ablation/PDF_HIDDEN_SPAN_DEFENSE_PROBE_NEW_RUBRIC_CN.md)
 - [LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md](test_data/github_fixture_samples/LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md)
 - [LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md](test_data/software_developer_sample_20_ablation/LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md)
+- 历史旧 rubric 结果：[FULL_CHAIN_GENERALIZATION_PROBE_CN.md](test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_CN.md)
 
-说明：各实验报告末尾会列出对应的原始结果 JSON；例如完整链路实验的结果 JSON 位于 [`test_data/software_developer_sample_20_ablation/full_chain_generalization_probe_20260724.json`](test_data/software_developer_sample_20_ablation/full_chain_generalization_probe_20260724.json)。
+说明：各实验报告末尾会列出对应的原始结果 JSON；例如当前完整链路实验的结果 JSON 位于 [`test_data/software_developer_sample_20_ablation/full_chain_generalization_probe_new_rubric_20260724.json`](test_data/software_developer_sample_20_ablation/full_chain_generalization_probe_new_rubric_20260724.json)。
+新 rubric 下 PDF 防御闭环的原始 JSON 位于 [`test_data/software_developer_sample_20_ablation/pdf_hidden_span_defense_probe_new_rubric_20260725.json`](test_data/software_developer_sample_20_ablation/pdf_hidden_span_defense_probe_new_rubric_20260725.json)。
 
 ## Web Demo 快速入口
 
@@ -225,7 +228,8 @@ You can leave it on during iteration. See the next section for details.
 <summary><b>4) Evaluation</b></summary>
 
 - `evaluator.py` uses templates that encode fairness and scoring rules.
-- Scores include `open_source`, `self_projects`, `production`, and `technical_skills`, plus bonus and deductions, then an explanation for evidence.
+- The current project rubric is documented in [`SCORING_RUBRIC.md`](SCORING_RUBRIC.md).
+- Scores include `relevant_experience`, `project_system_evidence`, `technical_skills_match`, and `evidence_quality_impact`, plus bonus and deductions, then an explanation for evidence.
 
 </details>
 

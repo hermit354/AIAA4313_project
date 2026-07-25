@@ -98,15 +98,23 @@ GITHUB_ATTACKS = {
 }
 
 
-SCORE_KEYS = [
-    "total_score",
-    "open_source",
-    "self_projects",
-    "production",
-    "technical_skills",
-    "bonus",
-    "deductions",
+CATEGORY_KEYS = [
+    "relevant_experience",
+    "project_system_evidence",
+    "technical_skills_match",
+    "evidence_quality_impact",
 ]
+
+
+CATEGORY_LABELS = {
+    "relevant_experience": "relevant_exp",
+    "project_system_evidence": "project_system",
+    "technical_skills_match": "tech_match",
+    "evidence_quality_impact": "evidence_quality",
+}
+
+
+SCORE_KEYS = ["total_score", *CATEGORY_KEYS, "bonus", "deductions"]
 
 
 def set_local_ollama_env() -> None:
@@ -304,18 +312,10 @@ def build_aggregate(rows: list[dict[str, Any]], attack_type: str) -> list[dict[s
                 "median_delta_total": median(deltas),
                 "max_delta_total": max(deltas, default=0.0),
                 "min_delta_total": min(deltas, default=0.0),
-                "mean_delta_open_source": mean([
-                    row["delta_vs_clean"]["open_source"] for row in subset
-                ]),
-                "mean_delta_self_projects": mean([
-                    row["delta_vs_clean"]["self_projects"] for row in subset
-                ]),
-                "mean_delta_production": mean([
-                    row["delta_vs_clean"]["production"] for row in subset
-                ]),
-                "mean_delta_technical_skills": mean([
-                    row["delta_vs_clean"]["technical_skills"] for row in subset
-                ]),
+                "category_deltas": {
+                    key: mean([row["delta_vs_clean"][key] for row in subset])
+                    for key in CATEGORY_KEYS
+                },
                 "mean_delta_bonus": mean([
                     row["delta_vs_clean"]["bonus"] for row in subset
                 ]),
@@ -352,9 +352,30 @@ def render_attack_examples() -> list[str]:
     return lines
 
 
+def render_category_delta_cells(row: dict[str, Any]) -> str:
+    return " | ".join(
+        f"{float(row['category_deltas'].get(key, 0.0)):+.1f}" for key in CATEGORY_KEYS
+    )
+
+
+def render_sample_delta_cells(row: dict[str, Any]) -> str:
+    delta = row.get("delta_vs_clean", {})
+    return " | ".join(f"{float(delta.get(key, 0.0)):+.1f}" for key in CATEGORY_KEYS)
+
+
+def project_relative_path(path: str | Path) -> str:
+    path_obj = Path(path)
+    for candidate in (path_obj, path_obj.resolve()):
+        try:
+            return str(candidate.relative_to(PROJECT_ROOT))
+        except ValueError:
+            continue
+    return str(path_obj)
+
+
 def render_report(result: dict[str, Any]) -> str:
     lines: list[str] = []
-    lines.append("# 完整链路攻击泛化实验（software_developer_sample_20）")
+    lines.append("# 完整链路攻击泛化实验（新 Software Developer Rubric）")
     lines.append("")
     lines.append(f"生成时间：{result['finished_at']}")
     lines.append("")
@@ -362,6 +383,7 @@ def render_report(result: dict[str, Any]) -> str:
     lines.append("")
     lines.append("- 数据：组员整理的 `test_data/software_developer_sample_20.zip`，共 20 份 Software Developer PDF 简历。")
     lines.append("- baseline：`llama3.1:8b + balanced PDF schema + extraction/scoring prompt hardening`。")
+    lines.append("- 评分标准：`SCORING_RUBRIC.md`，四个主维度为 `relevant_experience / project_system_evidence / technical_skills_match / evidence_quality_impact`。")
     lines.append("- PDF 攻击完整链路：`PDF -> PyMuPDF raw text -> PDF->JSONResume LLM extraction -> hardened scorer`。")
     lines.append("- GitHub 攻击链路：`PDF->JSONResume base + controlled GitHub repo evidence -> hardened scorer`；GitHub 数据使用受控 synthetic fixture，不访问或修改真实 GitHub。")
     lines.append("- GitHub 攻击只在有 GitHub 信号的候选人上测试。")
@@ -371,7 +393,7 @@ def render_report(result: dict[str, Any]) -> str:
     lines.append("")
     lines.append("### PDF 完整链路攻击")
     lines.append("")
-    lines.append("| Attack | 样本 | 正/零/负 | 平均 clean | 平均 attack | 平均提升 | 平均 Δtotal | 中位 Δtotal | 最大 | 最小 | Δopen | Δself | Δprod | Δtech | Δbonus | Δded |")
+    lines.append("| Attack | 样本 | 正/零/负 | 平均 clean | 平均 attack | 平均提升 | 平均 Δtotal | 中位 Δtotal | 最大 | 最小 | Δrelevant | Δproject | Δtech | Δevidence | Δbonus | Δded |")
     lines.append("|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
     for row in result["aggregate"]["pdf"]:
         lines.append(
@@ -381,14 +403,13 @@ def render_report(result: dict[str, Any]) -> str:
             f"**{row['mean_pct_increase_total']:+.1f}%** | "
             f"**{row['mean_delta_total']:+.1f}** | {row['median_delta_total']:+.1f} | "
             f"{row['max_delta_total']:+.1f} | {row['min_delta_total']:+.1f} | "
-            f"{row['mean_delta_open_source']:+.1f} | {row['mean_delta_self_projects']:+.1f} | "
-            f"{row['mean_delta_production']:+.1f} | {row['mean_delta_technical_skills']:+.1f} | "
+            f"{render_category_delta_cells(row)} | "
             f"{row['mean_delta_bonus']:+.1f} | {row['mean_delta_deductions']:+.1f} |"
         )
     lines.append("")
     lines.append("### GitHub 完整评分链路攻击")
     lines.append("")
-    lines.append("| Attack | 样本 | 正/零/负 | 平均 clean | 平均 attack | 平均提升 | 平均 Δtotal | 中位 Δtotal | 最大 | 最小 | Δopen | Δself | Δprod | Δtech | Δbonus | Δded |")
+    lines.append("| Attack | 样本 | 正/零/负 | 平均 clean | 平均 attack | 平均提升 | 平均 Δtotal | 中位 Δtotal | 最大 | 最小 | Δrelevant | Δproject | Δtech | Δevidence | Δbonus | Δded |")
     lines.append("|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
     for row in result["aggregate"]["github"]:
         lines.append(
@@ -398,45 +419,48 @@ def render_report(result: dict[str, Any]) -> str:
             f"**{row['mean_pct_increase_total']:+.1f}%** | "
             f"**{row['mean_delta_total']:+.1f}** | {row['median_delta_total']:+.1f} | "
             f"{row['max_delta_total']:+.1f} | {row['min_delta_total']:+.1f} | "
-            f"{row['mean_delta_open_source']:+.1f} | {row['mean_delta_self_projects']:+.1f} | "
-            f"{row['mean_delta_production']:+.1f} | {row['mean_delta_technical_skills']:+.1f} | "
+            f"{render_category_delta_cells(row)} | "
             f"{row['mean_delta_bonus']:+.1f} | {row['mean_delta_deductions']:+.1f} |"
         )
     lines.append("")
     lines.append("## 4. PDF 逐样本结果")
     lines.append("")
-    lines.append("| Candidate | Attack | clean | attack | Δtotal | JSON hits |")
-    lines.append("|---|---|---:|---:|---:|---|")
+    lines.append("| Candidate | Attack | clean | attack | Δtotal | Δrelevant | Δproject | Δtech | Δevidence | Δbonus | Δded | JSON hits |")
+    lines.append("|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|")
     for row in result["rows"]:
         if row["attack_type"] != "pdf":
             continue
         if not row.get("ok"):
             lines.append(
-                f"| `{row['candidate_id']}` | `{row['attack_id']}` |  |  |  | FAIL: `{row.get('error')}` |"
+                f"| `{row['candidate_id']}` | `{row['attack_id']}` |  |  |  |  |  |  |  |  |  | FAIL: `{row.get('error')}` |"
             )
             continue
         hits = ", ".join(k for k, v in row.get("json_hits", {}).items() if v) or "-"
         lines.append(
             f"| `{row['candidate_id']}` | `{row['attack_id']}` | {row['clean_score']['total_score']:.1f} | "
-            f"{row['attack_score']['total_score']:.1f} | **{row['delta_vs_clean']['total_score']:+.1f}** | {hits} |"
+            f"{row['attack_score']['total_score']:.1f} | **{row['delta_vs_clean']['total_score']:+.1f}** | "
+            f"{render_sample_delta_cells(row)} | {row['delta_vs_clean']['bonus']:+.1f} | "
+            f"{row['delta_vs_clean']['deductions']:+.1f} | {hits} |"
         )
     lines.append("")
     lines.append("## 5. GitHub 逐样本结果")
     lines.append("")
-    lines.append("| Candidate | Attack | clean | attack | Δtotal | adoption signals |")
-    lines.append("|---|---|---:|---:|---:|---|")
+    lines.append("| Candidate | Attack | clean | attack | Δtotal | Δrelevant | Δproject | Δtech | Δevidence | Δbonus | Δded | adoption signals |")
+    lines.append("|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|")
     for row in result["rows"]:
         if row["attack_type"] != "github":
             continue
         if not row.get("ok"):
             lines.append(
-                f"| `{row['candidate_id']}` | `{row['attack_id']}` |  |  |  | FAIL: `{row.get('error')}` |"
+                f"| `{row['candidate_id']}` | `{row['attack_id']}` |  |  |  |  |  |  |  |  |  | FAIL: `{row.get('error')}` |"
             )
             continue
         adoption = ", ".join(k for k, v in row.get("adoption", {}).items() if v) or "-"
         lines.append(
             f"| `{row['candidate_id']}` | `{row['attack_id']}` | {row['clean_score']['total_score']:.1f} | "
-            f"{row['attack_score']['total_score']:.1f} | **{row['delta_vs_clean']['total_score']:+.1f}** | {adoption} |"
+            f"{row['attack_score']['total_score']:.1f} | **{row['delta_vs_clean']['total_score']:+.1f}** | "
+            f"{render_sample_delta_cells(row)} | {row['delta_vs_clean']['bonus']:+.1f} | "
+            f"{row['delta_vs_clean']['deductions']:+.1f} | {adoption} |"
         )
     lines.append("")
     lines.append("## 6. 初步判断")
@@ -478,12 +502,11 @@ def render_report(result: dict[str, Any]) -> str:
         "- `github_repo_field_smuggling` 通常更强、更稳，但依赖 repo description 这类人类可见字段；适合作为完整链路强攻击 baseline，不适合作为隐蔽性主线。"
     )
     lines.append("- 判断稳定性时不要只看单个最大值；更应看正向样本比例、中位数、以及 JSON/adoption signal 是否真的出现。")
-    lines.append("- 如果 JSON hits 出现但分数不升，说明攻击穿过抽取层，但 scorer 没有稳定采纳这些证据。")
     lines.append("")
     lines.append("## 7. 文件")
     lines.append("")
-    lines.append(f"- 原始 JSON：`{Path(result['json_path']).relative_to(PROJECT_ROOT)}`")
-    lines.append(f"- 本报告：`{Path(result['report_path']).relative_to(PROJECT_ROOT)}`")
+    lines.append(f"- 原始 JSON：`{project_relative_path(result['json_path'])}`")
+    lines.append(f"- 本报告：`{project_relative_path(result['report_path'])}`")
     lines.append("")
     return "\n".join(lines)
 
@@ -499,6 +522,16 @@ def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
         "--pdf-attacks",
         default="pdf_compact_combined,pdf_jsonresume_shaped_project",
         help="Comma-separated PDF attack ids.",
+    )
+    parser.add_argument(
+        "--github-candidate-ids",
+        default="all-github",
+        help="Comma-separated candidate ids for GitHub attacks, 'all-github', or 'none'.",
+    )
+    parser.add_argument(
+        "--run-label",
+        default="new_rubric",
+        help="Output label used in report and JSON filenames.",
     )
     parser.add_argument("--timeout-sec", type=int, default=240)
     parser.add_argument("--verbose", action="store_true")
@@ -530,13 +563,32 @@ def main(argv: Iterable[str] | None = None) -> int:
         if attack_id not in PDF_ATTACKS:
             raise SystemExit(f"unknown PDF attack: {attack_id}")
 
-    github_targets = [candidate for candidate in all_candidates if candidate.has_github_signal]
+    if args.github_candidate_ids == "none":
+        github_targets = []
+    elif args.github_candidate_ids == "all-github":
+        github_targets = [candidate for candidate in all_candidates if candidate.has_github_signal]
+    else:
+        github_ids = [
+            item.strip()
+            for item in args.github_candidate_ids.split(",")
+            if item.strip()
+        ]
+        github_targets = [
+            candidate_map[cid]
+            for cid in github_ids
+            if cid in candidate_map and candidate_map[cid].has_github_signal
+        ]
 
     result: dict[str, Any] = {
         "started_at": datetime.now(timezone.utc).isoformat(),
         "model": MODEL_NAME,
         "schema_mode": SCHEMA_MODE,
         "prompt_mode": "hardened",
+        "rubric_id": "software_developer_rubric_v2",
+        "rubric_file": "SCORING_RUBRIC.md",
+        "category_keys": CATEGORY_KEYS,
+        "category_labels": CATEGORY_LABELS,
+        "run_label": args.run_label,
         "dataset": str((PROJECT_ROOT / "test_data" / "software_developer_sample_20.zip")),
         "pdf_candidate_ids": [candidate.candidate_id for candidate in pdf_targets],
         "github_candidate_ids": [candidate.candidate_id for candidate in github_targets],
@@ -728,8 +780,12 @@ def main(argv: Iterable[str] | None = None) -> int:
     }
     result["finished_at"] = datetime.now(timezone.utc).isoformat()
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d")
-    json_path = OUT_DIR / f"full_chain_generalization_probe_{stamp}.json"
-    report_path = OUT_DIR / "FULL_CHAIN_GENERALIZATION_PROBE_CN.md"
+    safe_label = "".join(
+        char if char.isalnum() or char in {"_", "-"} else "_"
+        for char in args.run_label.lower()
+    ).strip("_") or "new_rubric"
+    json_path = OUT_DIR / f"full_chain_generalization_probe_{safe_label}_{stamp}.json"
+    report_path = OUT_DIR / f"FULL_CHAIN_GENERALIZATION_PROBE_{safe_label.upper()}_CN.md"
     result["json_path"] = str(json_path)
     result["report_path"] = str(report_path)
     json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")

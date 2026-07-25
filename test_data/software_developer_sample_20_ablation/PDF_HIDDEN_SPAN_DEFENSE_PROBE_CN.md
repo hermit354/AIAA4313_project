@@ -1,5 +1,9 @@
 # PDF hidden-span detection + ablation 防御对照
 
+> ⚠️ 历史结果：本报告基于旧评分维度生成。
+> 当前 main 已切换到 `SCORING_RUBRIC.md` 的新 Software Developer rubric。
+> 新评分标准下的防御闭环实验请优先阅读 `PDF_HIDDEN_SPAN_DEFENSE_PROBE_NEW_RUBRIC_CN.md`。
+
 生成时间：2026-07-24T14:43:18.236307+00:00
 
 ## 1. 实验目的

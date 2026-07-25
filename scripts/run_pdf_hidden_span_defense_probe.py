@@ -31,6 +31,7 @@ import fitz
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = PROJECT_ROOT / "test_data" / "software_developer_sample_20_ablation"
+SANITIZED_PDF_DIR = OUT_DIR / "pdf_hidden_span_sanitized_pdfs"
 
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -61,6 +62,14 @@ from scripts.run_pdf_payload_variant_probe import (  # noqa: E402
 
 
 PAYLOADS = {**SCHEMA_COMPATIBLE_PAYLOADS, **VARIANT_PAYLOADS}
+
+
+CATEGORY_KEYS = [
+    "relevant_experience",
+    "project_system_evidence",
+    "technical_skills_match",
+    "evidence_quality_impact",
+]
 
 
 @dataclass(frozen=True)
@@ -148,17 +157,66 @@ def visible_text_from_pdf(
     return "\n".join(lines), kept, dropped
 
 
+def create_sanitized_pdf(
+    pdf_path: Path,
+    output_path: Path,
+    *,
+    min_font_size: float,
+    white_threshold: int,
+) -> tuple[int, list[SpanRecord]]:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    kept_count = 0
+    dropped: list[SpanRecord] = []
+    with fitz.open(pdf_path) as doc:
+        for page_index, page in enumerate(doc):
+            page_has_redaction = False
+            blocks = page.get_text("dict").get("blocks", [])
+            for block in blocks:
+                for line in block.get("lines", []):
+                    for span in line.get("spans", []):
+                        text = (span.get("text") or "").strip()
+                        if not text:
+                            continue
+                        record = SpanRecord(
+                            page=page_index + 1,
+                            text=text,
+                            size=float(span.get("size", 0.0)),
+                            color=int(span.get("color", 0)),
+                            bbox=tuple(float(x) for x in span.get("bbox", (0, 0, 0, 0))),
+                        )
+                        if is_hidden_span(
+                            record,
+                            min_font_size=min_font_size,
+                            white_threshold=white_threshold,
+                        ):
+                            page.add_redact_annot(fitz.Rect(record.bbox), fill=(1, 1, 1))
+                            dropped.append(record)
+                            page_has_redaction = True
+                        else:
+                            kept_count += 1
+            if page_has_redaction:
+                page.apply_redactions()
+        doc.save(output_path, garbage=4, deflate=True)
+    return kept_count, dropped
+
+
 def delta_scores(score: dict[str, Any], clean_score: dict[str, Any]) -> dict[str, float]:
-    keys = [
-        "total_score",
-        "open_source",
-        "self_projects",
-        "production",
-        "technical_skills",
-        "bonus",
-        "deductions",
-    ]
+    keys = ["total_score", "category_total", *CATEGORY_KEYS, "bonus", "deductions"]
     return {key: float(score[key]) - float(clean_score[key]) for key in keys}
+
+
+def project_relative_path(path: str | Path) -> str:
+    path_obj = Path(path)
+    for candidate in (path_obj, path_obj.resolve()):
+        try:
+            return str(candidate.relative_to(PROJECT_ROOT))
+        except ValueError:
+            continue
+    return str(path_obj)
+
+
+def render_category_delta_cells(delta: dict[str, Any]) -> str:
+    return " | ".join(f"{float(delta.get(key, 0.0)):+.1f}" for key in CATEGORY_KEYS)
 
 
 def evaluate_resume_text(resume_text: str, *, timeout_sec: int, verbose: bool):
@@ -235,12 +293,17 @@ def run_case(
     }
 
     start = time.time()
-    visible_text, kept, dropped = visible_text_from_pdf(
+    sanitized_pdf = (
+        SANITIZED_PDF_DIR / f"{candidate.candidate_id}_{payload_id}_sanitized.pdf"
+    )
+    kept_count, dropped = create_sanitized_pdf(
         attack_pdf,
+        sanitized_pdf,
         min_font_size=min_font_size,
         white_threshold=white_threshold,
     )
-    defended_resume = handler.extract_json_from_text(visible_text)
+    defended_raw_text = handler.extract_text_from_pdf(str(sanitized_pdf)) or ""
+    defended_resume = handler.extract_json_from_pdf(str(sanitized_pdf))
     if defended_resume is None:
         raise RuntimeError("defended extraction returned None")
     defended_eval = evaluate_resume_text(
@@ -252,9 +315,11 @@ def run_case(
         "delta_vs_clean": delta_scores(defended_score, clean_score),
         "delta_vs_attack": delta_scores(defended_score, attack_score),
         "json_hits": hit_fn(defended_resume),
+        "raw_hits": raw_hit_fn(defended_raw_text),
         "section_summary": section_summary(defended_resume),
-        "visible_text_len": len(visible_text),
-        "kept_span_count": len(kept),
+        "sanitized_pdf": str(sanitized_pdf),
+        "sanitized_raw_text_len": len(defended_raw_text),
+        "kept_span_count": kept_count,
         "dropped_span_count": len(dropped),
         "dropped_snippets": [span.text[:180] for span in dropped[:12]],
         "elapsed_sec": time.time() - start,
@@ -265,7 +330,7 @@ def run_case(
 
 def render_report(result: dict[str, Any]) -> str:
     lines: list[str] = []
-    lines.append("# PDF hidden-span detection + ablation 防御对照")
+    lines.append("# PDF hidden-span detection + ablation 防御对照（新 Software Developer Rubric）")
     lines.append("")
     lines.append(f"生成时间：{result['finished_at']}")
     lines.append("")
@@ -278,7 +343,7 @@ def render_report(result: dict[str, Any]) -> str:
     lines.append("```text")
     lines.append("clean PDF -> JSONResume -> hardened scorer")
     lines.append("attack PDF -> JSONResume -> hardened scorer")
-    lines.append("attack PDF -> hidden-span ablation -> JSONResume -> hardened scorer")
+    lines.append("attack PDF -> hidden-span ablation -> sanitized PDF -> JSONResume -> hardened scorer")
     lines.append("```")
     lines.append("")
     lines.append("## 2. 防御规则")
@@ -286,16 +351,17 @@ def render_report(result: dict[str, Any]) -> str:
     lines.append(
         f"- 删除条件：`font_size < {result['min_font_size']}` 且 `RGB >= {result['white_threshold']}`。"
     )
+    lines.append("- 评分标准：`SCORING_RUBRIC.md`，主维度为 `relevant_experience / project_system_evidence / technical_skills_match / evidence_quality_impact`。")
     lines.append("- 这个规则专门针对本轮 white tiny text 攻击；它不是通用 PDF 安全方案。")
     lines.append("")
     lines.append("## 3. 结果")
     lines.append("")
-    lines.append("| Candidate | Payload | clean | attack | Δattack | defended | Δdefense vs clean | Δdefense vs attack | dropped spans | attack JSON hits | defense JSON hits |")
-    lines.append("|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|")
+    lines.append("| Candidate | Payload | clean | attack | Δattack | defended | Δdefense vs clean | Δdefense vs attack | Δrel | Δproject | Δtech | Δevidence | dropped spans | attack JSON hits | defense JSON hits |")
+    lines.append("|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|---|")
     for row in result["rows"]:
         if not row["ok"]:
             lines.append(
-                f"| `{row['candidate_id']}` | `{row['payload_id']}` |  |  |  |  |  |  |  | FAIL: `{row.get('error')}` |  |"
+                f"| `{row['candidate_id']}` | `{row['payload_id']}` |  |  |  |  |  |  |  |  |  |  |  | FAIL: `{row.get('error')}` |  |"
             )
             continue
         clean_total = row["clean"]["score"]["total_score"]
@@ -308,6 +374,7 @@ def render_report(result: dict[str, Any]) -> str:
             f"{attack_total:.1f} | **{row['attack']['delta_vs_clean']['total_score']:+.1f}** | "
             f"{defense_total:.1f} | **{row['defense']['delta_vs_clean']['total_score']:+.1f}** | "
             f"**{row['defense']['delta_vs_attack']['total_score']:+.1f}** | "
+            f"{render_category_delta_cells(row['attack']['delta_vs_clean'])} | "
             f"{row['defense']['dropped_span_count']} | {attack_hits} | {defense_hits} |"
         )
     lines.append("")
@@ -365,8 +432,8 @@ def render_report(result: dict[str, Any]) -> str:
     lines.append("")
     lines.append("## 6. 文件")
     lines.append("")
-    lines.append(f"- 原始 JSON：`{Path(result['json_path']).relative_to(PROJECT_ROOT)}`")
-    lines.append(f"- 本报告：`{Path(result['report_path']).relative_to(PROJECT_ROOT)}`")
+    lines.append(f"- 原始 JSON：`{project_relative_path(result['json_path'])}`")
+    lines.append(f"- 本报告：`{project_relative_path(result['report_path'])}`")
     lines.append("")
     return "\n".join(lines)
 
@@ -375,7 +442,7 @@ def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--cases",
-        default="20734:hidden_combined,23030:hidden_project,23030:hidden_combined,23372:hidden_combined",
+        default="20734:compact_combined,22828:compact_combined,20516:compact_combined,23030:compact_combined,23372:compact_combined",
         help="Comma-separated candidate_id:payload_id cases.",
     )
     parser.add_argument("--timeout-sec", type=int, default=180)
@@ -405,6 +472,9 @@ def main(argv: Iterable[str] | None = None) -> int:
         "started_at": datetime.now(timezone.utc).isoformat(),
         "model": MODEL_NAME,
         "schema_mode": SCHEMA_MODE,
+        "rubric_id": "software_developer_rubric_v2",
+        "rubric_file": "SCORING_RUBRIC.md",
+        "category_keys": CATEGORY_KEYS,
         "min_font_size": args.min_font_size,
         "white_threshold": args.white_threshold,
         "cases": [{"candidate_id": cid, "payload_id": pid} for cid, pid in cases],
@@ -434,8 +504,8 @@ def main(argv: Iterable[str] | None = None) -> int:
 
     result["finished_at"] = datetime.now(timezone.utc).isoformat()
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d")
-    json_path = OUT_DIR / f"pdf_hidden_span_defense_probe_{stamp}.json"
-    report_path = OUT_DIR / "PDF_HIDDEN_SPAN_DEFENSE_PROBE_CN.md"
+    json_path = OUT_DIR / f"pdf_hidden_span_defense_probe_new_rubric_{stamp}.json"
+    report_path = OUT_DIR / "PDF_HIDDEN_SPAN_DEFENSE_PROBE_NEW_RUBRIC_CN.md"
     result["json_path"] = str(json_path)
     result["report_path"] = str(report_path)
     json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")

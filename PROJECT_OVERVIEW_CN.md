@@ -25,10 +25,10 @@
 
 主要评分维度包括：
 
-- `open_source`
-- `self_projects`
-- `production`
-- `technical_skills`
+- `relevant_experience`
+- `project_system_evidence`
+- `technical_skills_match`
+- `evidence_quality_impact`
 - `bonus`
 - `deductions`
 
@@ -51,7 +51,7 @@
 一个典型攻击目标是：
 
 ```text
-让候选人在评分系统中得到更高分，尤其是影响 production / project / technical evidence 等细分类。
+让候选人在评分系统中得到更高分，尤其是影响 relevant experience / project-system evidence / technical match / evidence quality 等细分类。
 ```
 
 我们特别希望和普通“简历造假”区分开：
@@ -330,7 +330,7 @@ scripts/run_full_chain_generalization_probe.py
 对应报告：
 
 ```text
-test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_CN.md
+test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_NEW_RUBRIC_CN.md
 ```
 
 ## 9. 重要报告文件
@@ -346,28 +346,46 @@ test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_
 2. 最新完整链路泛化实验（当前主报告）：
 
    ```text
-   test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_CN.md
+   test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_NEW_RUBRIC_CN.md
    ```
 
    对应原始结果：
 
    ```text
-   test_data/software_developer_sample_20_ablation/full_chain_generalization_probe_20260724.json
+   test_data/software_developer_sample_20_ablation/full_chain_generalization_probe_new_rubric_20260724.json
    ```
 
-3. 当前 baseline / 攻击 / 防御总结：
+3. 历史旧 rubric 完整链路结果：
+
+   ```text
+   test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_CN.md
+   ```
+
+4. 新 rubric 下 PDF hidden-span 防御闭环实验（demo 重点）：
+
+   ```text
+   test_data/software_developer_sample_20_ablation/PDF_HIDDEN_SPAN_DEFENSE_PROBE_NEW_RUBRIC_CN.md
+   ```
+
+   对应原始结果：
+
+   ```text
+   test_data/software_developer_sample_20_ablation/pdf_hidden_span_defense_probe_new_rubric_20260725.json
+   ```
+
+5. 当前 baseline / 攻击 / 防御总结：
 
    ```text
    test_data/github_fixture_samples/LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md
    ```
 
-4. prompt hardening / GitHub sanitizer ablation：
+6. prompt hardening / GitHub sanitizer ablation：
 
    ```text
    test_data/software_developer_sample_20_ablation/LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md
    ```
 
-5. PDF 完整链路攻击与防御：
+7. PDF 完整链路攻击与防御：
 
    ```text
    test_data/software_developer_sample_20_ablation/PDF_PAYLOAD_VARIANT_PROBE_CN.md
@@ -375,7 +393,7 @@ test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_
    test_data/software_developer_sample_20_ablation/PDF_SCHEMA_COMPATIBLE_ATTACK_RESULTS_CN.md
    ```
 
-6. GitHub / structure smuggling：
+8. GitHub / structure smuggling：
 
    ```text
    test_data/software_developer_sample_20_ablation/STRUCTURE_SMUGGLING_ATTACK_RESULTS_CN.md
