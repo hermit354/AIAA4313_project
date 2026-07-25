@@ -81,5 +81,22 @@
       "description": "sanitized PDF after hidden-span deletion",
       "source_pdf": "test_data/software_developer_sample_20_ablation/pdf_hidden_span_sanitized_pdfs/20734_compact_combined_sanitized.pdf"
     }
+  ],
+  "extra_high_impact": [
+    {
+      "file": "test_data/demo_handoff_samples/extra_high_impact/23372_clean_medium.pdf",
+      "candidate_id": "23372",
+      "description": "Optional high-impact sample for GitHub evaluation patch demo; stored old-defense result clean 65 -> attack 91 (+26)."
+    },
+    {
+      "file": "test_data/demo_handoff_samples/extra_high_impact/23372_github_clean.json",
+      "candidate_id": "23372",
+      "scenario": "clean"
+    },
+    {
+      "file": "test_data/demo_handoff_samples/extra_high_impact/23372_github_eval_patch.json",
+      "candidate_id": "23372",
+      "scenario": "github_eval_json_patch"
+    }
   ]
 }
