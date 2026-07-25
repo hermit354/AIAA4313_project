@@ -11,10 +11,49 @@
 
 组员请优先阅读中文项目说明：[PROJECT_OVERVIEW_CN.md](PROJECT_OVERVIEW_CN.md)。
 
+## Final Demo / Report 当前入口
+
+负责 pre / final demo 的同学请优先看：
+
+- **Demo 工作交接说明**：[FINAL_DEMO_REPORT_PLAYBOOK_CN.md](FINAL_DEMO_REPORT_PLAYBOOK_CN.md)
+- **5 个现场 demo PDF + GitHub fixture 样本包说明**：[test_data/demo_handoff_samples/README_CN.md](test_data/demo_handoff_samples/README_CN.md)
+- **可直接下载/转发的样本压缩包**：[test_data/demo_handoff_samples.zip](test_data/demo_handoff_samples.zip)
+- **单样本命令行 runner**：[scripts/demo_score_pdf_with_github_fixture.py](scripts/demo_score_pdf_with_github_fixture.py)
+
+当前推荐 demo 主线：
+
+```text
+普通防御 baseline
+  hardened prompt + instruction_filter
+
+进阶攻击
+  GitHub repo description evaluation patch
+  6/6 positive, mean +14.2, max +26
+
+进阶防御
+  semantic_filter + adaptive_structured GitHub evidence gate
+  0/6 positive, mean -7.0, max 0
+```
+
+关键结果文件：
+
+- **GitHub 输入注入攻击总结**：[GITHUB_INPUT_INJECTION_SUMMARY_CN.md](test_data/software_developer_sample_20_ablation/GITHUB_INPUT_INJECTION_SUMMARY_CN.md)
+- **GitHub semantic filter 防御结果**：[GITHUB_SEMANTIC_DEFENSE_RESULTS_CN.md](test_data/software_developer_sample_20_ablation/GITHUB_SEMANTIC_DEFENSE_RESULTS_CN.md)
+- **GitHub structured evidence gate 结果**：[GITHUB_STRUCTURED_EVIDENCE_GATE_RESULTS_CN.md](test_data/software_developer_sample_20_ablation/GITHUB_STRUCTURED_EVIDENCE_GATE_RESULTS_CN.md)
+- **PDF hidden-span 防御闭环实验**：[PDF_HIDDEN_SPAN_DEFENSE_PROBE_NEW_RUBRIC_CN.md](test_data/software_developer_sample_20_ablation/PDF_HIDDEN_SPAN_DEFENSE_PROBE_NEW_RUBRIC_CN.md)
+
+推荐最终防御配置：
+
+```bash
+GITHUB_SANITIZE_MODE=semantic_filter
+GITHUB_EVIDENCE_MODE=adaptive_structured
+EXTRACTION_SCHEMA_MODE=balanced
+DEFAULT_MODEL=llama3.1:8b
+```
+
 然后再根据需要阅读具体实验报告：
 
-- **最新完整链路泛化实验（当前主报告，新 Software Developer rubric）**：[FULL_CHAIN_GENERALIZATION_PROBE_NEW_RUBRIC_CN.md](test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_NEW_RUBRIC_CN.md)
-- **新 rubric 下的 PDF hidden-span 防御闭环实验（demo 重点）**：[PDF_HIDDEN_SPAN_DEFENSE_PROBE_NEW_RUBRIC_CN.md](test_data/software_developer_sample_20_ablation/PDF_HIDDEN_SPAN_DEFENSE_PROBE_NEW_RUBRIC_CN.md)
+- **最新完整链路泛化实验（新 Software Developer rubric）**：[FULL_CHAIN_GENERALIZATION_PROBE_NEW_RUBRIC_CN.md](test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_NEW_RUBRIC_CN.md)
 - [LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md](test_data/github_fixture_samples/LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md)
 - [LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md](test_data/software_developer_sample_20_ablation/LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md)
 - 历史旧 rubric 结果：[FULL_CHAIN_GENERALIZATION_PROBE_CN.md](test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_CN.md)
