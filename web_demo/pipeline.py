@@ -252,7 +252,17 @@ def _dashscope_chat(*, model: str, messages: list[dict[str, Any]], temperature: 
         json=payload,
         timeout=120,
     )
-    response.raise_for_status()
+    if not response.ok:
+        # DashScope's OpenAI-compatible endpoint returns useful JSON errors
+        # (for example ``Arrearage``) even for HTTP 400 responses. Surface the
+        # provider cause to the UI without including credentials or payloads.
+        try:
+            error = response.json().get("error") or {}
+        except (ValueError, AttributeError):
+            error = {}
+        code = str(error.get("code") or error.get("type") or f"HTTP {response.status_code}")
+        message = str(error.get("message") or "DashScope rejected the request.")
+        raise RuntimeError(f"DashScope {code}: {message}")
     content = response.json()["choices"][0]["message"]["content"]
     if not isinstance(content, str) or not content.strip():
         raise RuntimeError("DashScope returned an empty response")

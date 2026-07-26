@@ -4,7 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from web_demo.pipeline import PipelineConfig, _apply_text_defense, _extract, _github_context, _heuristic_evaluate, _parse, build_pipeline_config, defense_profiles, github_fixtures, provider_registry
+from web_demo.pipeline import PipelineConfig, _apply_text_defense, _dashscope_chat, _extract, _github_context, _heuristic_evaluate, _parse, build_pipeline_config, defense_profiles, github_fixtures, provider_registry
 
 class PipelineTests(unittest.TestCase):
     def test_config_fingerprint_is_stable_and_request_scoped(self):
@@ -72,6 +72,21 @@ class PipelineTests(unittest.TestCase):
         self.assertIn('deepseek-v4-flash',models)
         self.assertIn('qwen3-235b-a22b-instruct-2507',models)
         self.assertTrue(models['qwen3-vl-plus']['vision_pdf'])
+
+    def test_dashscope_error_exposes_provider_code_and_message(self):
+        import requests
+
+        class ArrearageResponse:
+            status_code=400
+            ok=False
+            text='{"error":{"code":"Arrearage"}}'
+            def json(self):
+                return {"error":{"code":"Arrearage","message":"Access denied: account is not in good standing."}}
+            def raise_for_status(self):
+                raise requests.HTTPError('400 Client Error')
+        with patch('requests.post',return_value=ArrearageResponse()):
+            with self.assertRaisesRegex(RuntimeError,'DashScope Arrearage: Access denied'):
+                _dashscope_chat(model='qwen3-vl-plus',messages=[{'role':'user','content':'hello'}],temperature=0,top_p=.1)
 
     def test_section_parser_does_not_turn_contact_or_education_into_work(self):
         resume=_parse('''Chenrui Tie
