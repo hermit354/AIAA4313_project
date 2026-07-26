@@ -44,18 +44,39 @@ class DemoApiTests(unittest.TestCase):
         self.assertEqual(updated.json()['profile_id'],'v2_structured')
 
     def test_staff_run_payload_includes_immutable_config_and_stage_duration(self):
+        artifact=backend.ARTIFACTS/'trace.json';artifact.parent.mkdir(parents=True,exist_ok=True);artifact.write_text('{"base": 51, "bonus": 6, "deduction": 2}',encoding='utf-8')
         c=backend.db()
         c.execute("insert into applications (id,email,filename,stored_path,sha256,status,created,is_demo) values(?,?,?,?,?,?,?,?)", ('app-trace','alice@demo.local','trace.pdf',None,'trace','UNDER_REVIEW',1,0))
         config={'defense_profile':'v2_structured','github_fixture_id':'20734_patch','github_evidence_mode':'structured','github_sanitize_mode':'adaptive'}
         c.execute("insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)", ('run-trace','app-trace','ollama','gemma3:4b','COMPLETED',1,2,55,__import__('json').dumps(config),'trace-fingerprint',None,None))
         c.execute("insert into stage_runs values(?,?,?,?,?,?,?)", ('trace-extract','run-trace','PDF_TEXT_EXTRACTION','COMPLETED',120,'done',None))
-        c.execute("insert into stage_runs values(?,?,?,?,?,?,?)", ('trace-github','run-trace','GITHUB_EVIDENCE_GATE','COMPLETED',230,'blocked injected text',None))
+        c.execute("insert into stage_runs values(?,?,?,?,?,?,?)", ('trace-github','run-trace','GITHUB_EVIDENCE_GATE','COMPLETED',230,'blocked injected text',str(artifact)))
         c.commit();c.close()
         records=self.client.get('/api/staff/applications',headers=self.login('staff@demo.local')).json()
         run=next(item for item in records if item['id']=='app-trace')['runs'][0]
         self.assertEqual(run['duration_ms'],350)
         self.assertEqual([stage['name'] for stage in run['stage_summary']],['PDF_TEXT_EXTRACTION','GITHUB_EVIDENCE_GATE'])
         self.assertEqual(__import__('json').loads(run['config_json'])['github_fixture_id'],'20734_patch')
+        self.assertEqual((run['base'],run['bonus'],run['deduction']),(51,6,2))
+
+    def test_database_reads_do_not_mark_active_runs_stale(self):
+        c=backend.db()
+        c.execute("insert into applications (id,email,filename,stored_path,sha256,status,created,is_demo) values(?,?,?,?,?,?,?,?)", ('app-active','alice@demo.local','active.pdf',None,'active','PROCESSING',1,0))
+        c.execute("insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)", ('run-active','app-active','ollama','gemma3:4b','RUNNING',1,None,None,'{}','active-fingerprint',None,None))
+        c.commit();c.close()
+        read=backend.db(); status=read.execute("select status,error from evaluation_runs where id='run-active'").fetchone();read.close()
+        self.assertEqual(status['status'],'RUNNING')
+        self.assertIsNone(status['error'])
+
+    def test_startup_recovery_marks_active_runs_once(self):
+        c=backend.db()
+        c.execute("insert into applications (id,email,filename,stored_path,sha256,status,created,is_demo) values(?,?,?,?,?,?,?,?)", ('app-recovery','alice@demo.local','recovery.pdf',None,'recovery','PROCESSING',1,0))
+        c.execute("insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)", ('run-recovery','app-recovery','ollama','gemma3:4b','RUNNING',1,None,None,'{}','recovery-fingerprint',None,None))
+        c.commit();c.close()
+        backend.recover_stale_runs()
+        c=backend.db(); status=c.execute("select status,error from evaluation_runs where id='run-recovery'").fetchone();c.close()
+        self.assertEqual(status['status'],'FAILED_STALE')
+        self.assertEqual(status['error'],'Recovered once at server startup')
 
     def test_staff_can_read_pdf_preview_metadata(self):
         pdf_path = backend.UPLOADS / 'one_page_resume.pdf'

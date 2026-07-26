@@ -35,9 +35,14 @@ def db():
     run=c.execute('select created from evaluation_runs where application_id=? order by created limit 1',(legacy['id'],)).fetchone()
     created=float(run['created']) if run else stamp()
    c.execute('update applications set stored_path=?,sha256=?,created=? where id=?',(str(source),hashlib.sha256(source.read_bytes()).hexdigest(),created,legacy['id']))
- c.execute("update evaluation_runs set status='FAILED_STALE',error='Recovered at server startup' where status='RUNNING'");c.commit();return c
+ c.commit();return c
 def rowdict(r): return dict(r) if r else None
 def stamp(): return time.time()
+def recover_stale_runs():
+ c=db()
+ c.execute("update evaluation_runs set status='FAILED_STALE',completed=?,error='Recovered once at server startup' where status in ('QUEUED','RUNNING')",(stamp(),))
+ c.execute("update stage_runs set status='FAILED',note='Interrupted by backend restart' where status in ('QUEUED','RUNNING')")
+ c.commit();c.close()
 def provider_for(model_id):
  return next((m['provider'].lower() for m in provider_registry() if m['id']==model_id),'ollama')
 def remove_managed_file(value,root):
@@ -82,7 +87,7 @@ class RunRequest(BaseModel):model:str='gemma3:4b';temperature:float=.1;topP:floa
 class Setting(BaseModel):model_id:str
 class DefenseSetting(BaseModel):profile_id:str
 @app.on_event('startup')
-def start():seed()
+def start():recover_stale_runs();seed()
 @app.get('/')
 def page():return FileResponse(ROOT/'templates'/'hiring_agent_glass_editorial_template.html')
 @app.get('/health')
@@ -99,11 +104,18 @@ def app_view(r,c):
  d['runs']=[]
  for row in c.execute('select * from evaluation_runs where application_id=? order by created desc',(d['id'],)):
   run=rowdict(row)
-  stages=[rowdict(stage) for stage in c.execute('select name,status,duration_ms,note from stage_runs where run_id=? order by rowid',(run['id'],))]
+  stage_rows=[rowdict(stage) for stage in c.execute('select name,status,duration_ms,note,artifact_path from stage_runs where run_id=? order by rowid',(run['id'],))]
+  stages=[{key:value for key,value in stage.items() if key!='artifact_path'} for stage in stage_rows]
   # A run can be in-flight, so this is the observed completed-stage cost, not
   # an invented wall-clock duration.  The UI labels missing legacy data clearly.
   run['stage_summary']=stages
   run['duration_ms']=sum(stage['duration_ms'] or 0 for stage in stages) if stages else None
+  artifact_path=next((stage['artifact_path'] for stage in stage_rows if stage['artifact_path']),None)
+  if artifact_path:
+   try:
+    artifact=json.loads(Path(artifact_path).read_text(encoding='utf-8'))
+    run['base']=artifact.get('base');run['bonus']=artifact.get('bonus');run['deduction']=artifact.get('deduction')
+   except (OSError,ValueError,TypeError):pass
   d['runs'].append(run)
  return d
 @app.get('/api/candidate/application')

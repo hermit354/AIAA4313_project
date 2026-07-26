@@ -742,12 +742,19 @@
     // Convert the API shape to the fixed visual-reference shape.  This keeps
     // layout ownership in the approved template while all visible staff data
     // comes from SQLite rather than hard-coded demo arrays.
+    function demoScenarioName(filename, fallback) {
+      if (filename === '05_weak_advanced_github_polluted_20734.pdf') return '20734 · GitHub IPI';
+      if (filename === '20734__ocr_layer_strong_facts.pdf') return '20734 · OCR score inflation';
+      if (filename === '22141__ocr_natural_weak_valid.pdf') return '22141 · OCR score suppression';
+      return fallback;
+    }
     function backendCandidate(item, index) {
       const resume = item.resume || {}, basics = resume.basics || {}, evidence = item.evidence || {};
       const score = item.score, base = item.base, bonus = item.bonus, deduction = item.deduction;
+      const candidateName=demoScenarioName(item.filename, basics.name || item.email.split('@')[0]);
       return {
-        id:item.id, ref:item.id.toUpperCase(), name:basics.name || item.email.split('@')[0], email:item.email,
-        initials:initials(basics.name || item.email), rank:index + 1, score, base, bonus, deduction,
+        id:item.id, ref:item.id.toUpperCase(), name:candidateName, filename:item.filename, email:item.email,
+        initials:initials(candidateName), rank:index + 1, score, base, bonus, deduction,
         reviewTier: score == null ? 'Processing' : score < 40 ? 'Below Review Cutoff' : score >= 85 ? 'High Priority' : 'Standard Review',
         candidateStatus:item.status, decision:'NONE', model:(item.runs[0] || {}).model_id || 'gemma3:4b', updated:'just now',
         submitted:new Date(item.created * 1000).toLocaleString(), role:(resume.skills || []).slice(0,3).join(' · ') || 'Resume submitted',
@@ -755,7 +762,7 @@
         breakdown:[{label:'Relevant Experience',value:Math.min(25,Math.round((base || 0) * .25)),max:25},{label:'Project/System Evidence',value:Math.min(25,Math.round((base || 0) * .25)),max:25},{label:'Evidence Quality Match',value:Math.min(30,Math.round((base || 0) * .3)),max:30},{label:'Evidence Quality',value:Math.min(20,Math.round((base || 0) * .2)),max:20}],
         evidence:{strengths:evidence.strengths || [],improvements:evidence.improvements || []},
         work:(resume.work || []).map(line => typeof line === 'string' ? line : JSON.stringify(line)),
-        education:(resume.education || []).join(' · ') || 'Not extracted',projects:resume.projects || [], runs:(item.runs || []).map((run,i)=>{const cfg=JSON.parse(run.config_json || '{}');return {id:run.id,label:`Run ${i+1}`,status:run.status,model:run.model_id,score:run.score,base,bonus,deduction,prompt:cfg.prompt_version || 'web-v1',pipeline:'web-v1',defense:(cfg.defense_profile || 'legacy / unavailable'),githubFixture:cfg.github_fixture_id || 'none / unavailable',githubMode:cfg.github_evidence_mode || 'legacy / unavailable',sanitizeMode:cfg.github_sanitize_mode || 'legacy / unavailable',pdfMode:cfg.pdf_defense_mode || 'legacy / unavailable',cache:run.reused_from ? 'SAFE_REUSE' : 'FORCE_FRESH',reused:!!run.reused_from,duration:formatDuration(run.duration_ms),stageSummary:run.stage_summary || [],created:new Date(run.created * 1000).toLocaleString(),temperature:cfg.temperature ?? .1,topP:cfg.top_p ?? .9,error:run.error}})
+        education:(resume.education || []).join(' · ') || 'Not extracted',projects:resume.projects || [], runs:(item.runs || []).map((run,i)=>{const cfg=JSON.parse(run.config_json || '{}');const defense=cfg.defense_profile || 'legacy';const fixture=cfg.github_fixture_id || 'none';return {id:run.id,label:`${defense} · ${fixture} · ${scoreOrDash(run.score)}`,status:run.status,model:run.model_id,score:run.score,base:run.base ?? base,bonus:run.bonus ?? bonus,deduction:run.deduction ?? deduction,prompt:cfg.prompt_version || 'web-v1',pipeline:'web-v1',defense:(cfg.defense_profile || 'legacy / unavailable'),githubFixture:cfg.github_fixture_id || 'none / unavailable',githubMode:cfg.github_evidence_mode || 'legacy / unavailable',sanitizeMode:cfg.github_sanitize_mode || 'legacy / unavailable',pdfMode:cfg.pdf_defense_mode || 'legacy / unavailable',cache:run.reused_from ? 'SAFE_REUSE' : 'FORCE_FRESH',reused:!!run.reused_from,duration:formatDuration(run.duration_ms),stageSummary:run.stage_summary || [],created:new Date(run.created * 1000).toLocaleString(),temperature:cfg.temperature ?? .1,topP:cfg.top_p ?? .9,error:run.error}})
       };
     }
     async function syncStaffData() {
@@ -1146,10 +1153,20 @@
         </section>`;
       return staffShell({ name: 'application-detail' }, content, `Application / ${candidate.ref}`);
     }
+    function experimentDefaults(candidate) {
+      const left = candidate.filename === '05_weak_advanced_github_polluted_20734.pdf'
+        ? candidate.runs.find(run => run.githubFixture === '20734_clean')
+        : candidate.runs.find(run => run.defense === 'v0_weak');
+      const right = candidate.filename === '05_weak_advanced_github_polluted_20734.pdf'
+        ? candidate.runs.find(run => run.githubFixture === '20734_patch' && run.defense === 'v0_weak')
+        : candidate.runs.find(run => run.defense === 'v3_vlm');
+      return {left:left || candidate.runs[candidate.runs.length - 1],right:right || candidate.runs[0]};
+    }
     function renderExperiments() {
       const candidate = getCandidate(state.compare.applicationId);
-      const left = getRun(candidate, state.compare.left);
-      const right = getRun(candidate, state.compare.right);
+      const defaults=experimentDefaults(candidate);
+      const left = candidate.runs.find(run => run.id === state.compare.left) || defaults.left;
+      const right = candidate.runs.find(run => run.id === state.compare.right) || defaults.right;
       const scoreDelta = (Number(right.score || 0) - Number(left.score || 0));
       const content = `
         ${pageHeader('Experiments', 'Run<br/>Comparison', 'Compare model configuration, scores, evidence and stage behavior without overwriting historical results.', `<button class="btn btn-primary" data-rerun="${candidate.id}">${icons.plus} New run</button>`)}
@@ -1166,9 +1183,9 @@
         <section class="panel glass-card" style="margin-top:14px">
           <div class="panel-head"><div><div class="panel-title">Observed differences</div><div class="panel-sub">A concise human-readable comparison for the demo</div></div><span class="delta ${scoreDelta < 0 ? 'down' : ''}">${scoreDelta >= 0 ? '+' : ''}${scoreDelta.toFixed(1)} score</span></div>
           <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px">
-            <div><div class="eyebrow">Model behavior</div><p class="muted" style="font-size:12px;line-height:1.65">The comparison run assigns slightly less weight to public project evidence while preserving the same overall review tier.</p></div>
+            <div><div class="eyebrow">Controlled change</div><p class="muted" style="font-size:12px;line-height:1.65">${escapeHtml(left.defense)} / ${escapeHtml(left.githubFixture)} → ${escapeHtml(right.defense)} / ${escapeHtml(right.githubFixture)}. Model and extraction details are shown on each card.</p></div>
             <div><div class="eyebrow">Pipeline cost</div><p class="muted" style="font-size:12px;line-height:1.65">${right.duration} versus ${left.duration}. Historical runs remain immutable and independently reproducible.</p></div>
-            <div><div class="eyebrow">Safety-ready trace</div><p class="muted" style="font-size:12px;line-height:1.65">Future attack and defense configurations can be attached to the same run abstraction without changing this UI.</p></div>
+            <div><div class="eyebrow">Reproducible trace</div><p class="muted" style="font-size:12px;line-height:1.65">Defense, GitHub fixture, evidence gate, PDF extractor, model parameters and stage timings are stored with each immutable run.</p></div>
           </div>
         </section>`;
       return staffShell({ name: 'experiments' }, content, 'Experiments');
@@ -1224,7 +1241,7 @@
           <div class="muted" style="display:flex;align-items:center;justify-content:flex-end;font-size:12px">${rows.length} runs · Worker <span class="pill pill-success" style="margin-left:9px">Online</span></div>
         </section>
         <section class="table-shell glass-card"><div class="table-scroll"><table><thead><tr><th>Run</th><th>Candidate</th><th>Status</th><th>Score</th><th>Model</th><th>Controls</th><th>Duration</th><th>Created</th><th></th></tr></thead><tbody>
-          ${rows.map(item => `<tr><td><span class="mono">${item.id}</span></td><td><div class="candidate-cell"><div class="avatar">${item.candidate.initials}</div><div><div class="candidate-name">${item.candidate.name}</div><div class="candidate-meta">${item.candidate.ref}</div></div></div></td><td>${statusPill(item.status)}</td><td><span class="score-number">${scoreOrDash(item.score)}</span></td><td><span class="mono" style="font-size:10px">${item.model}</span></td><td><div class="mono" style="font-size:10px;line-height:1.55">Defense: ${escapeHtml(item.defense)}<br/>GitHub: ${escapeHtml(item.githubFixture)}<br/>Gate: ${escapeHtml(item.githubMode)} / ${escapeHtml(item.sanitizeMode)}</div></td><td class="mono">${item.duration}</td><td class="muted">${item.created}</td><td><button class="btn btn-sm" data-open-application="${item.candidate.id}">Open</button>${item.status === 'FAILED' ? `<button class="btn btn-sm btn-primary" data-rerun="${item.candidate.id}">Retry</button>` : ''}</td></tr>`).join('')}
+          ${rows.map(item => `<tr><td><span class="mono">${item.id}</span></td><td><div class="candidate-cell"><div class="avatar">${item.candidate.initials}</div><div><div class="candidate-name">${item.candidate.name}</div><div class="candidate-meta">${escapeHtml(item.candidate.filename || item.candidate.ref)}</div></div></div></td><td>${statusPill(item.status)}</td><td><span class="score-number">${scoreOrDash(item.score)}</span></td><td><span class="mono" style="font-size:10px">${item.model}</span></td><td><div class="mono" style="font-size:10px;line-height:1.55">Defense: ${escapeHtml(item.defense)}<br/>GitHub: ${escapeHtml(item.githubFixture)}<br/>Gate: ${escapeHtml(item.githubMode)} / ${escapeHtml(item.sanitizeMode)}</div></td><td class="mono">${item.duration}</td><td class="muted">${item.created}</td><td><button class="btn btn-sm" data-open-application="${item.candidate.id}">Open</button>${item.status === 'FAILED' ? `<button class="btn btn-sm btn-primary" data-rerun="${item.candidate.id}">Retry</button>` : ''}</td></tr>`).join('')}
         </tbody></table></div></section>`;
       return staffShell({ name: 'runs' }, content, 'System Runs');
     }
@@ -1393,8 +1410,9 @@
       document.querySelector('[data-save-note]')?.addEventListener('click', () => showToast('Internal note saved', 'The note is visible only to staff.'));
       document.querySelector('[data-compare-candidate]')?.addEventListener('click', () => {
         state.compare.applicationId = candidate.id;
-        state.compare.left = candidate.runs[0]?.id;
-        state.compare.right = candidate.runs[1]?.id || candidate.runs[0]?.id;
+        const defaults=experimentDefaults(candidate);
+        state.compare.left = defaults.left?.id;
+        state.compare.right = defaults.right?.id;
         navigate('/staff/experiments');
       });
       document.querySelectorAll('[data-artifact]').forEach(button => button.addEventListener('click', () => artifactModal(button.dataset.artifact)));
@@ -1403,9 +1421,10 @@
     function bindExperiments() {
       document.querySelector('[data-compare-candidate-select]')?.addEventListener('change', event => {
         const candidate = getCandidate(event.target.value);
+        const defaults=experimentDefaults(candidate);
         state.compare.applicationId = candidate.id;
-        state.compare.left = candidate.runs[0]?.id;
-        state.compare.right = candidate.runs[1]?.id || candidate.runs[0]?.id;
+        state.compare.left = defaults.left?.id;
+        state.compare.right = defaults.right?.id;
         render();
       });
       document.querySelector('[data-compare-left]')?.addEventListener('change', event => { state.compare.left = event.target.value; render(); });

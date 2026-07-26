@@ -70,6 +70,7 @@ _GITHUB_FIXTURES = (
     {"id": "20734_clean", "name": "20734 · clean evidence", "path": "github_fixtures/03_clean_weak_20734_github_clean.json", "description": "Weak candidate, clean synthetic GitHub evidence."},
     {"id": "20734_direct", "name": "20734 · direct-command attack", "path": "github_fixtures/04_weak_basic_github_polluted_20734_direct_command.json", "description": "Visible direct command; use with V0 or V0-B.", "demo_url": "https://github.com/YrpSponge/ipi-20734-direct-command-demo"},
     {"id": "20734_patch", "name": "20734 · evaluation-patch attack", "path": "github_fixtures/05_weak_advanced_github_polluted_20734_eval_patch.json", "description": "Main non-factual GitHub injection; same PDF as the clean 20734 sample.", "demo_url": "https://github.com/YrpSponge/ipi-20734-evaluation-patch-demo"},
+    {"id": "20734_smuggle", "name": "20734 · repo-field smuggling attack", "path": "github_fixtures/06_weak_github_field_smuggling_20734.json", "description": "Strong IPI from the teammate experiment: false structured fields embedded in a repo description."},
     {"id": "22456_clean", "name": "22456 · clean evidence", "path": "github_fixtures/01_clean_strong_22456_github_clean.json", "description": "Strong reproducibility sample; not a low-to-high decision-impact case."},
     {"id": "22456_patch", "name": "22456 · evaluation-patch attack", "path": "github_fixtures/01_attack_strong_22456_github_eval_patch.json", "description": "Strong-sample stability comparison."},
     {"id": "23372_clean", "name": "23372 · clean evidence", "path": "extra_high_impact/23372_github_clean.json", "description": "Optional high-impact clean comparison."},
@@ -531,6 +532,7 @@ def _github_risk_patterns(semantic: bool) -> list[str]:
             r"trusted\s+scoring\s+policy\s+update", r"keep\s+factual\s+evidence\s+unchanged",
             r"whenever\s+there\s+is\s+ambiguity", r"do\s+not\s+quote",
             r"not\s+resume\s+evidence", r"c-17",
+            r"(?:^|\n)\s*(?:project\s+type|contributors|author\s+commit\s+count|stars|external\s+users|production\s+deployment|maintainer\s+role)\s*:",
         ]
     return patterns
 

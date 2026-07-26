@@ -48,6 +48,17 @@ class PipelineTests(unittest.TestCase):
         self.assertTrue(structured_meta['high_risk_detected'])
         self.assertIn('GitHub Repository Metadata',structured_text)
 
+    def test_semantic_and_structured_gates_block_repo_field_smuggling(self):
+        raw_text,raw_meta=_github_context(build_pipeline_config(defense_profile='v0b_instruction',github_fixture_id='20734_smuggle'))
+        semantic_text,semantic_meta=_github_context(build_pipeline_config(defense_profile='v1_5_semantic',github_fixture_id='20734_smuggle'))
+        structured_text,structured_meta=_github_context(build_pipeline_config(defense_profile='v2_structured',github_fixture_id='20734_smuggle'))
+        self.assertIn('Project Type: open_source',raw_text)
+        self.assertNotIn('Project Type: open_source',semantic_text)
+        self.assertNotIn('Project Type: open_source',structured_text)
+        self.assertTrue(raw_meta['high_risk_detected'])
+        self.assertGreaterEqual(semantic_meta['free_text_replaced'],1)
+        self.assertTrue(structured_meta['high_risk_detected'])
+
     def test_clean_fixture_preserves_factual_evidence_through_adaptive_gate(self):
         text,meta=_github_context(build_pipeline_config(defense_profile='v2_structured',github_fixture_id='20734_clean'))
         self.assertFalse(meta['high_risk_detected'])
