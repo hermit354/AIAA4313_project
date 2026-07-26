@@ -300,6 +300,8 @@
     .breadcrumb { font-size: 13px; color: var(--text-secondary); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
     .model-control { display: flex; align-items: center; gap: 10px; min-width: 250px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 999px; background: rgba(255,255,255,.4); }
     .model-control select { border: 0; outline: 0; background: transparent; min-width: 155px; font-size: 12px; font-weight: 700; }
+    .defense-control { min-width: 205px; }
+    .defense-control select { min-width: 135px; }
     .health-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sage); box-shadow: 0 0 0 4px var(--sage-soft); }
 
     .demo-switch { display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 700; }
@@ -354,16 +356,18 @@
     .detail-head { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 24px; align-items: end; margin-bottom: 22px; }
     .candidate-title { margin: 8px 0 0; font: 600 clamp(56px,7vw,94px)/.78 var(--font-display); letter-spacing: -.045em; }
     .detail-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 9px; }
-    .detail-grid { display: grid; grid-template-columns: minmax(300px,.9fr) minmax(330px,1.1fr) minmax(290px,.82fr); gap: 14px; align-items: start; }
+    .detail-grid { display: grid; grid-template-columns: minmax(270px,.78fr) minmax(300px,.94fr) minmax(320px,1.05fr); gap: 14px; align-items: start; }
     .panel { border-radius: 20px; padding: 18px; min-width: 0; }
     .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 13px; border-bottom: 1px solid var(--border); }
     .panel-title { font-weight: 700; font-size: 14px; }
     .panel-sub { color: var(--text-secondary); font-size: 11px; margin-top: 3px; }
 
     .pdf-frame { min-height: 740px; margin-top: 14px; border: 1px solid var(--border-strong); border-radius: 14px; background: #fbfdff; padding: 34px 30px; box-shadow: inset 0 0 28px rgba(43,78,112,.05); overflow: hidden; }
-    .pdf-preview { min-height: 740px; margin-top: 14px; border: 1px solid var(--border-strong); border-radius: 14px; overflow: hidden; background: #fbfdff; }
-    .pdf-preview iframe { display: block; width: 100%; min-height: 738px; border: 0; background: #fff; }
+    .pdf-preview { height: clamp(460px, var(--pdf-preview-height, 620px), 740px); margin-top: 14px; border: 1px solid var(--border-strong); border-radius: 14px; overflow: hidden; background: #fbfdff; }
+    .pdf-preview iframe { display: block; width: 100%; height: 100%; border: 0; background: #fff; }
     .pdf-preview-message { display: grid; min-height: 260px; place-items: center; padding: 28px; text-align: center; color: var(--text-secondary); }
+    .run-details-panel details { margin-top: 16px; }
+    .run-detail-actions { margin-top: 15px; display: grid; gap: 8px; }
     .pdf-name { font: 700 34px/1 var(--font-display); }
     .pdf-contact { margin-top: 8px; color: #64778a; font-size: 9px; }
     .pdf-rule { margin: 15px 0; border-top: 1px solid #c6d4e1; }
@@ -381,6 +385,9 @@
     .timeline-item:last-child::after { display: none; }
     .timeline-item strong { font-size: 13px; }
     .timeline-item p { margin: 5px 0 0; color: var(--text-secondary); font-size: 12px; line-height: 1.55; }
+    .parsed-lines { display: grid; gap: 8px; }
+    .parsed-line { margin: 0; padding-left: 14px; position: relative; color: var(--text-secondary); font-size: 12px; line-height: 1.55; }
+    .parsed-line::before { content: ""; position: absolute; left: 0; top: .62em; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
     .tag-list { display: flex; flex-wrap: wrap; gap: 7px; }
     .tag { padding: 6px 9px; border-radius: 999px; background: rgba(255,255,255,.44); border: 1px solid var(--border); font-size: 11px; }
 
@@ -483,8 +490,8 @@
     @keyframes shimmer { 100% { transform: translateX(100%); } }
 
     @media (max-width: 1180px) {
-      .detail-grid { grid-template-columns: minmax(300px,.9fr) minmax(350px,1.1fr); }
-      .detail-grid > :last-child { grid-column: 1 / -1; }
+      .detail-grid { grid-template-columns: minmax(280px,.82fr) minmax(350px,1.18fr); }
+      .detail-grid > .evaluation-panel { grid-column: 2; grid-row: 1 / span 2; }
       .model-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
     }
     @media (max-width: 980px) {
@@ -519,8 +526,9 @@
       .toolbar { grid-template-columns: 1fr; }
       .toolbar .search-wrap { grid-column: auto; }
       .detail-grid { grid-template-columns: 1fr; }
-      .detail-grid > :last-child { grid-column: auto; }
+      .detail-grid > .evaluation-panel { grid-column: auto; grid-row: auto; }
       .pdf-frame { min-height: 560px; }
+      .pdf-preview { height: clamp(420px, var(--pdf-preview-height, 560px), 560px); }
       .candidate-shell { padding: 10px; }
       .candidate-content { margin-top: 30px; }
       .status-story { grid-template-columns: 1fr 1fr; }
@@ -556,9 +564,11 @@
       candidateStatus: 'UNDER_REVIEW',
       uploadedFile: { name: 'alice_resume.pdf', size: '1.4 MB', uploaded: '23 Jul 2026, 15:42' },
       defaultModel: 'gemma3:4b',
+      defaultDefenseProfile: 'v2_structured',
       applicationFilters: { search: '', status: 'all', decision: 'all', sort: 'score_desc' },
       runFilters: { status: 'all', model: 'all' },
-      compare: { applicationId: 'app-alice', left: 'run-a1', right: 'run-a2' }
+      compare: { applicationId: 'app-alice', left: 'run-a1', right: 'run-a2' },
+      sessionExpired: false
     };
 
     const models = [
@@ -567,6 +577,15 @@
       { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', provider: 'Google', type: 'Cloud', healthy: true, installed: true, temperature: 0.1, topP: 0.9, structured: true },
       { id: 'llama3.2:3b', name: 'Llama 3.2 3B', provider: 'Ollama', type: 'Local', healthy: false, installed: false, temperature: 0.1, topP: 0.9, structured: false }
     ];
+    const defenseProfiles = [
+      { id: 'v0_weak', name: 'V0 · Weak baseline', description: 'Raw GitHub free text; controlled attack baseline only.' },
+      { id: 'v0b_instruction', name: 'V0-B · Prompt + instruction filter', description: 'Blocks direct commands but not semantic evaluation patches.' },
+      { id: 'v1_5_semantic', name: 'V1.5 · Semantic filter', description: 'Detects scoring-control language in GitHub free text.' },
+      { id: 'v2_structured', name: 'V2 · Adaptive structured gate', description: 'Risky GitHub free text is omitted before final scoring.' },
+      { id: 'pdf_hidden_text', name: 'PDF add-on · hidden-text removal', description: 'Use only for the optional PDF hidden-text attack line.' },
+      { id: 'v3_vlm', name: 'V3-VLM · visible-PDF extraction', description: 'Requires Qwen3-VL Plus and transcribes rendered pages rather than embedded PDF text.' }
+    ];
+    const githubFixtures = [{ id: 'none', name: 'No local fixture', description: 'Do not attach controlled GitHub evidence.' }];
 
     const candidates = [
       {
@@ -680,6 +699,7 @@
       if (token) headers.Authorization = `Bearer ${token}`;
       const response = await fetch(path, { ...options, headers });
       const body = await response.json().catch(() => ({}));
+      if (response.status === 401 && token) { expireSession(); throw new Error('Session expired. Please sign in again.'); }
       if (!response.ok) throw new Error(body.detail || 'Request failed.');
       return body;
     };
@@ -688,10 +708,18 @@
       const response = await fetch(path, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
       if (!response.ok) {
         const body = await response.json().catch(() => ({}));
+        if (response.status === 401 && token) { expireSession(); throw new Error('Session expired. Please sign in again.'); }
         throw new Error(body.detail || 'File request failed.');
       }
       return response.blob();
     };
+    function expireSession() {
+      if (state.sessionExpired) return;
+      state.sessionExpired = true;
+      sessionStorage.removeItem('hiring_agent_token');
+      state.user = null;
+      window.setTimeout(() => { if (routeFromHash().name !== 'login') navigate('/login'); }, 0);
+    }
     const mockApi = {
       async login(email, password) {
         const result = await api('/api/auth/login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({email,password}) });
@@ -704,7 +732,10 @@
         return { name: result.name, size: formatBytes(result.size), uploaded: new Date().toLocaleString(), runId: result.run_id };
       },
       async rerun(applicationId, config) { return api(`/api/staff/applications/${applicationId}/rerun`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(config) }); },
+      async deleteApplication(applicationId) { return api(`/api/staff/applications/${applicationId}`, { method:'DELETE' }); },
       async setDefaultModel(modelId) { return api('/api/staff/settings/default-model', { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({model_id:modelId}) }); },
+      async defenseProfiles() { return api('/api/staff/defense-profiles'); },
+      async setDefaultDefenseProfile(profileId) { return api('/api/staff/settings/default-defense-profile', { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({profile_id:profileId}) }); },
       async resetDemo() { return api('/api/demo/reset', { method:'POST' }); }
     };
 
@@ -723,16 +754,19 @@
         skills:resume.skills || [], github:resume.github || 'Not provided', summary:(resume.summary || []).join(' ') || `Local evaluation record for ${basics.name || item.email}.`,
         breakdown:[{label:'Relevant Experience',value:Math.min(25,Math.round((base || 0) * .25)),max:25},{label:'Project/System Evidence',value:Math.min(25,Math.round((base || 0) * .25)),max:25},{label:'Evidence Quality Match',value:Math.min(30,Math.round((base || 0) * .3)),max:30},{label:'Evidence Quality',value:Math.min(20,Math.round((base || 0) * .2)),max:20}],
         evidence:{strengths:evidence.strengths || [],improvements:evidence.improvements || []},
-        work:(resume.work || []).map((line,i)=>({title:`Experience ${i+1}`,dates:'',body:typeof line === 'string' ? line : JSON.stringify(line)})),
-        education:(resume.education || []).join(' · ') || 'Not extracted',projects:resume.projects || [], runs:(item.runs || []).map((run,i)=>({id:run.id,label:`Run ${i+1}`,status:run.status,model:run.model_id,score:run.score,base,bonus,deduction,prompt:'web-v1',pipeline:'web-v1',cache:run.reused_from ? 'SAFE_REUSE' : 'FORCE_FRESH',reused:!!run.reused_from,duration:'local',created:new Date(run.created * 1000).toLocaleString(),temperature:.1,topP:.9,error:run.error}))
+        work:(resume.work || []).map(line => typeof line === 'string' ? line : JSON.stringify(line)),
+        education:(resume.education || []).join(' · ') || 'Not extracted',projects:resume.projects || [], runs:(item.runs || []).map((run,i)=>{const cfg=JSON.parse(run.config_json || '{}');return {id:run.id,label:`Run ${i+1}`,status:run.status,model:run.model_id,score:run.score,base,bonus,deduction,prompt:cfg.prompt_version || 'web-v1',pipeline:'web-v1',defense:(cfg.defense_profile || 'legacy'),githubFixture:cfg.github_fixture_id || 'none',githubMode:cfg.github_evidence_mode || 'legacy',sanitizeMode:cfg.github_sanitize_mode || 'legacy',cache:run.reused_from ? 'SAFE_REUSE' : 'FORCE_FRESH',reused:!!run.reused_from,duration:'local',created:new Date(run.created * 1000).toLocaleString(),temperature:cfg.temperature ?? .1,topP:cfg.top_p ?? .9,error:run.error}})
       };
     }
     async function syncStaffData() {
       if (!state.user || state.user.role !== 'staff') return;
-      const [records, modelData] = await Promise.all([api('/api/staff/applications'), api('/api/staff/models')]);
+      const [records, modelData, defenseData] = await Promise.all([api('/api/staff/applications'), api('/api/staff/models'), mockApi.defenseProfiles()]);
       candidates.splice(0, candidates.length, ...records.map(backendCandidate));
       models.splice(0, models.length, ...modelData.models.map(model => ({...model, temperature:.1, topP:.9})));
       state.defaultModel = modelData.default_model;
+      defenseProfiles.splice(0, defenseProfiles.length, ...defenseData.profiles);
+      githubFixtures.splice(0, githubFixtures.length, ...(defenseData.github_fixtures || githubFixtures));
+      state.defaultDefenseProfile = defenseData.default_defense_profile;
       if (!candidates.some(c => c.id === state.compare.applicationId) && candidates[0]) state.compare.applicationId = candidates[0].id;
       if (candidates.some(candidate => candidate.runs.some(run => run.status === 'QUEUED' || run.status === 'RUNNING'))) {
         window.setTimeout(async () => {
@@ -752,6 +786,7 @@
       return String(value).replace(/[&<>'"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch]));
     }
     function currentModel() { return models.find(model => model.id === state.defaultModel) || models[0]; }
+    function currentDefenseProfile() { return defenseProfiles.find(profile => profile.id === state.defaultDefenseProfile) || defenseProfiles[0]; }
     function getCandidate(id) { return candidates.find(candidate => candidate.id === id) || candidates[0]; }
     function getRun(candidate, id) { return candidate.runs.find(run => run.id === id) || candidate.runs[0]; }
     function initials(name) { return name.split(/\s+/).map(s => s[0]).join('').slice(0,2).toUpperCase(); }
@@ -817,6 +852,9 @@
       const backdrop = document.querySelector('[data-modal-backdrop]');
       backdrop.addEventListener('click', event => { if (event.target === backdrop) closeModal(); });
       document.querySelectorAll('[data-close-modal]').forEach(button => button.addEventListener('click', closeModal));
+      // Bind once at modal creation.  Rebinding from a document-level click
+      // handler caused one confirmation click to issue multiple rerun requests.
+      bindModalActions();
     }
     function closeModal() { document.getElementById('modalRoot').innerHTML = ''; }
 
@@ -869,6 +907,12 @@
                   <span class="health-dot"></span>
                   <select aria-label="Default model" data-top-model>
                     ${models.filter(item => item.healthy).map(item => `<option value="${item.id}" ${item.id === state.defaultModel ? 'selected' : ''}>${item.name} · ${item.type}</option>`).join('')}
+                  </select>
+                </div>
+                <div class="model-control defense-control" title="Default defense profile for new runs">
+                  <span class="health-dot"></span>
+                  <select aria-label="Default defense profile" data-top-defense>
+                    ${defenseProfiles.map(profile => `<option value="${profile.id}" ${profile.id === state.defaultDefenseProfile ? 'selected' : ''}>${profile.name}</option>`).join('')}
                   </select>
                 </div>
                 <div class="demo-switch"><span>Demo Mode</span><button class="switch ${state.demoMode ? 'on' : ''}" aria-label="Toggle demo mode" aria-pressed="${state.demoMode}" data-demo-toggle><span></span></button></div>
@@ -1020,6 +1064,11 @@
       if (!target) return;
       try {
         const blob = await apiFile(`/api/staff/applications/${encodeURIComponent(applicationId)}/pdf`);
+        let metadata = null;
+        try { metadata = await api(`/api/staff/applications/${encodeURIComponent(applicationId)}/pdf-meta`); } catch (_) { /* Preview remains available without sizing metadata. */ }
+        const pageCount = Math.max(1, Number(metadata?.page_count) || 1);
+        target.style.setProperty('--pdf-preview-height', `${Math.min(740, 360 + pageCount * 130)}px`);
+        target.dataset.pageCount = String(pageCount);
         const url = URL.createObjectURL(blob);
         target.innerHTML = `<iframe title="Original uploaded resume PDF" src="${url}#toolbar=0"></iframe>`;
         document.querySelector('[data-download-pdf]')?.addEventListener('click', () => {
@@ -1042,6 +1091,9 @@
           <div class="config-row"><span>Model</span><span class="mono">${run.model}</span></div>
           <div class="config-row"><span>Temperature / top-p</span><span class="mono">${run.temperature} / ${run.topP}</span></div>
           <div class="config-row"><span>Prompt version</span><span class="mono">${run.prompt}</span></div>
+          <div class="config-row"><span>Defense profile</span><span class="mono">${run.defense || 'legacy'}</span></div>
+          <div class="config-row"><span>GitHub fixture</span><span class="mono">${run.githubFixture || 'none'}</span></div>
+          <div class="config-row"><span>Evidence gate</span><span class="mono">${run.githubMode || 'legacy'} / ${run.sanitizeMode || 'legacy'}</span></div>
           <div class="config-row"><span>Pipeline version</span><span class="mono">${run.pipeline}</span></div>
           <div class="config-row"><span>Cache policy</span><span class="mono">${run.cache}</span></div>
           <div class="config-row"><span>Duration</span><span class="mono">${run.duration}</span></div>
@@ -1058,27 +1110,22 @@
       const content = `
         <header class="detail-head">
           <div><div class="eyebrow">Application / ${candidate.ref}</div><h1 class="candidate-title">${candidate.name.split(' ').join('<br/>')}</h1><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:17px">${statusPill(candidate.candidateStatus)}${reviewPill(candidate.reviewTier)}<span class="pill pill-neutral">${candidate.email}</span></div></div>
-          <div class="detail-actions"><button class="btn" data-decision="HOLD">Hold</button><button class="btn btn-danger" data-decision="ARCHIVE">Archive</button><button class="btn btn-sage" data-decision="ADVANCE">${icons.check} Advance</button><button class="btn btn-primary" data-rerun="${candidate.id}">${icons.refresh} Rerun</button></div>
+          <div class="detail-actions"><button class="btn" data-decision="HOLD">Hold</button><button class="btn btn-danger" data-decision="ARCHIVE">Archive</button><button class="btn btn-sage" data-decision="ADVANCE">${icons.check} Advance</button><button class="btn btn-primary" data-rerun="${candidate.id}">${icons.refresh} Rerun</button><button class="btn btn-danger" data-delete-candidate="${candidate.id}">Delete record</button></div>
         </header>
         <section class="detail-grid">
           <article class="panel glass-card"><div class="panel-head"><div><div class="panel-title">Resume PDF</div><div class="panel-sub">${escapeHtml(candidate.ref)} · original uploaded document</div></div><button class="btn btn-sm" data-download-pdf>Download</button></div><div id="pdfPreview" class="pdf-preview"><div class="pdf-preview-message">Loading original PDF preview…</div></div></article>
-          <article class="panel glass-card">
-            <div class="panel-head"><div><div class="panel-title">Structured Resume</div><div class="panel-sub">Parsed into JSON Resume fields</div></div><span class="pill pill-success">Validated</span></div>
-            <section class="resume-section"><div class="eyebrow">Summary</div><h3>Candidate signal</h3><p class="muted" style="font-size:12px;line-height:1.65">${candidate.summary}</p></section>
-            <section class="resume-section"><div class="eyebrow">Experience</div><h3>Work history</h3>${candidate.work.map(item => `<div class="timeline-item"><strong>${item.title}</strong><div class="soft" style="font-size:10px;margin-top:3px">${item.dates}</div><p>${item.body}</p></div>`).join('')}</section>
-            <section class="resume-section"><div class="eyebrow">Technical profile</div><h3>Skills</h3><div class="tag-list">${candidate.skills.map(skill => `<span class="tag">${skill}</span>`).join('')}</div></section>
-            <section class="resume-section"><div class="eyebrow">Projects</div><h3>Selected work</h3>${candidate.projects.map(project => `<div style="display:flex;gap:10px;margin:9px 0;font-size:12px"><span class="section-number">→</span><span>${project}</span></div>`).join('')}</section>
-            <section class="resume-section"><div class="eyebrow">GitHub enrichment</div><h3>Public signals</h3><div class="config-row"><span>Profile</span><span class="mono">${candidate.github}</span></div><div class="config-row"><span>Repository activity</span><span>Consistent</span></div><div class="config-row"><span>Primary language</span><span>${candidate.skills[0]}</span></div></section>
+          <article class="panel glass-card run-details-panel">
+            <div class="panel-head"><div><div class="panel-title">Evaluation Run</div><div class="panel-sub">Immutable execution trace and artifacts</div></div>${statusPill(run.status)}</div>
+            ${runAdvanced(candidate, run)}
+            <div class="run-detail-actions"><button class="btn" data-compare-candidate="${candidate.id}">Compare ${candidate.runs.length} runs</button><button class="btn btn-primary" data-rerun="${candidate.id}">${icons.refresh} Create new run</button></div>
           </article>
-          <aside class="panel glass-raised">
+          <aside class="panel glass-raised evaluation-panel">
             <div class="panel-head"><div><div class="panel-title">AI Evaluation</div><div class="panel-sub">${run.model} · ${run.prompt}</div></div>${statusPill(run.status)}</div>
             <div class="score-hero"><div class="score-ring" style="background:conic-gradient(var(--accent) 0 ${Math.min(candidate.score,100)}%, rgba(58,91,122,.10) ${Math.min(candidate.score,100)}% 100%)"><span>${scoreOrDash(candidate.score)}</span></div><div class="score-copy"><h3>Priority score</h3><p>${candidate.reviewTier}. Final decision remains with human reviewers.</p></div></div>
             <div class="score-adjustments"><div class="adjustment"><span>Base</span><strong>${candidate.base}</strong></div><div class="adjustment"><span>Bonus</span><strong>+${candidate.bonus}</strong></div><div class="adjustment"><span>Deduction</span><strong>−${candidate.deduction}</strong></div></div>
             <div class="score-breakdown">${candidate.breakdown.map(item => `<div class="score-row"><span class="label">${item.label}</span><span class="value">${item.value} / ${item.max}</span><div class="bar"><span style="width:${item.value/item.max*100}%"></span></div></div>`).join('')}</div>
             <div style="margin-top:20px"><div class="eyebrow">Evidence</div><details open><summary>Key strengths</summary><div class="detail-body"><ul>${candidate.evidence.strengths.map(text => `<li>${text}</li>`).join('')}</ul></div></details><details><summary>Areas for improvement</summary><div class="detail-body"><ul>${candidate.evidence.improvements.map(text => `<li>${text}</li>`).join('')}</ul></div></details></div>
             <div style="margin-top:12px"><div class="eyebrow">Staff review</div><div class="field" style="margin-top:10px"><label for="staffNote">Internal note</label><textarea class="textarea" id="staffNote" placeholder="Add a human review note…"></textarea></div><button class="btn btn-sm" style="margin-top:9px" data-save-note>Save note</button></div>
-            <div style="margin-top:19px">${runAdvanced(candidate, run)}</div>
-            <div style="margin-top:15px;display:grid;gap:8px"><button class="btn" data-compare-candidate="${candidate.id}">Compare ${candidate.runs.length} runs</button><button class="btn btn-primary" data-rerun="${candidate.id}">${icons.refresh} Create new run</button></div>
           </aside>
         </section>`;
       return staffShell({ name: 'application-detail' }, content, `Application / ${candidate.ref}`);
@@ -1172,7 +1219,7 @@
         <section class="panel glass-raised" style="margin-top:14px"><div class="panel-head"><div><div class="panel-title">Guided demo sequence</div><div class="panel-sub">Suggested 15-minute flow</div></div><span class="pill pill-accent">4 steps</span></div><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px">
           ${[['01','Candidate upload','Show PDF input and candidate privacy.'],['02','AI screening','Open structured resume, evidence and ranking.'],['03','Model rerun','Switch the model without restarting services.'],['04','Run comparison','Compare immutable outputs and technical traces.']].map(item => `<div style="padding:15px;border-top:1px solid var(--border-strong)"><span class="section-number">${item[0]}</span><strong style="display:block;margin-top:10px;font-size:13px">${item[1]}</strong><span class="muted" style="display:block;margin-top:6px;font-size:11px;line-height:1.5">${item[2]}</span></div>`).join('')}
         </div></section>
-        <section class="panel glass-card" style="margin-top:14px"><div class="eyebrow">Future extension point</div><h2 class="display" style="font-size:38px;margin:9px 0">Attack and defense controls</h2><p class="muted" style="font-size:13px;line-height:1.7;max-width:900px">Do not display fake attack or defense buttons yet. Later, add configuration-backed actions here only after the security modules create real Evaluation Runs that can be compared through the existing experiment interface.</p></section>`;
+        <section class="panel glass-card" style="margin-top:14px"><div class="eyebrow">03 / Backend profile</div><h2 class="display" style="font-size:38px;margin:9px 0">Attack and defense controls</h2><p class="muted" style="font-size:13px;line-height:1.7;max-width:900px">Choose the backend profile for new uploads and reruns. Each choice is stored in the immutable Evaluation Run configuration, so the Experiments view can compare the same PDF under different defenses.</p><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">${defenseProfiles.map(profile => `<button class="btn ${profile.id === state.defaultDefenseProfile ? 'btn-primary' : ''}" data-set-defense="${profile.id}">${profile.name}</button>`).join('')}</div><div class="code-box" style="margin-top:14px">Active profile: ${escapeHtml(currentDefenseProfile().name)} — ${escapeHtml(currentDefenseProfile().description)}</div></section>`;
       return staffShell({ name: 'demo' }, content, 'Demo Controls');
     }
 
@@ -1181,12 +1228,20 @@
         <div class="modal-head"><div><div class="eyebrow">New evaluation run</div><h2>Rerun ${candidate.name}</h2></div><button class="btn btn-square btn-ghost" data-close-modal>${icons.close}</button></div>
         <div class="modal-body">
           <div class="field"><label for="rerunModel">Model</label><select class="select" id="rerunModel">${models.filter(model => model.healthy).map(model => `<option value="${model.id}" ${model.id === state.defaultModel ? 'selected' : ''}>${model.name} · ${model.type}</option>`).join('')}</select></div>
+          <div class="field"><label for="rerunDefense">Defense profile</label><select class="select" id="rerunDefense">${defenseProfiles.map(profile => `<option value="${profile.id}" ${profile.id === state.defaultDefenseProfile ? 'selected' : ''}>${profile.name} — ${profile.description}</option>`).join('')}</select><small class="muted">V3-VLM requires the Qwen3-VL Plus model and fails closed if visual extraction cannot complete.</small></div>
+          <div class="field"><label for="rerunGithubFixture">Controlled GitHub scenario</label><select class="select" id="rerunGithubFixture">${githubFixtures.map(fixture => `<option value="${fixture.id}">${fixture.name} — ${fixture.description}</option>`).join('')}</select><small class="muted">Fixture is an input scenario, separate from the defense choice. Local only; no live GitHub account is queried.</small></div>
           <div class="form-grid-2"><div class="field"><label for="rerunTemperature">Temperature</label><input class="input" id="rerunTemperature" type="number" min="0" max="2" step="0.1" value="0.1" /></div><div class="field"><label for="rerunTopP">Top-p</label><input class="input" id="rerunTopP" type="number" min="0" max="1" step="0.1" value="0.9" /></div></div>
           <div class="form-grid-2"><div class="field"><label for="rerunPrompt">Prompt version</label><select class="select" id="rerunPrompt"><option>baseline-v1</option></select></div><div class="field"><label for="rerunCache">Cache policy</label><select class="select" id="rerunCache"><option value="FORCE_FRESH">Force fresh</option><option value="SAFE_REUSE">Safe reuse</option></select></div></div>
           <label style="display:flex;align-items:center;gap:10px;font-size:13px"><input id="rerunGithub" type="checkbox" checked /> Enable GitHub enrichment</label>
           <div class="code-box">A new immutable Evaluation Run will be created. Existing scores and artifacts remain unchanged.</div>
         </div>
         <div class="modal-actions"><button class="btn" data-close-modal>Cancel</button><button class="btn btn-primary" data-confirm-rerun="${candidate.id}">${icons.refresh} Run evaluation</button></div>`);
+    }
+    function deleteCandidateModal(candidate) {
+      showModal(`
+        <div class="modal-head"><div><div class="eyebrow">Delete application</div><h2>Delete ${escapeHtml(candidate.name)}?</h2></div><button class="btn btn-square btn-ghost" data-close-modal>${icons.close}</button></div>
+        <div class="modal-body"><p class="muted" style="line-height:1.65">This permanently deletes the candidate record, every Evaluation Run, stage artifact and locally managed uploaded PDF. This cannot be undone.</p><div class="code-box">Application ID: ${escapeHtml(candidate.id)}</div></div>
+        <div class="modal-actions"><button class="btn" data-close-modal>Cancel</button><button class="btn btn-danger" data-confirm-delete="${candidate.id}">Delete permanently</button></div>`);
     }
 
     function artifactModal(type) {
@@ -1235,6 +1290,12 @@
         state.defaultModel = select.value;
         render();
         showToast('Default model updated', `${currentModel().name} will be used for new runs.`);
+      }));
+      document.querySelectorAll('[data-top-defense]').forEach(select => select.addEventListener('change', async () => {
+        await mockApi.setDefaultDefenseProfile(select.value);
+        state.defaultDefenseProfile = select.value;
+        render();
+        showToast('Default defense updated', `${currentDefenseProfile().name} will be used for new runs.`);
       }));
       document.querySelectorAll('[data-toast]').forEach(button => button.addEventListener('click', () => showToast('Template interaction', button.dataset.toast, 'warning')));
       document.querySelectorAll('[data-health-check]').forEach(button => button.addEventListener('click', () => showToast('Health check complete', 'API, worker and configured model providers are reachable.')));
@@ -1303,6 +1364,7 @@
     function bindDetail(candidate) {
       loadPdfPreview(candidate.id);
       document.querySelectorAll('[data-rerun]').forEach(button => button.addEventListener('click', () => rerunModal(getCandidate(button.dataset.rerun))));
+      document.querySelectorAll('[data-delete-candidate]').forEach(button => button.addEventListener('click', () => deleteCandidateModal(getCandidate(button.dataset.deleteCandidate))));
       document.querySelectorAll('[data-decision]').forEach(button => button.addEventListener('click', () => {
         candidate.decision = button.dataset.decision;
         render();
@@ -1355,20 +1417,37 @@
         showModal(`<div class="modal-head"><div><div class="eyebrow">Reset demonstration</div><h2>Restore demo data?</h2></div><button class="btn btn-square btn-ghost" data-close-modal>${icons.close}</button></div><div class="modal-body"><p class="muted">This mock resets the visible state. The real endpoint should remove only records tagged as demo data.</p></div><div class="modal-actions"><button class="btn" data-close-modal>Cancel</button><button class="btn btn-danger" data-confirm-reset>Reset data</button></div>`);
         document.querySelector('[data-confirm-reset]')?.addEventListener('click', async () => { await mockApi.resetDemo(); await syncStaffData(); closeModal(); render(); showToast('Demo reset complete', 'The fixed presentation state has been restored.'); });
       });
+      document.querySelectorAll('[data-set-defense]').forEach(button => button.addEventListener('click', async () => {
+        await mockApi.setDefaultDefenseProfile(button.dataset.setDefense);
+        state.defaultDefenseProfile = button.dataset.setDefense;
+        render();
+        showToast('Defense profile selected', `${currentDefenseProfile().name} is ready for the next run.`);
+      }));
     }
 
     function bindModalActions() {
-      document.querySelectorAll('[data-confirm-rerun]').forEach(button => button.addEventListener('click', async () => {
+      document.querySelectorAll('[data-confirm-rerun]').forEach(button => {
+        if (button.dataset.bound) return;
+        button.dataset.bound = 'true';
+        button.addEventListener('click', async () => {
         const candidate = getCandidate(button.dataset.confirmRerun);
+        const selectedDefense = document.getElementById('rerunDefense').value;
+        const selectedModel = document.getElementById('rerunModel').value;
+        if (selectedDefense === 'v3_vlm' && selectedModel !== 'qwen3-vl-plus') {
+          showToast('Select Qwen3-VL Plus', 'V3-VLM uses rendered PDF pages and cannot run with a text-only model.', 'warning');
+          return;
+        }
         button.disabled = true;
         button.textContent = 'Queueing run…';
         const config = {
-          model: document.getElementById('rerunModel').value,
+          model: selectedModel,
           temperature: Number(document.getElementById('rerunTemperature').value),
           topP: Number(document.getElementById('rerunTopP').value),
           prompt: document.getElementById('rerunPrompt').value,
           cache: document.getElementById('rerunCache').value,
-          github: document.getElementById('rerunGithub').checked
+          github: document.getElementById('rerunGithub').checked,
+          defense_profile: selectedDefense,
+          github_fixture_id: document.getElementById('rerunGithubFixture').value
         };
         try {
           const result = await mockApi.rerun(candidate.id, config);
@@ -1381,7 +1460,26 @@
           button.innerHTML = `${icons.refresh} Run evaluation`;
           showToast('Rerun failed', error.message, 'danger');
         }
-      }));
+        });
+      });
+      document.querySelectorAll('[data-confirm-delete]').forEach(button => {
+        if (button.dataset.bound) return;
+        button.dataset.bound = 'true';
+        button.addEventListener('click', async () => {
+        const candidate = getCandidate(button.dataset.confirmDelete);
+        button.disabled = true;
+        try {
+          await mockApi.deleteApplication(candidate.id);
+          await syncStaffData();
+          closeModal();
+          navigate('/staff/applications');
+          showToast('Application deleted', `${candidate.name} and its local run data were removed.`);
+        } catch (error) {
+          button.disabled = false;
+          showToast('Delete failed', error.message, 'danger');
+        }
+        });
+      });
     }
 
     function render() {
@@ -1407,7 +1505,6 @@
       if (route.name === 'models') bindModels();
       if (route.name === 'runs') bindRuns();
       if (route.name === 'demo') bindDemo();
-      bindModalActions();
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
@@ -1415,7 +1512,6 @@
     window.addEventListener('keydown', event => { if (event.key === 'Escape') closeModal(); });
     document.addEventListener('click', event => {
       if (event.target.closest('[data-close-modal]')) closeModal();
-      setTimeout(bindModalActions, 0);
     });
     render();
   </script>

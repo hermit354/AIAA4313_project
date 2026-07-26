@@ -7,7 +7,8 @@ from typing import Annotated
 from fastapi import Depends, FastAPI, File, Header, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
-from web_demo.pipeline import PipelineConfig, provider_registry, run_resume_pipeline
+import fitz
+from web_demo.pipeline import build_pipeline_config, defense_profiles, github_fixtures, provider_registry, run_resume_pipeline
 
 ROOT=Path(__file__).resolve().parent; DATA=ROOT/'data'; UPLOADS=DATA/'uploads'; ARTIFACTS=DATA/'artifacts'; DB=DATA/'hiring_agent.db'; TOKENS={}; WORKER=ThreadPoolExecutor(max_workers=1)
 app=FastAPI(title='Hiring Agent Local Demo',version='1.0.0')
@@ -39,8 +40,14 @@ def rowdict(r): return dict(r) if r else None
 def stamp(): return time.time()
 def provider_for(model_id):
  return next((m['provider'].lower() for m in provider_registry() if m['id']==model_id),'ollama')
+def remove_managed_file(value,root):
+ try:
+  path=Path(value).resolve();managed_root=root.resolve()
+  if path.is_relative_to(managed_root) and path.is_file():path.unlink();return True
+ except OSError:pass
+ return False
 def queue_stages(c,rid):
- for name in ['PDF_TEXT_EXTRACTION','RESUME_SECTION_PARSE','EVALUATION','RANK_AND_PERSIST']:
+ for name in ['PDF_TEXT_EXTRACTION','RESUME_SECTION_PARSE','GITHUB_EVIDENCE_GATE','EVALUATION','RANK_AND_PERSIST']:
   c.execute('insert into stage_runs values(?,?,?,?,?,?,?)',(uuid.uuid4().hex,rid,name,'QUEUED',0,'Waiting for local worker',None))
 def seed(reset=False):
  c=db()
@@ -58,9 +65,10 @@ def seed(reset=False):
   for aid,email,name,score,base,bonus,ded in demo:
    resume={'basics':{'name':name,'email':email},'skills':['Python','FastAPI','SQL'],'work':['Seeded demonstration resume']};evidence={'strengths':['Fixed demo record with evidence.'],'improvements':['Human review remains required.']}
    c.execute('insert into applications (id,email,filename,stored_path,sha256,status,created,score,base,bonus,deduction,resume_json,evidence_json,is_demo) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(aid,email,name.lower().replace(' ','_')+'.pdf',None,'seed-'+aid,'UNDER_REVIEW',stamp(),score,base,bonus,ded,json.dumps(resume),json.dumps(evidence),1))
-   rid='run-'+aid[4:];cfg=PipelineConfig();c.execute('insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)',(rid,aid,'ollama','gemma3:4b','COMPLETED',stamp(),stamp(),score,json.dumps(cfg.__dict__),cfg.fingerprint(),None,None))
-   for n in ['PDF_TEXT_EXTRACTION','RESUME_SECTION_PARSE','EVALUATION','RANK_AND_PERSIST']:c.execute('insert into stage_runs values(?,?,?,?,?,?,?)',(uuid.uuid4().hex,rid,n,'COMPLETED',100,'Seeded demo stage',None))
+   rid='run-'+aid[4:];cfg=build_pipeline_config();c.execute('insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)',(rid,aid,'ollama','gemma3:4b','COMPLETED',stamp(),stamp(),score,json.dumps(cfg.__dict__),cfg.fingerprint(),None,None))
+   for n in ['PDF_TEXT_EXTRACTION','RESUME_SECTION_PARSE','GITHUB_EVIDENCE_GATE','EVALUATION','RANK_AND_PERSIST']:c.execute('insert into stage_runs values(?,?,?,?,?,?,?)',(uuid.uuid4().hex,rid,n,'COMPLETED',100,'Seeded demo stage',None))
   c.execute("insert into app_settings values('default_model','gemma3:4b')")
+  c.execute("insert into app_settings values('default_defense_profile','v2_structured')")
  c.commit();c.close()
 def user(authorization:Annotated[str|None,Header()]=None):
  token=(authorization or '').removeprefix('Bearer ')
@@ -70,8 +78,9 @@ def staff(u=Depends(user)):
  if u['role']!='staff':raise HTTPException(403,'Staff access required')
  return u
 class Login(BaseModel):email:str;password:str
-class RunRequest(BaseModel):model:str='gemma3:4b';temperature:float=.1;topP:float=.9;prompt:str='web-v1';cache:str='SAFE_REUSE';github:bool=True
+class RunRequest(BaseModel):model:str='gemma3:4b';temperature:float=.1;topP:float=.9;prompt:str='web-v1';cache:str='SAFE_REUSE';github:bool=True;defense_profile:str='v2_structured';github_fixture_id:str='none'
 class Setting(BaseModel):model_id:str
+class DefenseSetting(BaseModel):profile_id:str
 @app.on_event('startup')
 def start():seed()
 @app.get('/')
@@ -113,6 +122,9 @@ def run_artifact(rid:str,u=Depends(staff)):
 @app.get('/api/staff/models')
 def models(u=Depends(staff)):
  c=db();r=c.execute("select value from app_settings where key='default_model'").fetchone();return {'default_model':r['value'] if r else 'gemma3:4b','models':provider_registry()}
+@app.get('/api/staff/defense-profiles')
+def defense_profile_options(u=Depends(staff)):
+ c=db();r=c.execute("select value from app_settings where key='default_defense_profile'").fetchone();ids={x['id'] for x in defense_profiles()};profile=r['value'] if r and r['value'] in ids else 'v2_structured';return {'default_defense_profile':profile,'profiles':defense_profiles(),'github_fixtures':github_fixtures()}
 def enqueue(aid,rid,path,config):WORKER.submit(execute_run,aid,rid,path,config)
 def execute_run(aid,rid,path,config):
  c=db();c.execute("update evaluation_runs set status='RUNNING' where id=?",(rid,));c.execute("update stage_runs set status='RUNNING',note='Local worker started' where run_id=? and name='PDF_TEXT_EXTRACTION'",(rid,));c.commit()
@@ -128,27 +140,53 @@ async def upload(file:UploadFile=File(...),u=Depends(user)):
  if file.content_type not in {'application/pdf','application/x-pdf'} or not (file.filename or '').lower().endswith('.pdf'):raise HTTPException(415,'Only PDF resumes are accepted')
  raw=await file.read()
  if not raw or len(raw)>10*1024*1024 or not raw.startswith(b'%PDF'):raise HTTPException(400,'Invalid, empty, or oversized PDF')
- sha=hashlib.sha256(raw).hexdigest();stored=UPLOADS/(uuid.uuid4().hex+'.pdf');stored.write_bytes(raw);aid='app-'+uuid.uuid4().hex[:10];rid='run-'+uuid.uuid4().hex[:10];c=db();model=(c.execute("select value from app_settings where key='default_model'").fetchone() or ['gemma3:4b'])[0];config=PipelineConfig(model_id=model)
- config=PipelineConfig(provider=provider_for(model),model_id=model);c.execute('insert into applications (id,email,filename,stored_path,sha256,status,created,score,base,bonus,deduction,resume_json,evidence_json,is_demo) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(aid,u['email'],file.filename,str(stored),sha,'PROCESSING',stamp(),None,None,None,None,None,None,0));c.execute('insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)',(rid,aid,config.provider,model,'QUEUED',stamp(),None,None,json.dumps(config.__dict__),config.fingerprint(),None,None));queue_stages(c,rid);c.commit();c.close();enqueue(aid,rid,stored,config);return {'application_id':aid,'run_id':rid,'name':file.filename,'size':len(raw),'sha256':sha}
+ sha=hashlib.sha256(raw).hexdigest();stored=UPLOADS/(uuid.uuid4().hex+'.pdf');stored.write_bytes(raw);aid='app-'+uuid.uuid4().hex[:10];rid='run-'+uuid.uuid4().hex[:10];c=db();model=(c.execute("select value from app_settings where key='default_model'").fetchone() or ['gemma3:4b'])[0];profile=(c.execute("select value from app_settings where key='default_defense_profile'").fetchone() or ['v2_structured'])[0];profile_ids={item['id'] for item in defense_profiles()};profile=profile if profile in profile_ids else 'v2_structured'
+ config=build_pipeline_config(provider=provider_for(model),model_id=model,defense_profile=profile);c.execute('insert into applications (id,email,filename,stored_path,sha256,status,created,score,base,bonus,deduction,resume_json,evidence_json,is_demo) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(aid,u['email'],file.filename,str(stored),sha,'PROCESSING',stamp(),None,None,None,None,None,None,0));c.execute('insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)',(rid,aid,config.provider,model,'QUEUED',stamp(),None,None,json.dumps(config.__dict__),config.fingerprint(),None,None));queue_stages(c,rid);c.commit();c.close();enqueue(aid,rid,stored,config);return {'application_id':aid,'run_id':rid,'name':file.filename,'size':len(raw),'sha256':sha}
 @app.post('/api/staff/applications/{aid}/rerun')
 def rerun(aid:str,x:RunRequest,u=Depends(staff)):
  c=db();a=c.execute('select * from applications where id=?',(aid,)).fetchone()
  if not a:raise HTTPException(404,'Application not found')
  if x.model not in [m['id'] for m in provider_registry()]:raise HTTPException(400,'Model is not allowlisted')
- config=PipelineConfig(provider=provider_for(x.model),model_id=x.model,temperature=x.temperature,top_p=x.topP,prompt_version=x.prompt,github_enrichment=x.github,force_fresh=x.cache=='FORCE_FRESH');fp=config.fingerprint()
+ if x.defense_profile not in {item['id'] for item in defense_profiles()}:raise HTTPException(400,'Defense profile is not allowlisted')
+ if x.github_fixture_id not in {item['id'] for item in github_fixtures()}:raise HTTPException(400,'GitHub fixture is not allowlisted')
+ config=build_pipeline_config(provider=provider_for(x.model),model_id=x.model,temperature=x.temperature,top_p=x.topP,prompt_version=x.prompt,github_enrichment=x.github,defense_profile=x.defense_profile,github_fixture_id=x.github_fixture_id,force_fresh=x.cache=='FORCE_FRESH');fp=config.fingerprint()
  if not config.force_fresh:
   old=c.execute("select id from evaluation_runs where application_id=? and config_fingerprint=? and status='COMPLETED'",(aid,fp)).fetchone()
   if old:return {'id':old['id'],'status':'COMPLETED','reused':True}
  if not a['stored_path']:raise HTTPException(409,'Seed records have no source PDF; upload a PDF to run a real evaluation')
  rid='run-'+uuid.uuid4().hex[:10];c.execute('insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)',(rid,aid,config.provider,x.model,'QUEUED',stamp(),None,None,json.dumps(config.__dict__),fp,None,None));queue_stages(c,rid);c.commit();c.close();enqueue(aid,rid,a['stored_path'],config);return {'id':rid,'status':'QUEUED','reused':False}
+@app.delete('/api/staff/applications/{aid}')
+def delete_application(aid:str,u=Depends(staff)):
+ c=db();application=c.execute('select stored_path from applications where id=?',(aid,)).fetchone()
+ if not application:c.close();raise HTTPException(404,'Application not found')
+ running=c.execute("select 1 from evaluation_runs where application_id=? and status in ('QUEUED','RUNNING')",(aid,)).fetchone()
+ if running:c.close();raise HTTPException(409,'Cannot delete an application while an evaluation run is active')
+ artifacts=[row['artifact_path'] for row in c.execute("select artifact_path from stage_runs where run_id in (select id from evaluation_runs where application_id=?) and artifact_path is not null",(aid,))]
+ c.execute('delete from stage_runs where run_id in (select id from evaluation_runs where application_id=?)',(aid,));c.execute('delete from evaluation_runs where application_id=?',(aid,));c.execute('delete from applications where id=?',(aid,));c.commit();c.close()
+ removed=sum(remove_managed_file(path,ARTIFACTS) for path in set(artifacts));removed+=int(remove_managed_file(application['stored_path'],UPLOADS)) if application['stored_path'] else 0
+ return {'id':aid,'deleted':True,'managed_files_removed':removed}
 @app.patch('/api/staff/settings/default-model')
 def model(x:Setting,u=Depends(staff)):
  if x.model_id not in [m['id'] for m in provider_registry()]:raise HTTPException(400,'Model is not allowlisted')
  c=db();c.execute("insert or replace into app_settings values('default_model',?)",(x.model_id,));c.commit();return x
+@app.patch('/api/staff/settings/default-defense-profile')
+def defense_profile(x:DefenseSetting,u=Depends(staff)):
+ if x.profile_id not in {item['id'] for item in defense_profiles()}:raise HTTPException(400,'Defense profile is not allowlisted')
+ c=db();c.execute("insert or replace into app_settings values('default_defense_profile',?)",(x.profile_id,));c.commit();return x
 @app.get('/api/staff/applications/{aid}/pdf')
 def pdf(aid:str,u=Depends(staff)):
  r=db().execute('select stored_path,filename from applications where id=?',(aid,)).fetchone()
  if not r or not r['stored_path'] or not Path(r['stored_path']).exists():raise HTTPException(404,'PDF artifact unavailable')
  return FileResponse(r['stored_path'],media_type='application/pdf',filename=r['filename'])
+@app.get('/api/staff/applications/{aid}/pdf-meta')
+def pdf_meta(aid:str,u=Depends(staff)):
+ r=db().execute('select stored_path from applications where id=?',(aid,)).fetchone()
+ if not r or not r['stored_path'] or not Path(r['stored_path']).exists():raise HTTPException(404,'PDF artifact unavailable')
+ document=fitz.open(r['stored_path'])
+ try:
+  if not document.page_count:raise HTTPException(422,'PDF has no pages')
+  rect=document[0].rect
+  return {'page_count':document.page_count,'page_width':round(rect.width),'page_height':round(rect.height)}
+ finally:document.close()
 @app.post('/api/demo/reset')
 def reset(u=Depends(staff)):seed(True);return {'ok':True}
