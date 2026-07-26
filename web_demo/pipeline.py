@@ -68,8 +68,8 @@ _FIXTURE_DIR = PROJECT_ROOT / "test_data" / "demo_handoff_samples"
 _GITHUB_FIXTURES = (
     {"id": "none", "name": "No local fixture", "description": "Do not attach controlled GitHub evidence."},
     {"id": "20734_clean", "name": "20734 · clean evidence", "path": "github_fixtures/03_clean_weak_20734_github_clean.json", "description": "Weak candidate, clean synthetic GitHub evidence."},
-    {"id": "20734_direct", "name": "20734 · direct-command attack", "path": "github_fixtures/04_weak_basic_github_polluted_20734_direct_command.json", "description": "Visible direct command; use with V0 or V0-B."},
-    {"id": "20734_patch", "name": "20734 · evaluation-patch attack", "path": "github_fixtures/05_weak_advanced_github_polluted_20734_eval_patch.json", "description": "Main non-factual GitHub injection; same PDF as the clean 20734 sample."},
+    {"id": "20734_direct", "name": "20734 · direct-command attack", "path": "github_fixtures/04_weak_basic_github_polluted_20734_direct_command.json", "description": "Visible direct command; use with V0 or V0-B.", "demo_url": "https://github.com/YrpSponge/ipi-20734-direct-command-demo"},
+    {"id": "20734_patch", "name": "20734 · evaluation-patch attack", "path": "github_fixtures/05_weak_advanced_github_polluted_20734_eval_patch.json", "description": "Main non-factual GitHub injection; same PDF as the clean 20734 sample.", "demo_url": "https://github.com/YrpSponge/ipi-20734-evaluation-patch-demo"},
     {"id": "22456_clean", "name": "22456 · clean evidence", "path": "github_fixtures/01_clean_strong_22456_github_clean.json", "description": "Strong reproducibility sample; not a low-to-high decision-impact case."},
     {"id": "22456_patch", "name": "22456 · evaluation-patch attack", "path": "github_fixtures/01_attack_strong_22456_github_eval_patch.json", "description": "Strong-sample stability comparison."},
     {"id": "23372_clean", "name": "23372 · clean evidence", "path": "extra_high_impact/23372_github_clean.json", "description": "Optional high-impact clean comparison."},

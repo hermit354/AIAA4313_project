@@ -95,7 +95,17 @@ def login(x:Login):
 @app.get('/api/me')
 def me(u=Depends(user)):return u
 def app_view(r,c):
- d=rowdict(r);d['resume']=json.loads(d.pop('resume_json') or '{}');d['evidence']=json.loads(d.pop('evidence_json') or '{}');d['runs']=[rowdict(x) for x in c.execute('select * from evaluation_runs where application_id=? order by created desc',(d['id'],))];return d
+ d=rowdict(r);d['resume']=json.loads(d.pop('resume_json') or '{}');d['evidence']=json.loads(d.pop('evidence_json') or '{}')
+ d['runs']=[]
+ for row in c.execute('select * from evaluation_runs where application_id=? order by created desc',(d['id'],)):
+  run=rowdict(row)
+  stages=[rowdict(stage) for stage in c.execute('select name,status,duration_ms,note from stage_runs where run_id=? order by rowid',(run['id'],))]
+  # A run can be in-flight, so this is the observed completed-stage cost, not
+  # an invented wall-clock duration.  The UI labels missing legacy data clearly.
+  run['stage_summary']=stages
+  run['duration_ms']=sum(stage['duration_ms'] or 0 for stage in stages) if stages else None
+  d['runs'].append(run)
+ return d
 @app.get('/api/candidate/application')
 def candidate_application(u=Depends(user)):
  if u['role']!='candidate':raise HTTPException(403,'Candidate access required')

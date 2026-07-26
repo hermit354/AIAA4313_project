@@ -755,7 +755,7 @@
         breakdown:[{label:'Relevant Experience',value:Math.min(25,Math.round((base || 0) * .25)),max:25},{label:'Project/System Evidence',value:Math.min(25,Math.round((base || 0) * .25)),max:25},{label:'Evidence Quality Match',value:Math.min(30,Math.round((base || 0) * .3)),max:30},{label:'Evidence Quality',value:Math.min(20,Math.round((base || 0) * .2)),max:20}],
         evidence:{strengths:evidence.strengths || [],improvements:evidence.improvements || []},
         work:(resume.work || []).map(line => typeof line === 'string' ? line : JSON.stringify(line)),
-        education:(resume.education || []).join(' · ') || 'Not extracted',projects:resume.projects || [], runs:(item.runs || []).map((run,i)=>{const cfg=JSON.parse(run.config_json || '{}');return {id:run.id,label:`Run ${i+1}`,status:run.status,model:run.model_id,score:run.score,base,bonus,deduction,prompt:cfg.prompt_version || 'web-v1',pipeline:'web-v1',defense:(cfg.defense_profile || 'legacy'),githubFixture:cfg.github_fixture_id || 'none',githubMode:cfg.github_evidence_mode || 'legacy',sanitizeMode:cfg.github_sanitize_mode || 'legacy',cache:run.reused_from ? 'SAFE_REUSE' : 'FORCE_FRESH',reused:!!run.reused_from,duration:'local',created:new Date(run.created * 1000).toLocaleString(),temperature:cfg.temperature ?? .1,topP:cfg.top_p ?? .9,error:run.error}})
+        education:(resume.education || []).join(' · ') || 'Not extracted',projects:resume.projects || [], runs:(item.runs || []).map((run,i)=>{const cfg=JSON.parse(run.config_json || '{}');return {id:run.id,label:`Run ${i+1}`,status:run.status,model:run.model_id,score:run.score,base,bonus,deduction,prompt:cfg.prompt_version || 'web-v1',pipeline:'web-v1',defense:(cfg.defense_profile || 'legacy / unavailable'),githubFixture:cfg.github_fixture_id || 'none / unavailable',githubMode:cfg.github_evidence_mode || 'legacy / unavailable',sanitizeMode:cfg.github_sanitize_mode || 'legacy / unavailable',pdfMode:cfg.pdf_defense_mode || 'legacy / unavailable',cache:run.reused_from ? 'SAFE_REUSE' : 'FORCE_FRESH',reused:!!run.reused_from,duration:formatDuration(run.duration_ms),stageSummary:run.stage_summary || [],created:new Date(run.created * 1000).toLocaleString(),temperature:cfg.temperature ?? .1,topP:cfg.top_p ?? .9,error:run.error}})
       };
     }
     async function syncStaffData() {
@@ -782,11 +782,17 @@
       if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
       return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
     }
+    function formatDuration(milliseconds) {
+      if (!Number.isFinite(milliseconds)) return 'unavailable (legacy run)';
+      if (milliseconds < 1000) return `${milliseconds} ms`;
+      return `${(milliseconds / 1000).toFixed(2)} s`;
+    }
     function escapeHtml(value = '') {
       return String(value).replace(/[&<>'"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch]));
     }
     function currentModel() { return models.find(model => model.id === state.defaultModel) || models[0]; }
     function currentDefenseProfile() { return defenseProfiles.find(profile => profile.id === state.defaultDefenseProfile) || defenseProfiles[0]; }
+    function githubFixtureLink(id) { return githubFixtures.find(fixture => fixture.id === id)?.demo_url || null; }
     function getCandidate(id) { return candidates.find(candidate => candidate.id === id) || candidates[0]; }
     function getRun(candidate, id) { return candidate.runs.find(run => run.id === id) || candidate.runs[0]; }
     function initials(name) { return name.split(/\s+/).map(s => s[0]).join('').slice(0,2).toUpperCase(); }
@@ -1080,11 +1086,19 @@
     }
 
     function pipelineHtml(run) {
+      if (run.stageSummary && run.stageSummary.length) {
+        return `<div class="pipeline">${run.stageSummary.map((stage,index) => {
+          const status=String(stage.status || '').toLowerCase();
+          const state=status === 'completed' ? 'done' : status === 'running' ? 'running' : status.includes('fail') ? 'failed' : 'queued';
+          return `<div class="pipeline-step ${state === 'running' ? 'running' : state === 'failed' ? 'failed' : ''}"><div class="pipeline-dot">${state === 'done' ? '✓' : state === 'running' ? '…' : state === 'failed' ? '!' : String(index+1).padStart(2,'0')}</div><div><div class="pipeline-name">${escapeHtml(stage.name)}</div><div class="pipeline-note">${escapeHtml(stage.note || 'No stage note')}</div></div><div class="pipeline-time">${formatDuration(stage.duration_ms)}</div></div>`;
+        }).join('')}</div>`;
+      }
       const stages = run.status === 'FAILED' ? stagePresets.failed : run.status === 'RUNNING' ? stagePresets.running : stagePresets.completed;
       return `<div class="pipeline">${stages.map((stage,index) => `<div class="pipeline-step ${stage.status === 'running' ? 'running' : stage.status === 'failed' ? 'failed' : ''}"><div class="pipeline-dot">${stage.status === 'done' ? '✓' : stage.status === 'running' ? '…' : stage.status === 'failed' ? '!' : String(index+1).padStart(2,'0')}</div><div><div class="pipeline-name">${stage.name}</div><div class="pipeline-note">${stage.note}</div></div><div class="pipeline-time">${stage.time}</div></div>`).join('')}</div>`;
     }
 
     function runAdvanced(candidate, run) {
+      const githubLink=githubFixtureLink(run.githubFixture);
       return `<details open><summary>Advanced run details</summary><div class="detail-body">
         <div class="config-list">
           <div class="config-row"><span>Run ID</span><span class="mono">${run.id}</span></div>
@@ -1093,7 +1107,9 @@
           <div class="config-row"><span>Prompt version</span><span class="mono">${run.prompt}</span></div>
           <div class="config-row"><span>Defense profile</span><span class="mono">${run.defense || 'legacy'}</span></div>
           <div class="config-row"><span>GitHub fixture</span><span class="mono">${run.githubFixture || 'none'}</span></div>
+          ${githubLink ? `<div class="config-row"><span>Public demo page</span><a class="mono" href="${githubLink}" target="_blank" rel="noopener">Open controlled GitHub page ↗</a></div>` : ''}
           <div class="config-row"><span>Evidence gate</span><span class="mono">${run.githubMode || 'legacy'} / ${run.sanitizeMode || 'legacy'}</span></div>
+          <div class="config-row"><span>PDF extraction</span><span class="mono">${run.pdfMode}</span></div>
           <div class="config-row"><span>Pipeline version</span><span class="mono">${run.pipeline}</span></div>
           <div class="config-row"><span>Cache policy</span><span class="mono">${run.cache}</span></div>
           <div class="config-row"><span>Duration</span><span class="mono">${run.duration}</span></div>
@@ -1168,6 +1184,10 @@
           <div class="config-row"><span>Base / bonus / deduction</span><span class="mono">${scoreOrDash(run.base)} / +${scoreOrDash(run.bonus)} / −${scoreOrDash(run.deduction)}</span></div>
           <div class="config-row"><span>Temperature / top-p</span><span class="mono">${run.temperature} / ${run.topP}</span></div>
           <div class="config-row"><span>Prompt</span><span class="mono">${run.prompt}</span></div>
+          <div class="config-row"><span>Defense profile</span><span class="mono">${run.defense}</span></div>
+          <div class="config-row"><span>GitHub scenario</span><span class="mono">${run.githubFixture}</span></div>
+          <div class="config-row"><span>Evidence gate</span><span class="mono">${run.githubMode} / ${run.sanitizeMode}</span></div>
+          <div class="config-row"><span>PDF extraction</span><span class="mono">${run.pdfMode}</span></div>
           <div class="config-row"><span>Cache</span><span class="mono">${run.cache}${run.reused ? ' · reused' : ''}</span></div>
           <div class="config-row"><span>Duration</span><span class="mono">${run.duration}</span></div>
         </div>
@@ -1203,8 +1223,8 @@
           <select class="select" data-run-model><option value="all">All models</option>${models.map(model => `<option value="${model.id}" ${state.runFilters.model === model.id ? 'selected' : ''}>${model.name}</option>`).join('')}</select>
           <div class="muted" style="display:flex;align-items:center;justify-content:flex-end;font-size:12px">${rows.length} runs · Worker <span class="pill pill-success" style="margin-left:9px">Online</span></div>
         </section>
-        <section class="table-shell glass-card"><div class="table-scroll"><table><thead><tr><th>Run</th><th>Candidate</th><th>Status</th><th>Score</th><th>Model</th><th>Cache</th><th>Duration</th><th>Created</th><th></th></tr></thead><tbody>
-          ${rows.map(item => `<tr><td><span class="mono">${item.id}</span></td><td><div class="candidate-cell"><div class="avatar">${item.candidate.initials}</div><div><div class="candidate-name">${item.candidate.name}</div><div class="candidate-meta">${item.candidate.ref}</div></div></div></td><td>${statusPill(item.status)}</td><td><span class="score-number">${scoreOrDash(item.score)}</span></td><td><span class="mono" style="font-size:10px">${item.model}</span></td><td><span class="mono" style="font-size:10px">${item.cache}</span></td><td class="mono">${item.duration}</td><td class="muted">${item.created}</td><td><button class="btn btn-sm" data-open-application="${item.candidate.id}">Open</button>${item.status === 'FAILED' ? `<button class="btn btn-sm btn-primary" data-rerun="${item.candidate.id}">Retry</button>` : ''}</td></tr>`).join('')}
+        <section class="table-shell glass-card"><div class="table-scroll"><table><thead><tr><th>Run</th><th>Candidate</th><th>Status</th><th>Score</th><th>Model</th><th>Controls</th><th>Duration</th><th>Created</th><th></th></tr></thead><tbody>
+          ${rows.map(item => `<tr><td><span class="mono">${item.id}</span></td><td><div class="candidate-cell"><div class="avatar">${item.candidate.initials}</div><div><div class="candidate-name">${item.candidate.name}</div><div class="candidate-meta">${item.candidate.ref}</div></div></div></td><td>${statusPill(item.status)}</td><td><span class="score-number">${scoreOrDash(item.score)}</span></td><td><span class="mono" style="font-size:10px">${item.model}</span></td><td><div class="mono" style="font-size:10px;line-height:1.55">Defense: ${escapeHtml(item.defense)}<br/>GitHub: ${escapeHtml(item.githubFixture)}<br/>Gate: ${escapeHtml(item.githubMode)} / ${escapeHtml(item.sanitizeMode)}</div></td><td class="mono">${item.duration}</td><td class="muted">${item.created}</td><td><button class="btn btn-sm" data-open-application="${item.candidate.id}">Open</button>${item.status === 'FAILED' ? `<button class="btn btn-sm btn-primary" data-rerun="${item.candidate.id}">Retry</button>` : ''}</td></tr>`).join('')}
         </tbody></table></div></section>`;
       return staffShell({ name: 'runs' }, content, 'System Runs');
     }

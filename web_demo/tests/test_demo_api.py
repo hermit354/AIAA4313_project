@@ -37,9 +37,25 @@ class DemoApiTests(unittest.TestCase):
         self.assertEqual(profiles.status_code,200)
         self.assertEqual({item['id'] for item in profiles.json()['profiles']},{'v0_weak','v0b_instruction','v1_5_semantic','v2_structured','pdf_hidden_text','v3_vlm'})
         self.assertIn('20734_patch',{item['id'] for item in profiles.json()['github_fixtures']})
+        fixture={item['id']:item for item in profiles.json()['github_fixtures']}['20734_patch']
+        self.assertEqual(fixture['demo_url'],'https://github.com/YrpSponge/ipi-20734-evaluation-patch-demo')
         updated=self.client.patch('/api/staff/settings/default-defense-profile',headers=h,json={'profile_id':'v2_structured'})
         self.assertEqual(updated.status_code,200)
         self.assertEqual(updated.json()['profile_id'],'v2_structured')
+
+    def test_staff_run_payload_includes_immutable_config_and_stage_duration(self):
+        c=backend.db()
+        c.execute("insert into applications (id,email,filename,stored_path,sha256,status,created,is_demo) values(?,?,?,?,?,?,?,?)", ('app-trace','alice@demo.local','trace.pdf',None,'trace','UNDER_REVIEW',1,0))
+        config={'defense_profile':'v2_structured','github_fixture_id':'20734_patch','github_evidence_mode':'structured','github_sanitize_mode':'adaptive'}
+        c.execute("insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)", ('run-trace','app-trace','ollama','gemma3:4b','COMPLETED',1,2,55,__import__('json').dumps(config),'trace-fingerprint',None,None))
+        c.execute("insert into stage_runs values(?,?,?,?,?,?,?)", ('trace-extract','run-trace','PDF_TEXT_EXTRACTION','COMPLETED',120,'done',None))
+        c.execute("insert into stage_runs values(?,?,?,?,?,?,?)", ('trace-github','run-trace','GITHUB_EVIDENCE_GATE','COMPLETED',230,'blocked injected text',None))
+        c.commit();c.close()
+        records=self.client.get('/api/staff/applications',headers=self.login('staff@demo.local')).json()
+        run=next(item for item in records if item['id']=='app-trace')['runs'][0]
+        self.assertEqual(run['duration_ms'],350)
+        self.assertEqual([stage['name'] for stage in run['stage_summary']],['PDF_TEXT_EXTRACTION','GITHUB_EVIDENCE_GATE'])
+        self.assertEqual(__import__('json').loads(run['config_json'])['github_fixture_id'],'20734_patch')
 
     def test_staff_can_read_pdf_preview_metadata(self):
         pdf_path = backend.UPLOADS / 'one_page_resume.pdf'
