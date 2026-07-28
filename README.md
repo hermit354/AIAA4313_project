@@ -1,4 +1,4 @@
-# HireLens: Securing AI Resume Screening
+# Let My Resume Through: Attack and Defense in an LLM-Based Hiring Agent
 
 HireLens is a controlled, end-to-end web demo for studying prompt-injection risks in LLM-assisted resume screening. A candidate uploads a PDF; the screening pipeline extracts evidence, produces a rubric-based priority score, and presents transparent run history to staff reviewers.
 
