@@ -570,6 +570,7 @@
       compare: { applicationId: 'app-alice', left: 'run-a1', right: 'run-a2' },
       sessionExpired: false
     };
+    const REVIEW_CUTOFF = 60;
 
     const models = [
       { id: 'gemma3:4b', name: 'Gemma 3 4B', provider: 'Ollama', type: 'Local', healthy: true, installed: true, temperature: 0.1, topP: 0.9, structured: true },
@@ -579,10 +580,9 @@
     ];
     const defenseProfiles = [
       { id: 'v0_weak', name: 'V0 · Weak baseline', description: 'Raw GitHub free text; controlled attack baseline only.' },
-      { id: 'v0b_instruction', name: 'V0-B · Prompt + instruction filter', description: 'Blocks direct commands but not semantic evaluation patches.' },
+      { id: 'baseline', name: 'Baseline · basic defense', description: 'Removes tiny white PDF text and blocks direct GitHub commands.' },
       { id: 'v1_5_semantic', name: 'V1.5 · Semantic filter', description: 'Detects scoring-control language in GitHub free text.' },
       { id: 'v2_structured', name: 'V2 · Adaptive structured gate', description: 'Risky GitHub free text is omitted before final scoring.' },
-      { id: 'pdf_hidden_text', name: 'PDF add-on · hidden-text removal', description: 'Use only for the optional PDF hidden-text attack line.' },
       { id: 'v3_vlm', name: 'V3-VLM · visible-PDF extraction', description: 'Requires Qwen3-VL Plus and transcribes rendered pages rather than embedded PDF text.' }
     ];
     const githubFixtures = [{ id: 'none', name: 'No local fixture', description: 'Do not attach controlled GitHub evidence.' }];
@@ -733,6 +733,7 @@
       },
       async rerun(applicationId, config) { return api(`/api/staff/applications/${applicationId}/rerun`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(config) }); },
       async deleteApplication(applicationId) { return api(`/api/staff/applications/${applicationId}`, { method:'DELETE' }); },
+      async deleteRun(runId) { return api(`/api/staff/runs/${runId}`, { method:'DELETE' }); },
       async setDefaultModel(modelId) { return api('/api/staff/settings/default-model', { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({model_id:modelId}) }); },
       async defenseProfiles() { return api('/api/staff/defense-profiles'); },
       async setDefaultDefenseProfile(profileId) { return api('/api/staff/settings/default-defense-profile', { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({profile_id:profileId}) }); },
@@ -755,14 +756,14 @@
       return {
         id:item.id, ref:item.id.toUpperCase(), name:candidateName, filename:item.filename, email:item.email,
         initials:initials(candidateName), rank:index + 1, score, base, bonus, deduction,
-        reviewTier: score == null ? 'Processing' : score < 40 ? 'Below Review Cutoff' : score >= 85 ? 'High Priority' : 'Standard Review',
+        reviewTier: score == null ? 'Processing' : score < REVIEW_CUTOFF ? 'Below Review Cutoff' : score >= 85 ? 'High Priority' : 'Standard Review',
         candidateStatus:item.status, decision:'NONE', model:(item.runs[0] || {}).model_id || 'gemma3:4b', updated:'just now',
         submitted:new Date(item.created * 1000).toLocaleString(), role:(resume.skills || []).slice(0,3).join(' · ') || 'Resume submitted',
         skills:resume.skills || [], github:resume.github || 'Not provided', summary:(resume.summary || []).join(' ') || `Local evaluation record for ${basics.name || item.email}.`,
-        breakdown:[{label:'Relevant Experience',value:Math.min(25,Math.round((base || 0) * .25)),max:25},{label:'Project/System Evidence',value:Math.min(25,Math.round((base || 0) * .25)),max:25},{label:'Evidence Quality Match',value:Math.min(30,Math.round((base || 0) * .3)),max:30},{label:'Evidence Quality',value:Math.min(20,Math.round((base || 0) * .2)),max:20}],
+        breakdown:(item.evidence?.breakdown || item.runs?.[0]?.breakdown || []).map(part=>({label:part.label,value:part.score,max:part.max,evidence:part.evidence})),
         evidence:{strengths:evidence.strengths || [],improvements:evidence.improvements || []},
         work:(resume.work || []).map(line => typeof line === 'string' ? line : JSON.stringify(line)),
-        education:(resume.education || []).join(' · ') || 'Not extracted',projects:resume.projects || [], runs:(item.runs || []).map((run,i)=>{const cfg=JSON.parse(run.config_json || '{}');const defense=cfg.defense_profile || 'legacy';const fixture=cfg.github_fixture_id || 'none';return {id:run.id,label:`${defense} · ${fixture} · ${scoreOrDash(run.score)}`,status:run.status,model:run.model_id,score:run.score,base:run.base ?? base,bonus:run.bonus ?? bonus,deduction:run.deduction ?? deduction,prompt:cfg.prompt_version || 'web-v1',pipeline:'web-v1',defense:(cfg.defense_profile || 'legacy / unavailable'),githubFixture:cfg.github_fixture_id || 'none / unavailable',githubMode:cfg.github_evidence_mode || 'legacy / unavailable',sanitizeMode:cfg.github_sanitize_mode || 'legacy / unavailable',pdfMode:cfg.pdf_defense_mode || 'legacy / unavailable',cache:run.reused_from ? 'SAFE_REUSE' : 'FORCE_FRESH',reused:!!run.reused_from,duration:formatDuration(run.duration_ms),stageSummary:run.stage_summary || [],created:new Date(run.created * 1000).toLocaleString(),temperature:cfg.temperature ?? .1,topP:cfg.top_p ?? .9,error:run.error}})
+        education:(resume.education || []).join(' · ') || 'Not extracted',projects:resume.projects || [], runs:(item.runs || []).map((run,i)=>{const cfg=JSON.parse(run.config_json || '{}');const defense=cfg.defense_profile || 'legacy';const fixture=cfg.github_fixture_id || 'none';const runEvidence=run.evidence || {};return {id:run.id,label:`${defense} · ${fixture} · ${scoreOrDash(run.score)}`,status:run.status,model:run.model_id,score:run.score,base:run.base ?? base,bonus:run.bonus ?? bonus,deduction:run.deduction ?? deduction,breakdown:(run.breakdown || []).map(part=>({label:part.label,value:part.score,max:part.max,evidence:part.evidence})),evidence:{strengths:runEvidence.strengths || [],improvements:runEvidence.improvements || []},prompt:cfg.prompt_version || 'web-v1',pipeline:'web-v1',defense:(cfg.defense_profile || 'legacy / unavailable'),githubFixture:cfg.github_fixture_id || 'none / unavailable',githubMode:cfg.github_evidence_mode || 'legacy / unavailable',sanitizeMode:cfg.github_sanitize_mode || 'legacy / unavailable',pdfMode:cfg.pdf_defense_mode || 'legacy / unavailable',cache:run.reused_from ? 'SAFE_REUSE' : 'FORCE_FRESH',reused:!!run.reused_from,duration:formatDuration(run.duration_ms),stageSummary:run.stage_summary || [],createdAt:Number(run.created || 0),created:new Date(run.created * 1000).toLocaleString(),temperature:cfg.temperature ?? .1,topP:cfg.top_p ?? .9,error:run.error}})
       };
     }
     async function syncStaffData() {
@@ -801,13 +802,14 @@
     function currentDefenseProfile() { return defenseProfiles.find(profile => profile.id === state.defaultDefenseProfile) || defenseProfiles[0]; }
     function githubFixtureLink(id) { return githubFixtures.find(fixture => fixture.id === id)?.demo_url || null; }
     function getCandidate(id) { return candidates.find(candidate => candidate.id === id) || candidates[0]; }
-    function getRun(candidate, id) { return candidate.runs.find(run => run.id === id) || candidate.runs[0]; }
+    function getRun(candidate, id) { return candidate?.runs?.find(run => run.id === id) || candidate?.runs?.[0] || null; }
     function initials(name) { return name.split(/\s+/).map(s => s[0]).join('').slice(0,2).toUpperCase(); }
     function scoreOrDash(value) { return Number.isFinite(value) ? Number(value).toFixed(1) : '—'; }
     function routeFromHash() {
       const raw = location.hash.replace(/^#/, '') || '/login';
       const clean = raw.split('?')[0];
-      if (clean.startsWith('/staff/application/')) return { name: 'application-detail', id: clean.split('/').pop() };
+      const params = new URLSearchParams(raw.split('?')[1] || '');
+      if (clean.startsWith('/staff/application/')) return { name: 'application-detail', id: clean.split('/').pop(), runId: params.get('run') };
       if (clean === '/staff/applications') return { name: 'applications' };
       if (clean === '/staff/experiments') return { name: 'experiments' };
       if (clean === '/staff/models') return { name: 'models' };
@@ -1127,44 +1129,55 @@
       </div></details>`;
     }
 
-    function renderApplicationDetail(id) {
+    function renderApplicationDetail(id, requestedRunId) {
       const candidate = getCandidate(id);
-      const run = candidate.runs[0];
+      const selectedRun = getRun(candidate, requestedRunId);
+      const hasRun = Boolean(selectedRun);
+      const run = selectedRun || { id: '', score: null, base: null, bonus: null, deduction: null, status: 'SUBMITTED', model: '—', prompt: '—', breakdown: [], evidence: { strengths: [], improvements: [] } };
+      const selectedScore = Number.isFinite(run.score) ? run.score : 0;
+      const selectedBreakdown = run.breakdown?.length ? run.breakdown : candidate.breakdown;
+      const selectedEvidence = run.evidence || candidate.evidence;
       const content = `
         <header class="detail-head">
           <div><div class="eyebrow">Application / ${candidate.ref}</div><h1 class="candidate-title">${candidate.name.split(' ').join('<br/>')}</h1><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:17px">${statusPill(candidate.candidateStatus)}${reviewPill(candidate.reviewTier)}<span class="pill pill-neutral">${candidate.email}</span></div></div>
-          <div class="detail-actions"><button class="btn" data-decision="HOLD">Hold</button><button class="btn btn-danger" data-decision="ARCHIVE">Archive</button><button class="btn btn-sage" data-decision="ADVANCE">${icons.check} Advance</button><button class="btn btn-primary" data-rerun="${candidate.id}">${icons.refresh} Rerun</button><button class="btn btn-danger" data-delete-candidate="${candidate.id}">Delete record</button></div>
+          <div class="detail-actions"><button class="btn" data-decision="HOLD">Hold</button><button class="btn btn-danger" data-decision="ARCHIVE">Archive</button><button class="btn btn-sage" data-decision="ADVANCE">${icons.check} Advance</button><button class="btn btn-primary" data-rerun="${candidate.id}">${icons.refresh} Rerun</button><button class="btn btn-danger" data-delete-candidate="${candidate.id}">Delete candidate</button></div>
         </header>
         <section class="detail-grid">
           <article class="panel glass-card"><div class="panel-head"><div><div class="panel-title">Resume PDF</div><div class="panel-sub">${escapeHtml(candidate.ref)} · original uploaded document</div></div><button class="btn btn-sm" data-download-pdf>Download</button></div><div id="pdfPreview" class="pdf-preview"><div class="pdf-preview-message">Loading original PDF preview…</div></div></article>
           <article class="panel glass-card run-details-panel">
             <div class="panel-head"><div><div class="panel-title">Evaluation Run</div><div class="panel-sub">Immutable execution trace and artifacts</div></div>${statusPill(run.status)}</div>
-            ${runAdvanced(candidate, run)}
-            <div class="run-detail-actions"><button class="btn" data-compare-candidate="${candidate.id}">Compare ${candidate.runs.length} runs</button><button class="btn btn-primary" data-rerun="${candidate.id}">${icons.refresh} Create new run</button></div>
+            <div class="field" style="margin:15px 0"><label for="detailRunSelect">Showing run</label><select class="select" id="detailRunSelect" data-detail-run-select>${candidate.runs.map(item => `<option value="${item.id}" ${item.id === run.id ? 'selected' : ''}>${item.label} · ${item.model} · ${item.created}</option>`).join('')}</select><small class="muted">The PDF on the left stays fixed; the trace and AI evaluation update to this immutable run.</small></div>
+            ${hasRun ? runAdvanced(candidate, run) : '<div class="empty-state" style="padding:28px 12px"><span class="section-number">0</span><h3>No evaluation runs yet</h3><p class="muted">This candidate is preserved after run deletion. The original PDF remains available.</p></div>'}
+            <div class="run-detail-actions">${hasRun ? `<button class="btn" data-compare-candidate="${candidate.id}">Compare ${candidate.runs.length} runs</button><button class="btn btn-danger" data-delete-run="${run.id}" data-run-candidate="${candidate.id}">Delete this run</button>` : ''}<button class="btn btn-primary" data-rerun="${candidate.id}">${icons.refresh} Create new run</button></div>
           </article>
           <aside class="panel glass-raised evaluation-panel">
             <div class="panel-head"><div><div class="panel-title">AI Evaluation</div><div class="panel-sub">${run.model} · ${run.prompt}</div></div>${statusPill(run.status)}</div>
-            <div class="score-hero"><div class="score-ring" style="background:conic-gradient(var(--accent) 0 ${Math.min(candidate.score,100)}%, rgba(58,91,122,.10) ${Math.min(candidate.score,100)}% 100%)"><span>${scoreOrDash(candidate.score)}</span></div><div class="score-copy"><h3>Priority score</h3><p>${candidate.reviewTier}. Final decision remains with human reviewers.</p></div></div>
-            <div class="score-adjustments"><div class="adjustment"><span>Base</span><strong>${candidate.base}</strong></div><div class="adjustment"><span>Bonus</span><strong>+${candidate.bonus}</strong></div><div class="adjustment"><span>Deduction</span><strong>−${candidate.deduction}</strong></div></div>
-            <div class="score-breakdown">${candidate.breakdown.map(item => `<div class="score-row"><span class="label">${item.label}</span><span class="value">${item.value} / ${item.max}</span><div class="bar"><span style="width:${item.value/item.max*100}%"></span></div></div>`).join('')}</div>
-            <div style="margin-top:20px"><div class="eyebrow">Evidence</div><details open><summary>Key strengths</summary><div class="detail-body"><ul>${candidate.evidence.strengths.map(text => `<li>${text}</li>`).join('')}</ul></div></details><details><summary>Areas for improvement</summary><div class="detail-body"><ul>${candidate.evidence.improvements.map(text => `<li>${text}</li>`).join('')}</ul></div></details></div>
+            <div class="score-hero"><div class="score-ring" style="background:conic-gradient(var(--accent) 0 ${Math.min(selectedScore,100)}%, rgba(58,91,122,.10) ${Math.min(selectedScore,100)}% 100%)"><span>${scoreOrDash(run.score)}</span></div><div class="score-copy"><h3>Priority score</h3><p>${run.score < REVIEW_CUTOFF ? 'Below Review Cutoff' : run.score >= 85 ? 'High Priority' : 'Standard Review'}. Final decision remains with human reviewers.</p></div></div>
+            <div class="score-adjustments"><div class="adjustment"><span>Base</span><strong>${scoreOrDash(run.base)}</strong></div><div class="adjustment"><span>Bonus</span><strong>+${scoreOrDash(run.bonus)}</strong></div><div class="adjustment"><span>Deduction</span><strong>−${scoreOrDash(run.deduction)}</strong></div></div>
+            <div class="score-breakdown">${selectedBreakdown.map(item => `<div class="score-row"><span class="label">${item.label}</span><span class="value">${item.value} / ${item.max}</span><div class="bar"><span style="width:${item.value/item.max*100}%"></span></div></div>`).join('')}</div>
+            <div style="margin-top:20px"><div class="eyebrow">Evidence</div><details open><summary>Key strengths</summary><div class="detail-body"><ul>${selectedEvidence.strengths.map(text => `<li>${text}</li>`).join('')}</ul></div></details><details><summary>Areas for improvement</summary><div class="detail-body"><ul>${selectedEvidence.improvements.map(text => `<li>${text}</li>`).join('')}</ul></div></details></div>
             <div style="margin-top:12px"><div class="eyebrow">Staff review</div><div class="field" style="margin-top:10px"><label for="staffNote">Internal note</label><textarea class="textarea" id="staffNote" placeholder="Add a human review note…"></textarea></div><button class="btn btn-sm" style="margin-top:9px" data-save-note>Save note</button></div>
           </aside>
         </section>`;
       return staffShell({ name: 'application-detail' }, content, `Application / ${candidate.ref}`);
     }
     function experimentDefaults(candidate) {
+      if (!candidate || !candidate.runs || !candidate.runs.length) return {left:null,right:null};
       const left = candidate.filename === '05_weak_advanced_github_polluted_20734.pdf'
         ? candidate.runs.find(run => run.githubFixture === '20734_clean')
         : candidate.runs.find(run => run.defense === 'v0_weak');
       const right = candidate.filename === '05_weak_advanced_github_polluted_20734.pdf'
-        ? candidate.runs.find(run => run.githubFixture === '20734_patch' && run.defense === 'v0_weak')
+        ? candidate.runs.find(run => run.githubFixture === '20734_new_rubric_patch' && run.defense === 'v0_weak')
         : candidate.runs.find(run => run.defense === 'v3_vlm');
       return {left:left || candidate.runs[candidate.runs.length - 1],right:right || candidate.runs[0]};
     }
     function renderExperiments() {
       const candidate = getCandidate(state.compare.applicationId);
       const defaults=experimentDefaults(candidate);
+      if (!defaults.left || !defaults.right) {
+        const content = `${pageHeader('Experiments', 'Run<br/>Comparison', 'This candidate has no evaluation runs yet. Open the candidate page to create a new run.', `<button class="btn btn-primary" data-open-application="${candidate.id}">Open candidate</button>`)}<section class="panel glass-card"><div class="empty-state"><span class="section-number">0</span><h3>No runs available for comparison</h3><p class="muted">Deleting a run keeps the candidate and its PDF, but comparison requires at least one completed run.</p><button class="btn btn-primary" data-rerun="${candidate.id}">${icons.refresh} Create new run</button></div></section>`;
+        return staffShell({ name: 'experiments' }, content, 'Experiments');
+      }
       const left = candidate.runs.find(run => run.id === state.compare.left) || defaults.left;
       const right = candidate.runs.find(run => run.id === state.compare.right) || defaults.right;
       const scoreDelta = (Number(right.score || 0) - Number(left.score || 0));
@@ -1227,7 +1240,7 @@
       return staffShell({ name: 'models' }, content, 'Models & Prompts');
     }
 
-    function allRuns() { return candidates.flatMap(candidate => candidate.runs.map(run => ({...run, candidate}))); }
+    function allRuns() { return candidates.flatMap(candidate => candidate.runs.map(run => ({...run, candidate}))).sort((left, right) => right.createdAt - left.createdAt); }
     function filteredRuns() {
       return allRuns().filter(item => (state.runFilters.status === 'all' || item.status === state.runFilters.status) && (state.runFilters.model === 'all' || item.model === state.runFilters.model));
     }
@@ -1241,7 +1254,7 @@
           <div class="muted" style="display:flex;align-items:center;justify-content:flex-end;font-size:12px">${rows.length} runs · Worker <span class="pill pill-success" style="margin-left:9px">Online</span></div>
         </section>
         <section class="table-shell glass-card"><div class="table-scroll"><table><thead><tr><th>Run</th><th>Candidate</th><th>Status</th><th>Score</th><th>Model</th><th>Controls</th><th>Duration</th><th>Created</th><th></th></tr></thead><tbody>
-          ${rows.map(item => `<tr><td><span class="mono">${item.id}</span></td><td><div class="candidate-cell"><div class="avatar">${item.candidate.initials}</div><div><div class="candidate-name">${item.candidate.name}</div><div class="candidate-meta">${escapeHtml(item.candidate.filename || item.candidate.ref)}</div></div></div></td><td>${statusPill(item.status)}</td><td><span class="score-number">${scoreOrDash(item.score)}</span></td><td><span class="mono" style="font-size:10px">${item.model}</span></td><td><div class="mono" style="font-size:10px;line-height:1.55">Defense: ${escapeHtml(item.defense)}<br/>GitHub: ${escapeHtml(item.githubFixture)}<br/>Gate: ${escapeHtml(item.githubMode)} / ${escapeHtml(item.sanitizeMode)}</div></td><td class="mono">${item.duration}</td><td class="muted">${item.created}</td><td><button class="btn btn-sm" data-open-application="${item.candidate.id}">Open</button>${item.status === 'FAILED' ? `<button class="btn btn-sm btn-primary" data-rerun="${item.candidate.id}">Retry</button>` : ''}</td></tr>`).join('')}
+          ${rows.map(item => `<tr><td><span class="mono">${item.id}</span></td><td><div class="candidate-cell"><div class="avatar">${item.candidate.initials}</div><div><div class="candidate-name">${item.candidate.name}</div><div class="candidate-meta">${escapeHtml(item.candidate.filename || item.candidate.ref)}</div></div></div></td><td>${statusPill(item.status)}</td><td><span class="score-number">${scoreOrDash(item.score)}</span></td><td><span class="mono" style="font-size:10px">${item.model}</span></td><td><div class="mono" style="font-size:10px;line-height:1.55">Defense: ${escapeHtml(item.defense)}<br/>GitHub: ${escapeHtml(item.githubFixture)}<br/>Gate: ${escapeHtml(item.githubMode)} / ${escapeHtml(item.sanitizeMode)}</div></td><td class="mono">${item.duration}</td><td class="muted">${item.created}</td><td><div style="display:flex;gap:6px"><button class="btn btn-sm" data-open-application="${item.candidate.id}" data-run-id="${item.id}">Open</button><button class="btn btn-sm btn-danger" data-delete-run="${item.id}" data-run-candidate="${item.candidate.id}" ${['QUEUED','RUNNING'].includes(item.status) ? 'disabled' : ''}>Delete run</button>${item.status === 'FAILED' ? `<button class="btn btn-sm btn-primary" data-rerun="${item.candidate.id}">Retry</button>` : ''}</div></td></tr>`).join('')}
         </tbody></table></div></section>`;
       return staffShell({ name: 'runs' }, content, 'System Runs');
     }
@@ -1279,6 +1292,12 @@
         <div class="modal-head"><div><div class="eyebrow">Delete application</div><h2>Delete ${escapeHtml(candidate.name)}?</h2></div><button class="btn btn-square btn-ghost" data-close-modal>${icons.close}</button></div>
         <div class="modal-body"><p class="muted" style="line-height:1.65">This permanently deletes the candidate record, every Evaluation Run, stage artifact and locally managed uploaded PDF. This cannot be undone.</p><div class="code-box">Application ID: ${escapeHtml(candidate.id)}</div></div>
         <div class="modal-actions"><button class="btn" data-close-modal>Cancel</button><button class="btn btn-danger" data-confirm-delete="${candidate.id}">Delete permanently</button></div>`);
+    }
+    function deleteRunModal(candidate, run) {
+      showModal(`
+        <div class="modal-head"><div><div class="eyebrow">Delete evaluation run</div><h2>Delete only this run?</h2></div><button class="btn btn-square btn-ghost" data-close-modal>${icons.close}</button></div>
+        <div class="modal-body"><p class="muted" style="line-height:1.65">This removes the selected immutable Run, its stages and artifact. The candidate record, uploaded PDF and all other Runs remain available.</p><div class="code-box">Candidate: ${escapeHtml(candidate.name)}<br/>Run ID: ${escapeHtml(run.id)}<br/>Score: ${scoreOrDash(run.score)}</div></div>
+        <div class="modal-actions"><button class="btn" data-close-modal>Cancel</button><button class="btn btn-danger" data-confirm-delete-run="${run.id}" data-run-candidate="${candidate.id}">Delete this run</button></div>`);
     }
 
     function artifactModal(type) {
@@ -1400,8 +1419,10 @@
 
     function bindDetail(candidate) {
       loadPdfPreview(candidate.id);
+      document.querySelector('[data-detail-run-select]')?.addEventListener('change', event => navigate(`/staff/application/${candidate.id}?run=${encodeURIComponent(event.target.value)}`));
       document.querySelectorAll('[data-rerun]').forEach(button => button.addEventListener('click', () => rerunModal(getCandidate(button.dataset.rerun))));
       document.querySelectorAll('[data-delete-candidate]').forEach(button => button.addEventListener('click', () => deleteCandidateModal(getCandidate(button.dataset.deleteCandidate))));
+      document.querySelectorAll('[data-delete-run]').forEach(button => button.addEventListener('click', () => deleteRunModal(candidate,getRun(candidate,button.dataset.deleteRun))));
       document.querySelectorAll('[data-decision]').forEach(button => button.addEventListener('click', () => {
         candidate.decision = button.dataset.decision;
         render();
@@ -1446,7 +1467,8 @@
     function bindRuns() {
       document.querySelector('[data-run-status]')?.addEventListener('change', event => { state.runFilters.status = event.target.value; render(); });
       document.querySelector('[data-run-model]')?.addEventListener('change', event => { state.runFilters.model = event.target.value; render(); });
-      document.querySelectorAll('[data-open-application]').forEach(button => button.addEventListener('click', () => navigate(`/staff/application/${button.dataset.openApplication}`)));
+      document.querySelectorAll('[data-open-application]').forEach(button => button.addEventListener('click', () => navigate(`/staff/application/${button.dataset.openApplication}?run=${encodeURIComponent(button.dataset.runId)}`)));
+      document.querySelectorAll('[data-delete-run]').forEach(button => button.addEventListener('click', () => { const candidate=getCandidate(button.dataset.runCandidate);deleteRunModal(candidate,getRun(candidate,button.dataset.deleteRun)); }));
       document.querySelectorAll('[data-rerun]').forEach(button => button.addEventListener('click', () => rerunModal(getCandidate(button.dataset.rerun))));
     }
 
@@ -1519,6 +1541,28 @@
         }
         });
       });
+      document.querySelectorAll('[data-confirm-delete-run]').forEach(button => {
+        if (button.dataset.bound) return;
+        button.dataset.bound = 'true';
+        button.addEventListener('click', async () => {
+          const runId=button.dataset.confirmDeleteRun;
+          const candidateId=button.dataset.runCandidate;
+          button.disabled=true;
+          try {
+            await mockApi.deleteRun(runId);
+            await syncStaffData();
+            closeModal();
+            const candidate=getCandidate(candidateId);
+            const remaining=candidate?.id === candidateId ? candidate.runs[0] : null;
+            if (routeFromHash().name === 'application-detail') navigate(`/staff/application/${candidateId}${remaining ? `?run=${encodeURIComponent(remaining.id)}` : ''}`);
+            else render();
+            showToast('Run deleted','The candidate, PDF and other Runs were preserved.');
+          } catch (error) {
+            button.disabled=false;
+            showToast('Run deletion failed',error.message,'danger');
+          }
+        });
+      });
     }
 
     function render() {
@@ -1528,7 +1572,7 @@
       if (route.name === 'login') html = renderLogin();
       else if (route.name === 'candidate') html = renderCandidate();
       else if (route.name === 'applications') html = renderApplications();
-      else if (route.name === 'application-detail') html = renderApplicationDetail(route.id);
+      else if (route.name === 'application-detail') html = renderApplicationDetail(route.id, route.runId);
       else if (route.name === 'experiments') html = renderExperiments();
       else if (route.name === 'models') html = renderModels();
       else if (route.name === 'runs') html = renderRuns();

@@ -31,11 +31,25 @@ class DemoApiTests(unittest.TestCase):
         template=(Path(__file__).resolve().parents[1]/'templates'/'hiring_agent_glass_editorial_template.html').read_text(encoding='utf-8')
         self.assertNotIn('setTimeout(bindModalActions, 0);',template)
 
+    def test_system_run_open_preserves_run_context_and_detail_can_switch_runs(self):
+        template=(Path(__file__).resolve().parents[1]/'templates'/'hiring_agent_glass_editorial_template.html').read_text(encoding='utf-8')
+        self.assertIn('runId: params.get(\'run\')',template)
+        self.assertIn('data-detail-run-select',template)
+        self.assertIn('data-run-id="${item.id}"',template)
+        self.assertIn('?run=${encodeURIComponent(button.dataset.runId)}',template)
+        self.assertNotIn('const run = candidate.runs[0];',template)
+
+    def test_review_cutoff_is_consistently_set_to_sixty(self):
+        template=(Path(__file__).resolve().parents[1]/'templates'/'hiring_agent_glass_editorial_template.html').read_text(encoding='utf-8')
+        self.assertIn('const REVIEW_CUTOFF = 60;',template)
+        self.assertEqual(template.count('score < REVIEW_CUTOFF'),2)
+        self.assertNotIn('score < 40',template)
+
     def test_staff_can_select_a_default_defense_profile(self):
         h=self.login('staff@demo.local')
         profiles=self.client.get('/api/staff/defense-profiles',headers=h)
         self.assertEqual(profiles.status_code,200)
-        self.assertEqual({item['id'] for item in profiles.json()['profiles']},{'v0_weak','v0b_instruction','v1_5_semantic','v2_structured','pdf_hidden_text','v3_vlm'})
+        self.assertEqual({item['id'] for item in profiles.json()['profiles']},{'v0_weak','baseline','v1_5_semantic','v2_structured','v3_vlm'})
         self.assertIn('20734_patch',{item['id'] for item in profiles.json()['github_fixtures']})
         fixture={item['id']:item for item in profiles.json()['github_fixtures']}['20734_patch']
         self.assertEqual(fixture['demo_url'],'https://github.com/YrpSponge/ipi-20734-evaluation-patch-demo')
@@ -43,8 +57,20 @@ class DemoApiTests(unittest.TestCase):
         self.assertEqual(updated.status_code,200)
         self.assertEqual(updated.json()['profile_id'],'v2_structured')
 
+    def test_system_runs_are_sorted_newest_first(self):
+        template=(Path(__file__).resolve().parents[1]/'templates'/'hiring_agent_glass_editorial_template.html').read_text(encoding='utf-8')
+        self.assertIn('createdAt:Number(run.created || 0)',template)
+        self.assertIn('.sort((left, right) => right.createdAt - left.createdAt)',template)
+
+    def test_run_delete_ui_calls_run_endpoint_not_candidate_endpoint(self):
+        template=(Path(__file__).resolve().parents[1]/'templates'/'hiring_agent_glass_editorial_template.html').read_text(encoding='utf-8')
+        self.assertIn('async deleteRun(runId)',template)
+        self.assertIn('/api/staff/runs/${runId}',template)
+        self.assertIn('data-confirm-delete-run',template)
+        self.assertIn('The candidate, PDF and other Runs were preserved.',template)
+
     def test_staff_run_payload_includes_immutable_config_and_stage_duration(self):
-        artifact=backend.ARTIFACTS/'trace.json';artifact.parent.mkdir(parents=True,exist_ok=True);artifact.write_text('{"base": 51, "bonus": 6, "deduction": 2}',encoding='utf-8')
+        artifact=backend.ARTIFACTS/'trace.json';artifact.parent.mkdir(parents=True,exist_ok=True);artifact.write_text('{"base": 51, "bonus": 6, "deduction": 2, "evidence": {"breakdown": [{"key": "relevant_experience", "label": "Relevant Experience", "score": 18, "max": 30, "evidence": "work"}]}}',encoding='utf-8')
         c=backend.db()
         c.execute("insert into applications (id,email,filename,stored_path,sha256,status,created,is_demo) values(?,?,?,?,?,?,?,?)", ('app-trace','alice@demo.local','trace.pdf',None,'trace','UNDER_REVIEW',1,0))
         config={'defense_profile':'v2_structured','github_fixture_id':'20734_patch','github_evidence_mode':'structured','github_sanitize_mode':'adaptive'}
@@ -58,6 +84,8 @@ class DemoApiTests(unittest.TestCase):
         self.assertEqual([stage['name'] for stage in run['stage_summary']],['PDF_TEXT_EXTRACTION','GITHUB_EVIDENCE_GATE'])
         self.assertEqual(__import__('json').loads(run['config_json'])['github_fixture_id'],'20734_patch')
         self.assertEqual((run['base'],run['bonus'],run['deduction']),(51,6,2))
+        self.assertEqual(run['breakdown'][0]['max'],30)
+        self.assertEqual(run['evidence']['breakdown'][0]['score'],18)
 
     def test_database_reads_do_not_mark_active_runs_stale(self):
         c=backend.db()
@@ -111,6 +139,25 @@ class DemoApiTests(unittest.TestCase):
         self.assertIsNone(c.execute("select 1 from stage_runs where id='stage-delete'").fetchone())
         c.close()
         self.assertFalse(pdf_path.exists()); self.assertFalse(artifact_path.exists())
+
+    def test_staff_can_delete_one_run_without_deleting_candidate_or_pdf(self):
+        pdf_path=backend.UPLOADS/'keep_candidate.pdf';artifact_old=backend.ARTIFACTS/'old-run.json';artifact_new=backend.ARTIFACTS/'new-run.json'
+        pdf_path.parent.mkdir(parents=True,exist_ok=True);artifact_old.parent.mkdir(parents=True,exist_ok=True)
+        pdf_path.write_bytes(b'%PDF-1.4\n');artifact_old.write_text('{"score": 45, "base": 45, "bonus": 0, "deduction": 0, "resume": {"basics": {"name": "Old"}}, "evidence": {"strengths": ["old"]}}',encoding='utf-8');artifact_new.write_text('{"score": 88, "base": 84, "bonus": 4, "deduction": 0, "resume": {"basics": {"name": "New"}}, "evidence": {"strengths": ["new"]}}',encoding='utf-8')
+        c=backend.db();c.execute("insert into applications (id,email,filename,stored_path,sha256,status,created,score,base,bonus,deduction,resume_json,evidence_json,is_demo) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",('app-keep','alice@demo.local','keep_candidate.pdf',str(pdf_path),'keep','UNDER_REVIEW',1,88,84,4,0,'{}','{}',0))
+        for rid,created,score,artifact in [('run-old',1,45,artifact_old),('run-new',2,88,artifact_new)]:
+            c.execute("insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)",(rid,'app-keep','ollama','gemma3:4b','COMPLETED',created,created,score,'{}',rid,None,None));c.execute("insert into stage_runs values(?,?,?,?,?,?,?)",('stage-'+rid,rid,'EVALUATION','COMPLETED',1,'done',str(artifact)))
+        c.commit();c.close();h=self.login('staff@demo.local')
+        response=self.client.delete('/api/staff/runs/run-new',headers=h);self.assertEqual(response.status_code,200)
+        c=backend.db();app=c.execute("select score,base,bonus,status from applications where id='app-keep'").fetchone()
+        self.assertIsNotNone(app);self.assertEqual(tuple(app),(45,45,0,'UNDER_REVIEW'));self.assertIsNotNone(c.execute("select 1 from evaluation_runs where id='run-old'").fetchone());self.assertIsNone(c.execute("select 1 from evaluation_runs where id='run-new'").fetchone());c.close()
+        self.assertTrue(pdf_path.exists());self.assertTrue(artifact_old.exists());self.assertFalse(artifact_new.exists())
+
+    def test_deleting_last_run_keeps_candidate_and_clears_ghost_score(self):
+        c=backend.db();c.execute("insert into applications (id,email,filename,stored_path,sha256,status,created,score,base,bonus,deduction,resume_json,evidence_json,is_demo) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",('app-last','alice@demo.local','last.pdf',None,'last','UNDER_REVIEW',1,77,70,7,0,'{}','{}',0));c.execute("insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)",('run-last','app-last','ollama','gemma3:4b','COMPLETED',1,1,77,'{}','last',None,None));c.commit();c.close()
+        response=self.client.delete('/api/staff/runs/run-last',headers=self.login('staff@demo.local'));self.assertEqual(response.status_code,200)
+        c=backend.db();app=c.execute("select score,base,bonus,deduction,status from applications where id='app-last'").fetchone();c.close()
+        self.assertEqual(tuple(app),(None,None,None,None,'SUBMITTED'))
     def test_reset_removes_only_demo_records(self):
         c=backend.db(); c.execute("insert into users values(?,?,?,?,?)",('real@example.local','Real Candidate','candidate','x',0)); c.execute("insert into applications values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",('app-real','real@example.local','real.pdf',None,'real','UNDER_REVIEW',1,50,50,0,0,'{}','{}',0)); c.commit(); c.close()
         self.assertEqual(self.client.post('/api/demo/reset',headers=self.login('staff@demo.local')).status_code,200)
@@ -123,7 +170,7 @@ class DemoApiTests(unittest.TestCase):
     def test_upload_validation_and_real_run(self):
         h=self.login('alice@demo.local')
         self.assertEqual(self.client.post('/api/candidate/resume',headers=h,files={'file':('bad.txt',b'text','text/plain')}).status_code,415)
-        fixture=Path(__file__).resolve().parents[2]/'test_data/demo_handoff_samples/pdf/03_clean_weak_20734.pdf'
+        fixture=Path(__file__).resolve().parents[2]/'test_data/demo_handoff_samples/pdf/clean_weak_20734.pdf'
         response=self.client.post('/api/candidate/resume',headers=h,files={'file':('resume.pdf',fixture.read_bytes(),'application/pdf')});self.assertEqual(response.status_code,200)
         backend.WORKER.shutdown(wait=True)
         staff=self.login('staff@demo.local');record=self.client.get('/api/staff/applications/'+response.json()['application_id'],headers=staff).json()

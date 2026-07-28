@@ -114,7 +114,7 @@ def app_view(r,c):
   if artifact_path:
    try:
     artifact=json.loads(Path(artifact_path).read_text(encoding='utf-8'))
-    run['base']=artifact.get('base');run['bonus']=artifact.get('bonus');run['deduction']=artifact.get('deduction')
+    run['base']=artifact.get('base');run['bonus']=artifact.get('bonus');run['deduction']=artifact.get('deduction');run['evidence']=artifact.get('evidence') or {};run['breakdown']=run['evidence'].get('breakdown')
    except (OSError,ValueError,TypeError):pass
   d['runs'].append(run)
  return d
@@ -177,6 +177,22 @@ def rerun(aid:str,x:RunRequest,u=Depends(staff)):
   if old:return {'id':old['id'],'status':'COMPLETED','reused':True}
  if not a['stored_path']:raise HTTPException(409,'Seed records have no source PDF; upload a PDF to run a real evaluation')
  rid='run-'+uuid.uuid4().hex[:10];c.execute('insert into evaluation_runs values(?,?,?,?,?,?,?,?,?,?,?,?)',(rid,aid,config.provider,x.model,'QUEUED',stamp(),None,None,json.dumps(config.__dict__),fp,None,None));queue_stages(c,rid);c.commit();c.close();enqueue(aid,rid,a['stored_path'],config);return {'id':rid,'status':'QUEUED','reused':False}
+@app.delete('/api/staff/runs/{rid}')
+def delete_run(rid:str,u=Depends(staff)):
+ c=db();run=c.execute('select id,application_id,status from evaluation_runs where id=?',(rid,)).fetchone()
+ if not run:c.close();raise HTTPException(404,'Run not found')
+ if run['status'] in {'QUEUED','RUNNING'}:c.close();raise HTTPException(409,'Cannot delete a queued or running evaluation')
+ aid=run['application_id'];artifacts=[row['artifact_path'] for row in c.execute('select artifact_path from stage_runs where run_id=? and artifact_path is not null',(rid,))]
+ c.execute('delete from stage_runs where run_id=?',(rid,));c.execute('delete from evaluation_runs where id=?',(rid,))
+ latest=c.execute("select id,score from evaluation_runs where application_id=? and status='COMPLETED' order by created desc limit 1",(aid,)).fetchone()
+ if latest:
+  path_row=c.execute("select artifact_path from stage_runs where run_id=? and artifact_path is not null limit 1",(latest['id'],)).fetchone();artifact={}
+  if path_row:
+   try:artifact=json.loads(Path(path_row['artifact_path']).read_text(encoding='utf-8'))
+   except (OSError,ValueError,TypeError):artifact={}
+  c.execute('update applications set status=?,score=?,base=?,bonus=?,deduction=?,resume_json=?,evidence_json=? where id=?',('UNDER_REVIEW',artifact.get('score',latest['score']),artifact.get('base'),artifact.get('bonus'),artifact.get('deduction'),json.dumps(artifact.get('resume') or {}),json.dumps(artifact.get('evidence') or {}),aid))
+ else:c.execute("update applications set status='SUBMITTED',score=null,base=null,bonus=null,deduction=null,resume_json='{}',evidence_json='{}' where id=?",(aid,))
+ c.commit();c.close();removed=sum(remove_managed_file(path,ARTIFACTS) for path in set(artifacts));return {'id':rid,'application_id':aid,'deleted':True,'candidate_deleted':False,'managed_files_removed':removed}
 @app.delete('/api/staff/applications/{aid}')
 def delete_application(aid:str,u=Depends(staff)):
  c=db();application=c.execute('select stored_path from applications where id=?',(aid,)).fetchone()
