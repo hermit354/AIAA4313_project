@@ -21,61 +21,14 @@
 - **可直接下载/转发的样本压缩包**：[test_data/demo_handoff_samples.zip](test_data/demo_handoff_samples.zip)
 - **单样本命令行 runner**：[scripts/demo_score_pdf_with_github_fixture.py](scripts/demo_score_pdf_with_github_fixture.py)
 
-当前推荐 demo 主线：
-
-```text
-Clean sanity check
-  20 clean PDF 按组员强/中/弱标签的平均分约为 80.5 / 73.1 / 66.1
-  注意：不要用 01/02/03 的 clean GitHub fixture 总分证明强/中/弱排序，
-        那几个 fixture 主要用于 GitHub 攻防控制变量。
-
-V0 基线建立
-  V0-A 原始 baseline：schema-targeted output hijack
-    22456: 45 -> 120, Δ +75
-    6-sample repeat mean Δ +76.5 / +78.0
-  V0-B 进阶 baseline：basic prompt hardening + instruction_filter
-    same payload repeat mean Δ -1.5 / -7.5
-
-V1 进阶攻击
-  GitHub repo description evaluation patch
-  22456 repeat-3: +18, +18, +18
-  6-sample repeat mean Δ +10.1
-
-V1.5 普通防御
-  semantic_filter
-  6-sample repeat mean Δ -1.9
-
-V2 结构化防御
-  structured_extract GitHub evidence gate
-  22456 repeat-3: +1, +2, -1
-  6-sample repeat mean Δ -0.9, max +3
-```
-
-关键结果文件：
+主要结果位置：
 
 - **GitHub 输入注入攻击总结**：[GITHUB_INPUT_INJECTION_SUMMARY_CN.md](test_data/software_developer_sample_20_ablation/GITHUB_INPUT_INJECTION_SUMMARY_CN.md)
 - **GitHub semantic filter 防御结果**：[GITHUB_SEMANTIC_DEFENSE_RESULTS_CN.md](test_data/software_developer_sample_20_ablation/GITHUB_SEMANTIC_DEFENSE_RESULTS_CN.md)
 - **GitHub structured evidence gate 结果**：[GITHUB_STRUCTURED_EVIDENCE_GATE_RESULTS_CN.md](test_data/software_developer_sample_20_ablation/GITHUB_STRUCTURED_EVIDENCE_GATE_RESULTS_CN.md)
 - **PDF hidden-span 防御闭环实验**：[PDF_HIDDEN_SPAN_DEFENSE_PROBE_NEW_RUBRIC_CN.md](test_data/software_developer_sample_20_ablation/PDF_HIDDEN_SPAN_DEFENSE_PROBE_NEW_RUBRIC_CN.md)
-
-推荐最终防御配置：
-
-```bash
-GITHUB_SANITIZE_MODE=instruction_filter
-GITHUB_EVIDENCE_MODE=structured_extract
-EXTRACTION_SCHEMA_MODE=balanced
-DEFAULT_MODEL=llama3.1:8b
-```
-
-然后再根据需要阅读具体实验报告：
-
 - **最新完整链路泛化实验（新 Software Developer rubric）**：[FULL_CHAIN_GENERALIZATION_PROBE_NEW_RUBRIC_CN.md](test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_NEW_RUBRIC_CN.md)
-- [LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md](test_data/github_fixture_samples/LLM_INPUT_INJECTION_BASELINE_SUMMARY_CN.md)
-- [LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md](test_data/software_developer_sample_20_ablation/LLAMA31_GROUP_PROMPT_ABLATION_AUDIT_CN.md)
-- 历史旧 rubric 结果：[FULL_CHAIN_GENERALIZATION_PROBE_CN.md](test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_CN.md)
-
-说明：各实验报告末尾会列出对应的原始结果 JSON；例如当前完整链路实验的结果 JSON 位于 [`test_data/software_developer_sample_20_ablation/full_chain_generalization_probe_new_rubric_20260724.json`](test_data/software_developer_sample_20_ablation/full_chain_generalization_probe_new_rubric_20260724.json)。
-新 rubric 下 PDF 防御闭环的原始 JSON 位于 [`test_data/software_developer_sample_20_ablation/pdf_hidden_span_defense_probe_new_rubric_20260725.json`](test_data/software_developer_sample_20_ablation/pdf_hidden_span_defense_probe_new_rubric_20260725.json)。
+- **GitHub non-fact boundary attack 原始结果**：[test_data/software_developer_sample_20_ablation/](test_data/software_developer_sample_20_ablation/)
 
 ## Web Demo 快速入口
 
