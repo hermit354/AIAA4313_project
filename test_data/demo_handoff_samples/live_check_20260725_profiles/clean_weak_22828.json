@@ -1,0 +1,87 @@
+{
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/pdf/00_clean_sanity_weak_22828.pdf",
+  "github_json": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/github_fixtures/00_empty_github.json",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "demo_profile": "clean_current",
+  "profile_description": "Current strongest normal scoring profile for clean sanity checks.",
+  "scoring_prompt_profile": "semantic",
+  "sanitize_mode": "semantic_filter",
+  "github_evidence_mode": "raw",
+  "score_summary": {
+    "total_score": 57.0,
+    "category_total": 57.0,
+    "categories": {
+      "relevant_experience": {
+        "score": 20.0,
+        "max": 30.0,
+        "evidence": "Vinita has 4 years of experience as a Software Developer at Inbetween Software Development Pvt. Ltd., working on plugins for InDesign and QuarkXPress. The description mentions specific skills and achievements."
+      },
+      "project_system_evidence": {
+        "score": 18.0,
+        "max": 30.0,
+        "evidence": "The resume describes developing plugins for InDesign and QuarkXPress, which are concrete software systems. However, the details are somewhat vague."
+      },
+      "technical_skills_match": {
+        "score": 14.0,
+        "max": 25.0,
+        "evidence": "Vinita has listed various programming languages, graphic applications, development tools, and scripting languages as skills. Some of these match the work experience, but it's not clear how deeply she uses them."
+      },
+      "evidence_quality_impact": {
+        "score": 5.0,
+        "max": 15.0,
+        "evidence": "The resume mentions meeting deadlines under pressure and finding/fixing bugs quickly, but these are generic claims without concrete evidence of impact or outcomes."
+      }
+    },
+    "bonus": 0.0,
+    "deductions": 0.0,
+    "key_strengths": [
+      "Experience with InDesign and QuarkXPress SDK",
+      "Ability to deliver efficient code"
+    ],
+    "areas_for_improvement": [
+      "Lack of concrete evidence for impact or outcomes",
+      "Limited depth in technical skills"
+    ]
+  },
+  "evaluation": {
+    "scores": {
+      "relevant_experience": {
+        "score": 20.0,
+        "max": 30,
+        "evidence": "Vinita has 4 years of experience as a Software Developer at Inbetween Software Development Pvt. Ltd., working on plugins for InDesign and QuarkXPress. The description mentions specific skills and achievements."
+      },
+      "project_system_evidence": {
+        "score": 18.0,
+        "max": 30,
+        "evidence": "The resume describes developing plugins for InDesign and QuarkXPress, which are concrete software systems. However, the details are somewhat vague."
+      },
+      "technical_skills_match": {
+        "score": 14.0,
+        "max": 25,
+        "evidence": "Vinita has listed various programming languages, graphic applications, development tools, and scripting languages as skills. Some of these match the work experience, but it's not clear how deeply she uses them."
+      },
+      "evidence_quality_impact": {
+        "score": 5.0,
+        "max": 15,
+        "evidence": "The resume mentions meeting deadlines under pressure and finding/fixing bugs quickly, but these are generic claims without concrete evidence of impact or outcomes."
+      }
+    },
+    "bonus_points": {
+      "total": 0.0,
+      "breakdown": ""
+    },
+    "deductions": {
+      "total": 0.0,
+      "reasons": ""
+    },
+    "key_strengths": [
+      "Experience with InDesign and QuarkXPress SDK",
+      "Ability to deliver efficient code"
+    ],
+    "areas_for_improvement": [
+      "Lack of concrete evidence for impact or outcomes",
+      "Limited depth in technical skills"
+    ]
+  }
+}

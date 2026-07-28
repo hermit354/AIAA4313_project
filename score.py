@@ -114,6 +114,7 @@ def _evaluate_resume(
         extraction_schema_mode=os.environ.get("EXTRACTION_SCHEMA_MODE", "balanced"),
         github_enrichment=bool(github_data),
         github_sanitize_mode=os.environ.get("GITHUB_SANITIZE_MODE", "off"),
+        scoring_prompt_profile=os.environ.get("SCORING_PROMPT_PROFILE", "semantic"),
     )
     evaluation_result, _ = evaluate_resume_data(resume_data, config, github_data)
     return evaluation_result

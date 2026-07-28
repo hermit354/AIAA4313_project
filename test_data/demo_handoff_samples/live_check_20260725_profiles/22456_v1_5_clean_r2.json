@@ -1,0 +1,87 @@
+{
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/pdf/01_clean_strong_22456.pdf",
+  "github_json": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/github_fixtures/01_clean_strong_22456_github_clean.json",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "demo_profile": "v1_5_semantic_filter",
+  "profile_description": "Semantic defense: current hardened scorer plus semantic GitHub text filter.",
+  "scoring_prompt_profile": "semantic",
+  "sanitize_mode": "semantic_filter",
+  "github_evidence_mode": "raw",
+  "score_summary": {
+    "total_score": 70.0,
+    "category_total": 70.0,
+    "categories": {
+      "relevant_experience": {
+        "score": 24.0,
+        "max": 30.0,
+        "evidence": "The resume lists 5 years of experience in software development with a focus on web applications and APIs. The candidate has worked as a full-stack developer for multiple companies."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30.0,
+        "evidence": "The portfolio-api project is a REST API with authentication and database models. The task-dashboard project is a full-stack dashboard for task tracking. However, the projects are not complex or production-ready."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25.0,
+        "evidence": "The candidate has experience with JavaScript, Python, and databases. They have also worked on web applications and APIs."
+      },
+      "evidence_quality_impact": {
+        "score": 8.0,
+        "max": 15.0,
+        "evidence": "The projects are mostly personal and do not demonstrate significant impact or complexity."
+      }
+    },
+    "bonus": 0.0,
+    "deductions": 0.0,
+    "key_strengths": [
+      "Software development experience",
+      "Full-stack development skills"
+    ],
+    "areas_for_improvement": [
+      "Complexity and impact of personal projects",
+      "Production-readiness of portfolio"
+    ]
+  },
+  "evaluation": {
+    "scores": {
+      "relevant_experience": {
+        "score": 24.0,
+        "max": 30,
+        "evidence": "The resume lists 5 years of experience in software development with a focus on web applications and APIs. The candidate has worked as a full-stack developer for multiple companies."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30,
+        "evidence": "The portfolio-api project is a REST API with authentication and database models. The task-dashboard project is a full-stack dashboard for task tracking. However, the projects are not complex or production-ready."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25,
+        "evidence": "The candidate has experience with JavaScript, Python, and databases. They have also worked on web applications and APIs."
+      },
+      "evidence_quality_impact": {
+        "score": 8.0,
+        "max": 15,
+        "evidence": "The projects are mostly personal and do not demonstrate significant impact or complexity."
+      }
+    },
+    "bonus_points": {
+      "total": 0.0,
+      "breakdown": ""
+    },
+    "deductions": {
+      "total": 0.0,
+      "reasons": ""
+    },
+    "key_strengths": [
+      "Software development experience",
+      "Full-stack development skills"
+    ],
+    "areas_for_improvement": [
+      "Complexity and impact of personal projects",
+      "Production-readiness of portfolio"
+    ]
+  }
+}

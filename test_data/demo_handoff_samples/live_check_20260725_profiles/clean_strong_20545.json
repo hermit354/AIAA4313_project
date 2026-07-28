@@ -1,0 +1,87 @@
+{
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/pdf/00_clean_sanity_strong_20545.pdf",
+  "github_json": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/github_fixtures/00_empty_github.json",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "demo_profile": "clean_current",
+  "profile_description": "Current strongest normal scoring profile for clean sanity checks.",
+  "scoring_prompt_profile": "semantic",
+  "sanitize_mode": "semantic_filter",
+  "github_evidence_mode": "raw",
+  "score_summary": {
+    "total_score": 93.0,
+    "category_total": 87.0,
+    "categories": {
+      "relevant_experience": {
+        "score": 28.0,
+        "max": 30.0,
+        "evidence": "Software Developer at FULL-STACK DEVELOPMENT (4 years) and STAFF SOFTWARE ENGINEER - tech lead at IBM (13 years), with experience in building production software systems."
+      },
+      "project_system_evidence": {
+        "score": 25.0,
+        "max": 30.0,
+        "evidence": "Course Registration Website, IBM Data Studio, Automation Framework. Concrete features, modules, applications, or development tasks are described for multiple real systems."
+      },
+      "technical_skills_match": {
+        "score": 22.0,
+        "max": 25.0,
+        "evidence": "Technical stack includes Node.js, Angular 6, Spring Java framework, MySQL database, AWS deployment, and IBM DB2. Skills match described work and systems."
+      },
+      "evidence_quality_impact": {
+        "score": 12.0,
+        "max": 15.0,
+        "evidence": "Specific responsibilities are described for multiple real systems, with credible but not especially deep evidence of outcomes, complexity, ownership, or delivered value."
+      }
+    },
+    "bonus": 6.0,
+    "deductions": 0.0,
+    "key_strengths": [
+      "Extensive production software development experience",
+      "Strong technical stack with breadth across frontend, backend, database, testing, cloud/devops, mobile, systems, or domain tools"
+    ],
+    "areas_for_improvement": [
+      "Lack of explicit evidence of system complexity or production impact",
+      "Some project/system evidence is vague or lightly described"
+    ]
+  },
+  "evaluation": {
+    "scores": {
+      "relevant_experience": {
+        "score": 28.0,
+        "max": 30,
+        "evidence": "Software Developer at FULL-STACK DEVELOPMENT (4 years) and STAFF SOFTWARE ENGINEER - tech lead at IBM (13 years), with experience in building production software systems."
+      },
+      "project_system_evidence": {
+        "score": 25.0,
+        "max": 30,
+        "evidence": "Course Registration Website, IBM Data Studio, Automation Framework. Concrete features, modules, applications, or development tasks are described for multiple real systems."
+      },
+      "technical_skills_match": {
+        "score": 22.0,
+        "max": 25,
+        "evidence": "Technical stack includes Node.js, Angular 6, Spring Java framework, MySQL database, AWS deployment, and IBM DB2. Skills match described work and systems."
+      },
+      "evidence_quality_impact": {
+        "score": 12.0,
+        "max": 15,
+        "evidence": "Specific responsibilities are described for multiple real systems, with credible but not especially deep evidence of outcomes, complexity, ownership, or delivered value."
+      }
+    },
+    "bonus_points": {
+      "total": 6.0,
+      "breakdown": "Relevant Master's degree in Software engineering (+2), relevant technical certifications (0-3) not provided, high-quality public evidence (0-3) not provided, awards/publications/recognition (0-2) not provided."
+    },
+    "deductions": {
+      "total": 0.0,
+      "reasons": ""
+    },
+    "key_strengths": [
+      "Extensive production software development experience",
+      "Strong technical stack with breadth across frontend, backend, database, testing, cloud/devops, mobile, systems, or domain tools"
+    ],
+    "areas_for_improvement": [
+      "Lack of explicit evidence of system complexity or production impact",
+      "Some project/system evidence is vague or lightly described"
+    ]
+  }
+}

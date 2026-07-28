@@ -1,0 +1,86 @@
+{
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/pdf/00_clean_sanity_strong_20545.pdf",
+  "github_json": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/github_fixtures/00_empty_github.json",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "sanitize_mode": "instruction_filter",
+  "github_evidence_mode": "raw",
+  "score_summary": {
+    "total_score": 91.0,
+    "category_total": 85.0,
+    "categories": {
+      "relevant_experience": {
+        "score": 28.0,
+        "max": 30.0,
+        "evidence": "The candidate has extensive production software development experience across years and systems, with concrete evidence of significant responsibility, delivery, ownership, complexity, or impact."
+      },
+      "project_system_evidence": {
+        "score": 25.0,
+        "max": 30.0,
+        "evidence": "The candidate has worked on multiple real systems or meaningful business/customer use, integrations, data, deployment, operational context, or clear feature delivery. Projects include a course registration website and IBM Data Studio."
+      },
+      "technical_skills_match": {
+        "score": 20.0,
+        "max": 25.0,
+        "evidence": "The candidate's technical stack is adequate for a standard Software Developer role, with skills in Java, Spring, Angular, MySQL, AWS, and DB2. However, the resume does not provide strong evidence of depth across multiple layers or specialized domains."
+      },
+      "evidence_quality_impact": {
+        "score": 12.0,
+        "max": 15.0,
+        "evidence": "The candidate has specific responsibilities described, with credible but not especially deep evidence of outcomes, complexity, ownership, or delivered value. Projects have clear features and business context."
+      }
+    },
+    "bonus": 6.0,
+    "deductions": 0.0,
+    "key_strengths": [
+      "Extensive production software development experience",
+      "Strong technical skills in Java, Spring, Angular, MySQL, AWS, and DB2",
+      "Leadership roles in automation project and IBM Data Studio"
+    ],
+    "areas_for_improvement": [
+      "Lack of depth across multiple layers or specialized domains",
+      "Limited evidence of impact or outcomes from projects"
+    ]
+  },
+  "evaluation": {
+    "scores": {
+      "relevant_experience": {
+        "score": 28.0,
+        "max": 30,
+        "evidence": "The candidate has extensive production software development experience across years and systems, with concrete evidence of significant responsibility, delivery, ownership, complexity, or impact."
+      },
+      "project_system_evidence": {
+        "score": 25.0,
+        "max": 30,
+        "evidence": "The candidate has worked on multiple real systems or meaningful business/customer use, integrations, data, deployment, operational context, or clear feature delivery. Projects include a course registration website and IBM Data Studio."
+      },
+      "technical_skills_match": {
+        "score": 20.0,
+        "max": 25,
+        "evidence": "The candidate's technical stack is adequate for a standard Software Developer role, with skills in Java, Spring, Angular, MySQL, AWS, and DB2. However, the resume does not provide strong evidence of depth across multiple layers or specialized domains."
+      },
+      "evidence_quality_impact": {
+        "score": 12.0,
+        "max": 15,
+        "evidence": "The candidate has specific responsibilities described, with credible but not especially deep evidence of outcomes, complexity, ownership, or delivered value. Projects have clear features and business context."
+      }
+    },
+    "bonus_points": {
+      "total": 6.0,
+      "breakdown": "Graduate education: +2 (Master's in Software engineering), Technical certifications: +0 (no relevant recognized certifications listed), High-quality public evidence: +0 (no meaningful GitHub, portfolio, or deployed project links provided), Awards/publications/recognition: +4 (shipped IBM DSAC 1.1 and 1.2, shipped IBM Data Studio 3.1 and 3.2)"
+    },
+    "deductions": {
+      "total": 0.0,
+      "reasons": ""
+    },
+    "key_strengths": [
+      "Extensive production software development experience",
+      "Strong technical skills in Java, Spring, Angular, MySQL, AWS, and DB2",
+      "Leadership roles in automation project and IBM Data Studio"
+    ],
+    "areas_for_improvement": [
+      "Lack of depth across multiple layers or specialized domains",
+      "Limited evidence of impact or outcomes from projects"
+    ]
+  }
+}

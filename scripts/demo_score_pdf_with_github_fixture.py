@@ -19,6 +19,47 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CACHE_DIR = PROJECT_ROOT / "test_data" / "demo_handoff_samples" / "cache"
 
+DEMO_PROFILES = {
+    "clean_current": {
+        "scoring_prompt_profile": "semantic",
+        "sanitize_mode": "semantic_filter",
+        "github_evidence_mode": "raw",
+        "description": "Current strongest normal scoring profile for clean sanity checks.",
+    },
+    "v0_original": {
+        "scoring_prompt_profile": "weak",
+        "sanitize_mode": "off",
+        "github_evidence_mode": "raw",
+        "description": "Original-style weak baseline: raw GitHub text, no sanitizer, no scorer prompt-injection boundary.",
+    },
+    "v1_basic": {
+        "scoring_prompt_profile": "basic",
+        "sanitize_mode": "instruction_filter",
+        "github_evidence_mode": "raw",
+        "description": "Advanced baseline: direct-command filter and basic scorer hardening, but no semantic scoring-boundary defense.",
+    },
+    "v1_5_semantic_filter": {
+        "scoring_prompt_profile": "semantic",
+        "sanitize_mode": "semantic_filter",
+        "github_evidence_mode": "raw",
+        "description": "Semantic defense: current hardened scorer plus semantic GitHub text filter.",
+    },
+    "v2_structured_gate": {
+        "scoring_prompt_profile": "basic",
+        "sanitize_mode": "instruction_filter",
+        "github_evidence_mode": "structured_extract",
+        "description": "Structured defense: GitHub free text is converted to schema-constrained evidence before scoring.",
+    },
+}
+
+DEMO_PROFILE_ALIASES = {
+    "v0": "v0_original",
+    "v1": "v1_basic",
+    "v1.5": "v1_5_semantic_filter",
+    "v1_5": "v1_5_semantic_filter",
+    "v2": "v2_structured_gate",
+}
+
 
 def _safe_model_suffix(model: str, schema_mode: str) -> str:
     raw = f"{model}_{schema_mode}"
@@ -34,23 +75,41 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run a single controlled demo evaluation: PDF + local GitHub JSON fixture."
     )
-    parser.add_argument("--pdf", required=True, help="Path to the PDF resume.")
+    parser.add_argument(
+        "--list-demo-profiles",
+        action="store_true",
+        help="List reproducible demo profiles and exit.",
+    )
+    parser.add_argument(
+        "--demo-profile",
+        choices=sorted(DEMO_PROFILES | DEMO_PROFILE_ALIASES),
+        help=(
+            "Named reproducible demo configuration. "
+            "Use v0_original, v1_basic, v1_5_semantic_filter, or v2_structured_gate."
+        ),
+    )
+    parser.add_argument("--pdf", help="Path to the PDF resume.")
     parser.add_argument(
         "--github-json",
-        required=True,
         help="Path to the controlled GitHub fixture JSON.",
     )
     parser.add_argument(
         "--sanitize-mode",
-        default="semantic_filter",
+        default=None,
         choices=["off", "instruction_filter", "semantic_filter"],
-        help="GitHub sanitizer mode.",
+        help="GitHub sanitizer mode. Overrides --demo-profile when provided.",
     )
     parser.add_argument(
         "--github-evidence-mode",
-        default="raw",
+        default=None,
         choices=["raw", "structured_extract", "adaptive_structured"],
-        help="GitHub evidence serialization/gate mode.",
+        help="GitHub evidence serialization/gate mode. Overrides --demo-profile when provided.",
+    )
+    parser.add_argument(
+        "--scoring-prompt-profile",
+        default=None,
+        choices=["weak", "basic", "semantic"],
+        help="Scorer prompt boundary profile. Overrides --demo-profile when provided.",
     )
     parser.add_argument(
         "--model",
@@ -71,7 +130,38 @@ def parse_args() -> argparse.Namespace:
         "--output-json",
         help="Optional path for saving the evaluation result JSON.",
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+    if not args.list_demo_profiles and (not args.pdf or not args.github_json):
+        parser.error("--pdf and --github-json are required unless --list-demo-profiles is used")
+    return args
+
+
+def resolve_demo_config(args: argparse.Namespace) -> dict[str, str]:
+    profile_name = None
+    if args.demo_profile:
+        profile_name = DEMO_PROFILE_ALIASES.get(args.demo_profile, args.demo_profile)
+        config = dict(DEMO_PROFILES[profile_name])
+    else:
+        config = dict(DEMO_PROFILES["clean_current"])
+
+    if args.sanitize_mode is not None:
+        config["sanitize_mode"] = args.sanitize_mode
+    if args.github_evidence_mode is not None:
+        config["github_evidence_mode"] = args.github_evidence_mode
+    if args.scoring_prompt_profile is not None:
+        config["scoring_prompt_profile"] = args.scoring_prompt_profile
+    config["demo_profile"] = profile_name or "manual"
+    return config
+
+
+def print_demo_profiles() -> None:
+    print("Available demo profiles:")
+    for name, config in DEMO_PROFILES.items():
+        print(f"- {name}")
+        print(f"  scoring_prompt_profile: {config['scoring_prompt_profile']}")
+        print(f"  sanitize_mode: {config['sanitize_mode']}")
+        print(f"  github_evidence_mode: {config['github_evidence_mode']}")
+        print(f"  description: {config['description']}")
 
 
 def summarize_score(evaluation: Any) -> dict[str, Any]:
@@ -101,15 +191,65 @@ def summarize_score(evaluation: Any) -> dict[str, Any]:
     }
 
 
+def load_json_resume_cache(cache_path: Path, json_resume_cls: Any) -> Any:
+    """Load either a raw JSONResume cache or a wrapped experiment cache.
+
+    Some experiment scripts save caches as:
+
+        {"candidate_id": "...", "summary": {...}, "resume": {...}}
+
+    The demo runner must use the nested `resume` object in that case. Passing the
+    wrapper directly into JSONResume silently drops the unknown metadata fields
+    and can produce an almost empty resume, which makes scores hard to reproduce.
+    """
+
+    cache_data = json.loads(cache_path.read_text(encoding="utf-8"))
+    if isinstance(cache_data, dict) and isinstance(cache_data.get("resume"), dict):
+        resume_payload = cache_data["resume"]
+    else:
+        resume_payload = cache_data
+    resume = json_resume_cls(**resume_payload)
+    if not any(
+        [
+            getattr(resume, "basics", None),
+            getattr(resume, "work", None),
+            getattr(resume, "education", None),
+            getattr(resume, "skills", None),
+            getattr(resume, "projects", None),
+        ]
+    ):
+        raise ValueError(
+            f"Resume cache produced no core content; cache may be malformed: {cache_path}"
+        )
+    return resume
+
+
 def main() -> int:
     args = parse_args()
+    if args.list_demo_profiles:
+        print_demo_profiles()
+        return 0
+    demo_config = resolve_demo_config(args)
 
     os.environ["DEFAULT_MODEL"] = args.model
     os.environ["EXTRACTION_SCHEMA_MODE"] = args.schema_mode
-    os.environ["GITHUB_SANITIZE_MODE"] = args.sanitize_mode
-    os.environ["GITHUB_EVIDENCE_MODE"] = args.github_evidence_mode
-    os.environ.setdefault("NO_PROXY", "127.0.0.1,localhost")
-    os.environ.setdefault("no_proxy", "127.0.0.1,localhost")
+    os.environ["GITHUB_SANITIZE_MODE"] = demo_config["sanitize_mode"]
+    os.environ["GITHUB_EVIDENCE_MODE"] = demo_config["github_evidence_mode"]
+    os.environ["SCORING_PROMPT_PROFILE"] = demo_config["scoring_prompt_profile"]
+    # Local Ollama calls should not go through the user's HTTP/SOCKS proxy.
+    # Otherwise httpx may require the optional socksio package before it even
+    # reaches 127.0.0.1.
+    for proxy_key in (
+        "HTTP_PROXY",
+        "HTTPS_PROXY",
+        "ALL_PROXY",
+        "http_proxy",
+        "https_proxy",
+        "all_proxy",
+    ):
+        os.environ.pop(proxy_key, None)
+    os.environ["NO_PROXY"] = "127.0.0.1,localhost"
+    os.environ["no_proxy"] = "127.0.0.1,localhost"
 
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
@@ -132,9 +272,7 @@ def main() -> int:
     resume_cache_path = CACHE_DIR / cache_name
 
     if resume_cache_path.exists() and not args.no_cache:
-        resume_data = JSONResume(
-            **json.loads(resume_cache_path.read_text(encoding="utf-8"))
-        )
+        resume_data = load_json_resume_cache(resume_cache_path, JSONResume)
         print(f"[cache] loaded extracted resume: {resume_cache_path}")
     else:
         print(f"[extract] PDF -> JSONResume: {pdf_path}")
@@ -149,7 +287,11 @@ def main() -> int:
 
     print(
         "[score] "
-        f"sanitize={args.sanitize_mode}, github_evidence={args.github_evidence_mode}, model={args.model}"
+        f"demo_profile={demo_config['demo_profile']}, "
+        f"scoring_prompt={demo_config['scoring_prompt_profile']}, "
+        f"sanitize={demo_config['sanitize_mode']}, "
+        f"github_evidence={demo_config['github_evidence_mode']}, "
+        f"model={args.model}"
     )
     evaluation = _evaluate_resume(resume_data, github_data)
     summary = summarize_score(evaluation)
@@ -166,8 +308,12 @@ def main() -> int:
         "github_json": str(github_path),
         "model": args.model,
         "schema_mode": args.schema_mode,
-        "sanitize_mode": args.sanitize_mode,
-        "github_evidence_mode": args.github_evidence_mode,
+        "demo_profile": demo_config["demo_profile"],
+        "profile_description": demo_config["description"],
+        "scoring_prompt_profile": demo_config["scoring_prompt_profile"],
+        "sanitize_mode": demo_config["sanitize_mode"],
+        "github_evidence_mode": demo_config["github_evidence_mode"],
+        "resume_cache_path": str(resume_cache_path),
         "score_summary": summary,
         "evaluation": evaluation.model_dump(),
     }

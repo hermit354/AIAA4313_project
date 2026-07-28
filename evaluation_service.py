@@ -29,6 +29,7 @@ class EvaluationConfig:
     extraction_schema_mode: str = "balanced"
     github_enrichment: bool = True
     github_sanitize_mode: str = "instruction_filter"
+    scoring_prompt_profile: str = "semantic"
     prompt_version: str = FORMAL_PROMPT_VERSION
 
     @property
@@ -222,6 +223,7 @@ def evaluate_resume_data(
     evaluator = ResumeEvaluator(
         model_name=config.model_id,
         model_params=config.model_params,
+        scoring_prompt_profile=config.scoring_prompt_profile,
     )
     evaluation = evaluator.evaluate_resume(resume_text)
     return evaluation, calculate_score(evaluation)

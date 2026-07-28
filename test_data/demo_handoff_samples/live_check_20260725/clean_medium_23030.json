@@ -1,0 +1,86 @@
+{
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/pdf/02_clean_medium_23030.pdf",
+  "github_json": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/github_fixtures/00_empty_github.json",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "sanitize_mode": "instruction_filter",
+  "github_evidence_mode": "raw",
+  "score_summary": {
+    "total_score": 77.0,
+    "category_total": 73.0,
+    "categories": {
+      "relevant_experience": {
+        "score": 25.0,
+        "max": 30.0,
+        "evidence": "The candidate has 5 years of experience in software development, with a focus on building and maintaining production software systems. They have worked on multiple projects, including a web application for a large e-commerce company and an internal tool for a financial institution."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30.0,
+        "evidence": "The candidate has worked on several projects, including a web application that handles over 10,000 transactions per day and an internal tool that automates data processing for a large company. They have also contributed to the development of a cloud-based platform for a startup."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25.0,
+        "evidence": "The candidate has experience with Java, Python, and JavaScript, as well as frameworks such as Spring and Django. They have also worked with databases like MySQL and PostgreSQL."
+      },
+      "evidence_quality_impact": {
+        "score": 10.0,
+        "max": 15.0,
+        "evidence": "The candidate has a strong track record of delivering high-quality software systems that meet business requirements. They have experience with testing, deployment, and maintenance of production systems."
+      }
+    },
+    "bonus": 4.0,
+    "deductions": 0.0,
+    "key_strengths": [
+      "Strong software development experience",
+      "Ability to work on complex projects",
+      "Good technical skills"
+    ],
+    "areas_for_improvement": [
+      "Could benefit from more experience with cloud-based platforms",
+      "May need to develop skills in emerging technologies like AI and machine learning"
+    ]
+  },
+  "evaluation": {
+    "scores": {
+      "relevant_experience": {
+        "score": 25.0,
+        "max": 30,
+        "evidence": "The candidate has 5 years of experience in software development, with a focus on building and maintaining production software systems. They have worked on multiple projects, including a web application for a large e-commerce company and an internal tool for a financial institution."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30,
+        "evidence": "The candidate has worked on several projects, including a web application that handles over 10,000 transactions per day and an internal tool that automates data processing for a large company. They have also contributed to the development of a cloud-based platform for a startup."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25,
+        "evidence": "The candidate has experience with Java, Python, and JavaScript, as well as frameworks such as Spring and Django. They have also worked with databases like MySQL and PostgreSQL."
+      },
+      "evidence_quality_impact": {
+        "score": 10.0,
+        "max": 15,
+        "evidence": "The candidate has a strong track record of delivering high-quality software systems that meet business requirements. They have experience with testing, deployment, and maintenance of production systems."
+      }
+    },
+    "bonus_points": {
+      "total": 4.0,
+      "breakdown": "Relevant Master's degree in Computer Science"
+    },
+    "deductions": {
+      "total": 0.0,
+      "reasons": ""
+    },
+    "key_strengths": [
+      "Strong software development experience",
+      "Ability to work on complex projects",
+      "Good technical skills"
+    ],
+    "areas_for_improvement": [
+      "Could benefit from more experience with cloud-based platforms",
+      "May need to develop skills in emerging technologies like AI and machine learning"
+    ]
+  }
+}

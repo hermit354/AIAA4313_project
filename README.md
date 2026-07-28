@@ -15,24 +15,40 @@
 
 负责 pre / final demo 的同学请优先看：
 
+- **Final report Overleaf 只读版**：https://www.overleaf.com/read/nnvvypwsgpym#7b7a26
 - **Demo 工作交接说明**：[FINAL_DEMO_REPORT_PLAYBOOK_CN.md](FINAL_DEMO_REPORT_PLAYBOOK_CN.md)
-- **5 个现场 demo PDF + GitHub fixture 样本包说明**：[test_data/demo_handoff_samples/README_CN.md](test_data/demo_handoff_samples/README_CN.md)
+- **现场 demo PDF + GitHub fixture 样本包说明**：[test_data/demo_handoff_samples/README_CN.md](test_data/demo_handoff_samples/README_CN.md)
 - **可直接下载/转发的样本压缩包**：[test_data/demo_handoff_samples.zip](test_data/demo_handoff_samples.zip)
 - **单样本命令行 runner**：[scripts/demo_score_pdf_with_github_fixture.py](scripts/demo_score_pdf_with_github_fixture.py)
 
 当前推荐 demo 主线：
 
 ```text
-普通防御 baseline
-  hardened prompt + instruction_filter
+Clean sanity check
+  20 clean PDF 按组员强/中/弱标签的平均分约为 80.5 / 73.1 / 66.1
+  注意：不要用 01/02/03 的 clean GitHub fixture 总分证明强/中/弱排序，
+        那几个 fixture 主要用于 GitHub 攻防控制变量。
 
-进阶攻击
+V0 基线建立
+  V0-A 原始 baseline：schema-targeted output hijack
+    22456: 45 -> 120, Δ +75
+    6-sample repeat mean Δ +76.5 / +78.0
+  V0-B 进阶 baseline：basic prompt hardening + instruction_filter
+    same payload repeat mean Δ -1.5 / -7.5
+
+V1 进阶攻击
   GitHub repo description evaluation patch
-  6/6 positive, mean +14.2, max +26
+  22456 repeat-3: +18, +18, +18
+  6-sample repeat mean Δ +10.1
 
-进阶防御
-  semantic_filter + adaptive_structured GitHub evidence gate
-  0/6 positive, mean -7.0, max 0
+V1.5 普通防御
+  semantic_filter
+  6-sample repeat mean Δ -1.9
+
+V2 结构化防御
+  structured_extract GitHub evidence gate
+  22456 repeat-3: +1, +2, -1
+  6-sample repeat mean Δ -0.9, max +3
 ```
 
 关键结果文件：
@@ -45,8 +61,8 @@
 推荐最终防御配置：
 
 ```bash
-GITHUB_SANITIZE_MODE=semantic_filter
-GITHUB_EVIDENCE_MODE=adaptive_structured
+GITHUB_SANITIZE_MODE=instruction_filter
+GITHUB_EVIDENCE_MODE=structured_extract
 EXTRACTION_SCHEMA_MODE=balanced
 DEFAULT_MODEL=llama3.1:8b
 ```

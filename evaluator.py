@@ -16,19 +16,28 @@ from prompt import (
     MODEL_PROVIDER_MAPPING,
     GEMINI_API_KEY,
 )
+from prompts.scoring_prompt_profiles import apply_scoring_prompt_profile, normalize_scoring_prompt_profile
 from prompts.template_manager import TemplateManager
 
 logger = logging.getLogger(__name__)
 
 
 class ResumeEvaluator:
-    def __init__(self, model_name: str = DEFAULT_MODEL, model_params: dict = None):
+    def __init__(
+        self,
+        model_name: str = DEFAULT_MODEL,
+        model_params: dict = None,
+        scoring_prompt_profile: str | None = None,
+    ):
         if not model_name:
             raise ValueError("Model name cannot be empty")
 
         self.model_name = model_name
         self.model_params = model_params or MODEL_PARAMETERS.get(
             model_name, {"temperature": 0.5, "top_p": 0.9}
+        )
+        self.scoring_prompt_profile = normalize_scoring_prompt_profile(
+            scoring_prompt_profile
         )
         self.template_manager = TemplateManager()
         self._initialize_llm_provider()
@@ -43,7 +52,9 @@ class ResumeEvaluator:
         )
         if criteria_template is None:
             raise ValueError("Failed to load resume evaluation criteria template")
-        return criteria_template
+        return apply_scoring_prompt_profile(
+            criteria_template, self.scoring_prompt_profile
+        )
 
     def evaluate_resume(self, resume_text: str) -> EvaluationData:
         self._last_resume_text = resume_text
@@ -57,6 +68,9 @@ class ResumeEvaluator:
                 raise ValueError(
                     "Failed to load resume evaluation system message template"
                 )
+            system_message = apply_scoring_prompt_profile(
+                system_message, self.scoring_prompt_profile
+            )
 
             # Prepare chat parameters
             chat_params = {

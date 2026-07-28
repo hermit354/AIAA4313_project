@@ -1,5 +1,8 @@
 # AIAA4313 Project 中文说明
 
+> 说明：本文是项目总览，包含一部分探索阶段的路线。最终 pre / final demo 与 report 口径以
+> [`FINAL_DEMO_REPORT_PLAYBOOK_CN.md`](FINAL_DEMO_REPORT_PLAYBOOK_CN.md) 为准。
+
 本仓库是基于 [`interviewstreet/hiring-agent`](https://github.com/interviewstreet/hiring-agent) 改造的课程项目版本。我们的目标不是做一个生产级招聘系统，而是在一个真实感较强的 LLM 招聘 Agent 上做 AI Security 攻防演示：
 
 ```text
@@ -361,7 +364,7 @@ test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_
    test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_CN.md
    ```
 
-4. 新 rubric 下 PDF hidden-span 防御闭环实验（demo 重点）：
+4. 新 rubric 下 PDF hidden-span 防御闭环实验（补充实验，不是当前 GitHub 主线 demo）：
 
    ```text
    test_data/software_developer_sample_20_ablation/PDF_HIDDEN_SPAN_DEFENSE_PROBE_NEW_RUBRIC_CN.md
@@ -400,19 +403,19 @@ test_data/software_developer_sample_20_ablation/FULL_CHAIN_GENERALIZATION_PROBE_
    test_data/software_developer_sample_20_ablation/STEALTH_SMUGGLING_PROBE_CN.md
    ```
 
-7. clean utility impact：
+9. clean utility impact：
 
    ```text
    test_data/software_developer_sample_20_ablation/LLAMA31_CLEAN_UTILITY_IMPACT_CN.md
    ```
 
-8. 模型对比：
+10. 模型对比：
 
    ```text
    test_data/github_fixture_samples/MODEL_SWEEP_RESULTS_CN.md
    ```
 
-9. schema 消融：
+11. schema 消融：
 
    ```text
    test_data/github_fixture_samples/SCHEMA_ABLATION_RESULTS_CN.md

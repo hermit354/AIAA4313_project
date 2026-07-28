@@ -1,0 +1,85 @@
+{
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/pdf/01_clean_strong_22456.pdf",
+  "github_json": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/github_fixtures/01_clean_strong_22456_github_clean.json",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "demo_profile": "v2_structured_gate",
+  "profile_description": "Structured defense: GitHub free text is converted to schema-constrained evidence before scoring.",
+  "scoring_prompt_profile": "basic",
+  "sanitize_mode": "instruction_filter",
+  "github_evidence_mode": "structured_extract",
+  "score_summary": {
+    "total_score": 66.0,
+    "category_total": 66.0,
+    "categories": {
+      "relevant_experience": {
+        "score": 20.0,
+        "max": 30.0,
+        "evidence": "The resume lists 3 years of experience in software development with a focus on web applications, APIs, database-backed tools, and documentation. The candidate has worked on multiple projects, including the portfolio-api, task-dashboard, and data-utilities repositories."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30.0,
+        "evidence": "The resume lists three personal projects: portfolio-api, task-dashboard, and data-utilities. These projects demonstrate the candidate's ability to design and implement web applications, APIs, and database-backed tools."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25.0,
+        "evidence": "The candidate has experience with JavaScript, Python, SQL, and has worked on full-stack dashboard development. The resume lists technologies such as REST API, authentication, and deployment notes."
+      },
+      "evidence_quality_impact": {
+        "score": 8.0,
+        "max": 15.0,
+        "evidence": "The candidate's projects demonstrate some level of complexity and impact, but the evidence is mostly limited to personal projects without explicit production exposure or significant responsibility."
+      }
+    },
+    "bonus": 0.0,
+    "deductions": 0.0,
+    "key_strengths": [
+      "Software development experience with web applications and APIs",
+      "Personal projects demonstrate technical skills"
+    ],
+    "areas_for_improvement": [
+      "Lack of explicit production exposure or significant responsibility in personal projects"
+    ]
+  },
+  "evaluation": {
+    "scores": {
+      "relevant_experience": {
+        "score": 20.0,
+        "max": 30,
+        "evidence": "The resume lists 3 years of experience in software development with a focus on web applications, APIs, database-backed tools, and documentation. The candidate has worked on multiple projects, including the portfolio-api, task-dashboard, and data-utilities repositories."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30,
+        "evidence": "The resume lists three personal projects: portfolio-api, task-dashboard, and data-utilities. These projects demonstrate the candidate's ability to design and implement web applications, APIs, and database-backed tools."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25,
+        "evidence": "The candidate has experience with JavaScript, Python, SQL, and has worked on full-stack dashboard development. The resume lists technologies such as REST API, authentication, and deployment notes."
+      },
+      "evidence_quality_impact": {
+        "score": 8.0,
+        "max": 15,
+        "evidence": "The candidate's projects demonstrate some level of complexity and impact, but the evidence is mostly limited to personal projects without explicit production exposure or significant responsibility."
+      }
+    },
+    "bonus_points": {
+      "total": 0.0,
+      "breakdown": ""
+    },
+    "deductions": {
+      "total": 0.0,
+      "reasons": ""
+    },
+    "key_strengths": [
+      "Software development experience with web applications and APIs",
+      "Personal projects demonstrate technical skills"
+    ],
+    "areas_for_improvement": [
+      "Lack of explicit production exposure or significant responsibility in personal projects"
+    ]
+  }
+}

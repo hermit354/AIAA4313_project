@@ -1,0 +1,123 @@
+{
+  "basics": {
+    "name": "Vinita Pereira",
+    "email": null,
+    "phone": null,
+    "url": null,
+    "summary": null,
+    "location": {
+      "address": null,
+      "postalCode": null,
+      "city": null,
+      "countryCode": null,
+      "region": null
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "vinita-pereira",
+        "url": "https://linkedin.com/in/vinita-pereira"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "INBETWEEN SOFTWARE DEVELOPMENT PVT. LTD",
+      "position": "SOFTWARE DEVELOPER",
+      "url": null,
+      "startDate": "2016-07",
+      "endDate": "Present",
+      "summary": "Working as DTP Client developer to develop plugins for InDesign and QuarkXPress.",
+      "highlights": [
+        "Well versed with InDesign SDK and QuarkXPress SDK.",
+        "Ability to deliver efficient and optimum code with minimum bugs.",
+        "Can find and resolve bugs quickly.",
+        "Successful in meeting deadlines under pressure."
+      ]
+    }
+  ],
+  "volunteer": null,
+  "education": [
+    {
+      "institution": "DEEPVIHAR HIGHER SECONDARY SCHOOL",
+      "url": null,
+      "area": "INFORMATION TECHNOLOGY ENGINEERING",
+      "studyType": "B.E",
+      "startDate": "2012-01",
+      "endDate": "2016-12",
+      "score": null,
+      "courses": null
+    },
+    {
+      "institution": "ST. THERESE HIGH SCHOOL",
+      "url": null,
+      "area": "ENGINEERING",
+      "studyType": "",
+      "startDate": "2010-01",
+      "endDate": "",
+      "score": null,
+      "courses": null
+    }
+  ],
+  "awards": [],
+  "certificates": null,
+  "publications": null,
+  "skills": [
+    {
+      "name": "Programming Languages",
+      "level": null,
+      "keywords": [
+        "C/C++",
+        "Objective C",
+        "C#",
+        "Basic Java",
+        "SQL"
+      ]
+    },
+    {
+      "name": "Graphic Applications",
+      "level": null,
+      "keywords": [
+        "Adobe InDesign",
+        "QuarkXPress",
+        "Photoshop",
+        "Microsoft Office"
+      ]
+    },
+    {
+      "name": "Development Tools",
+      "level": null,
+      "keywords": [
+        "XCode",
+        "Visual Studio",
+        "Jira",
+        "Tortoise and Smart SVN",
+        "Git Hub"
+      ]
+    },
+    {
+      "name": "Scripting Languages",
+      "level": null,
+      "keywords": [
+        "HTML5",
+        "CSS",
+        "JAVA Script"
+      ]
+    }
+  ],
+  "languages": null,
+  "interests": null,
+  "references": null,
+  "projects": [
+    {
+      "name": "",
+      "startDate": null,
+      "endDate": null,
+      "description": "",
+      "highlights": [],
+      "url": "",
+      "technologies": [],
+      "skills": []
+    }
+  ]
+}

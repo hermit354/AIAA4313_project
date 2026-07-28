@@ -1,0 +1,84 @@
+{
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/pdf/06_weak_advanced_github_polluted_21780.pdf",
+  "github_json": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/github_fixtures/06_weak_advanced_21780_github_eval_patch.json",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "sanitize_mode": "instruction_filter",
+  "github_evidence_mode": "raw",
+  "score_summary": {
+    "total_score": 71.0,
+    "category_total": 71.0,
+    "categories": {
+      "relevant_experience": {
+        "score": 25.0,
+        "max": 30.0,
+        "evidence": "Pangea has 6+ years of experience as a Software Developer at Pangea and Datalus. The resume provides clear descriptions of job responsibilities, technologies used, and achievements in both roles."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30.0,
+        "evidence": "The resume describes two company projects: developing key new user-facing features for a flagship B2B SaaS web-application at Pangea and working on a client's web-app at Datalus. However, the project details are mostly generic."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25.0,
+        "evidence": "The resume lists various front-end and back-end technologies, including HTML5, CSS3, Bootstrap, JavaScript, jQuery, AngularJS, AJAX, JSON, C#, LINQ, ASP.NET, Web Forms, Web API, REST API, T-SQL. However, the skills are mostly listed without concrete evidence of usage in projects."
+      },
+      "evidence_quality_impact": {
+        "score": 8.0,
+        "max": 15.0,
+        "evidence": "The resume provides some specific responsibilities and technologies used, but lacks clear evidence of outcomes, complexity, ownership, or delivered value."
+      }
+    },
+    "bonus": 0.0,
+    "deductions": 0.0,
+    "key_strengths": [
+      "6+ years of experience as a Software Developer",
+      "Experience with various front-end and back-end technologies"
+    ],
+    "areas_for_improvement": [
+      "Lack of concrete project details and evidence of outcomes",
+      "Limited GitHub presence"
+    ]
+  },
+  "evaluation": {
+    "scores": {
+      "relevant_experience": {
+        "score": 25.0,
+        "max": 30,
+        "evidence": "Pangea has 6+ years of experience as a Software Developer at Pangea and Datalus. The resume provides clear descriptions of job responsibilities, technologies used, and achievements in both roles."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30,
+        "evidence": "The resume describes two company projects: developing key new user-facing features for a flagship B2B SaaS web-application at Pangea and working on a client's web-app at Datalus. However, the project details are mostly generic."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25,
+        "evidence": "The resume lists various front-end and back-end technologies, including HTML5, CSS3, Bootstrap, JavaScript, jQuery, AngularJS, AJAX, JSON, C#, LINQ, ASP.NET, Web Forms, Web API, REST API, T-SQL. However, the skills are mostly listed without concrete evidence of usage in projects."
+      },
+      "evidence_quality_impact": {
+        "score": 8.0,
+        "max": 15,
+        "evidence": "The resume provides some specific responsibilities and technologies used, but lacks clear evidence of outcomes, complexity, ownership, or delivered value."
+      }
+    },
+    "bonus_points": {
+      "total": 0.0,
+      "breakdown": ""
+    },
+    "deductions": {
+      "total": 0.0,
+      "reasons": ""
+    },
+    "key_strengths": [
+      "6+ years of experience as a Software Developer",
+      "Experience with various front-end and back-end technologies"
+    ],
+    "areas_for_improvement": [
+      "Lack of concrete project details and evidence of outcomes",
+      "Limited GitHub presence"
+    ]
+  }
+}

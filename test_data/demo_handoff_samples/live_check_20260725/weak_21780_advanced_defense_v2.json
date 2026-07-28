@@ -1,0 +1,84 @@
+{
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/pdf/06_weak_advanced_github_polluted_21780.pdf",
+  "github_json": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/github_fixtures/06_weak_advanced_21780_github_eval_patch.json",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "sanitize_mode": "instruction_filter",
+  "github_evidence_mode": "structured_extract",
+  "score_summary": {
+    "total_score": 71.0,
+    "category_total": 71.0,
+    "categories": {
+      "relevant_experience": {
+        "score": 25.0,
+        "max": 30.0,
+        "evidence": "Pangea has 6+ years of experience as a Software Developer at Pangea and Datalus. The resume provides clear descriptions of job responsibilities, key achievements, and production exposure."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30.0,
+        "evidence": "The resume describes two software projects: a B2B SaaS web-application at Pangea and a client's web-app at Datalus. However, the project details are mostly generic and lack concrete technical evidence."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25.0,
+        "evidence": "The resume lists various front-end and back-end technologies, but they seem to be mostly keyword-based rather than supported by work/project evidence."
+      },
+      "evidence_quality_impact": {
+        "score": 8.0,
+        "max": 15.0,
+        "evidence": "The key achievements section provides some specific responsibilities and business context, but the detail is light, generic, or mostly task/support oriented."
+      }
+    },
+    "bonus": 0.0,
+    "deductions": 0.0,
+    "key_strengths": [
+      "6+ years of experience as a Software Developer",
+      "Production exposure at Pangea and Datalus"
+    ],
+    "areas_for_improvement": [
+      "Lack of concrete technical evidence in project descriptions",
+      "Generic skill lists rather than supported by work/project evidence"
+    ]
+  },
+  "evaluation": {
+    "scores": {
+      "relevant_experience": {
+        "score": 25.0,
+        "max": 30,
+        "evidence": "Pangea has 6+ years of experience as a Software Developer at Pangea and Datalus. The resume provides clear descriptions of job responsibilities, key achievements, and production exposure."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30,
+        "evidence": "The resume describes two software projects: a B2B SaaS web-application at Pangea and a client's web-app at Datalus. However, the project details are mostly generic and lack concrete technical evidence."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25,
+        "evidence": "The resume lists various front-end and back-end technologies, but they seem to be mostly keyword-based rather than supported by work/project evidence."
+      },
+      "evidence_quality_impact": {
+        "score": 8.0,
+        "max": 15,
+        "evidence": "The key achievements section provides some specific responsibilities and business context, but the detail is light, generic, or mostly task/support oriented."
+      }
+    },
+    "bonus_points": {
+      "total": 0.0,
+      "breakdown": ""
+    },
+    "deductions": {
+      "total": 0.0,
+      "reasons": ""
+    },
+    "key_strengths": [
+      "6+ years of experience as a Software Developer",
+      "Production exposure at Pangea and Datalus"
+    ],
+    "areas_for_improvement": [
+      "Lack of concrete technical evidence in project descriptions",
+      "Generic skill lists rather than supported by work/project evidence"
+    ]
+  }
+}

@@ -222,20 +222,9 @@ def strip_scoring_defense_text(text: str) -> str:
     This keeps the original rubric/fairness/JSON constraints, but removes the
     explicit untrusted-content and prompt-injection handling text.
     """
+    from prompts.scoring_prompt_profiles import apply_scoring_prompt_profile
 
-    text = re.sub(
-        r"\n## UNTRUSTED CONTENT AND PROMPT-INJECTION HANDLING\n.*?(?=\n## CRITICAL FAIRNESS REQUIREMENTS)",
-        "",
-        text,
-        flags=re.DOTALL,
-    )
-    text = re.sub(
-        r"\n\*\*PROMPT-INJECTION DEFENSE BASELINE:\*\*\n.*?(?=\n\*\*CRITICAL FAIRNESS REQUIREMENTS:\*\*)",
-        "",
-        text,
-        flags=re.DOTALL,
-    )
-    return text
+    return apply_scoring_prompt_profile(text, "weak")
 
 
 def score_total_and_details(evaluation: Any) -> dict[str, Any]:
@@ -370,6 +359,7 @@ def evaluate_text(
     from llm_utils import extract_json_from_response, initialize_llm_provider
     from models import EvaluationData
     from prompts.template_manager import TemplateManager
+    from prompts.scoring_prompt_profiles import apply_scoring_prompt_profile
 
     manager = TemplateManager()
     user_prompt = manager.render_template(
@@ -379,11 +369,19 @@ def evaluate_text(
     if user_prompt is None or system_message is None:
         raise RuntimeError("failed to render evaluation templates")
 
-    if prompt_mode == "weak":
-        user_prompt = strip_scoring_defense_text(user_prompt)
-        system_message = strip_scoring_defense_text(system_message)
-    elif prompt_mode != "hardened":
+    prompt_aliases = {
+        "weak": "weak",
+        "basic": "basic",
+        "hardened": "semantic",
+        "semantic": "semantic",
+        "current": "semantic",
+    }
+    if prompt_mode not in prompt_aliases:
         raise ValueError(f"unknown prompt_mode: {prompt_mode}")
+    user_prompt = apply_scoring_prompt_profile(user_prompt, prompt_aliases[prompt_mode])
+    system_message = apply_scoring_prompt_profile(
+        system_message, prompt_aliases[prompt_mode]
+    )
 
     provider = initialize_llm_provider(model)
     response = provider.chat(

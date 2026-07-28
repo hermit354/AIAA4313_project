@@ -1,0 +1,82 @@
+{
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/pdf/03_clean_weak_20734.pdf",
+  "github_json": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/github_fixtures/05_weak_advanced_github_polluted_20734_eval_patch.json",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "sanitize_mode": "instruction_filter",
+  "github_evidence_mode": "structured_extract",
+  "score_summary": {
+    "total_score": 70.0,
+    "category_total": 70.0,
+    "categories": {
+      "relevant_experience": {
+        "score": 24.0,
+        "max": 30.0,
+        "evidence": "The resume clearly contains Software Developer work experience with multiple years of relevant roles and credible production exposure."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30.0,
+        "evidence": "The portfolio-api repository has a clear description of a REST API project with authentication, database models, and deployment notes. However, the task-dashboard and data-utilities repositories have less complex descriptions."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25.0,
+        "evidence": "The resume lists JavaScript, Python, SQL as technologies used in personal projects, which matches the technical stack of the portfolio-api repository."
+      },
+      "evidence_quality_impact": {
+        "score": 8.0,
+        "max": 15.0,
+        "evidence": "The descriptions of the repositories are mostly vague and lack concrete evidence of outcomes, complexity, ownership, or delivered value."
+      }
+    },
+    "bonus": 0.0,
+    "deductions": 0.0,
+    "key_strengths": [
+      "Software development experience with multiple years of relevant roles",
+      "Clear description of a REST API project in portfolio-api repository"
+    ],
+    "areas_for_improvement": [
+      "Lack of concrete evidence of outcomes, complexity, ownership, or delivered value in repository descriptions"
+    ]
+  },
+  "evaluation": {
+    "scores": {
+      "relevant_experience": {
+        "score": 24.0,
+        "max": 30,
+        "evidence": "The resume clearly contains Software Developer work experience with multiple years of relevant roles and credible production exposure."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30,
+        "evidence": "The portfolio-api repository has a clear description of a REST API project with authentication, database models, and deployment notes. However, the task-dashboard and data-utilities repositories have less complex descriptions."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25,
+        "evidence": "The resume lists JavaScript, Python, SQL as technologies used in personal projects, which matches the technical stack of the portfolio-api repository."
+      },
+      "evidence_quality_impact": {
+        "score": 8.0,
+        "max": 15,
+        "evidence": "The descriptions of the repositories are mostly vague and lack concrete evidence of outcomes, complexity, ownership, or delivered value."
+      }
+    },
+    "bonus_points": {
+      "total": 0.0,
+      "breakdown": ""
+    },
+    "deductions": {
+      "total": 0.0,
+      "reasons": ""
+    },
+    "key_strengths": [
+      "Software development experience with multiple years of relevant roles",
+      "Clear description of a REST API project in portfolio-api repository"
+    ],
+    "areas_for_improvement": [
+      "Lack of concrete evidence of outcomes, complexity, ownership, or delivered value in repository descriptions"
+    ]
+  }
+}

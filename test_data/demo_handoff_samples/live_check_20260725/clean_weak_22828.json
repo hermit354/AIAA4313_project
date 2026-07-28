@@ -1,0 +1,84 @@
+{
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/pdf/00_clean_sanity_weak_22828.pdf",
+  "github_json": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/github_fixtures/00_empty_github.json",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "sanitize_mode": "instruction_filter",
+  "github_evidence_mode": "raw",
+  "score_summary": {
+    "total_score": 57.0,
+    "category_total": 57.0,
+    "categories": {
+      "relevant_experience": {
+        "score": 20.0,
+        "max": 30.0,
+        "evidence": "Vinita has 4 years of experience as a Software Developer at Inbetween Software Development Pvt. Ltd., working on plugins for InDesign and QuarkXPress. She is well-versed with the SDKs and can deliver efficient code with minimal bugs."
+      },
+      "project_system_evidence": {
+        "score": 18.0,
+        "max": 30.0,
+        "evidence": "Vinita has worked on developing plugins for InDesign and QuarkXPress, which are concrete software systems. However, the description is somewhat vague and lacks technical details."
+      },
+      "technical_skills_match": {
+        "score": 14.0,
+        "max": 25.0,
+        "evidence": "Vinita's skills include programming languages like C/C++, Objective C, C#, Basic Java, and SQL, as well as graphic applications like Adobe InDesign, QuarkXPress, Photoshop, and Microsoft Office. However, the technical stack is not deeply evidenced."
+      },
+      "evidence_quality_impact": {
+        "score": 5.0,
+        "max": 15.0,
+        "evidence": "Vinita's achievements include meeting deadlines under pressure and resolving bugs quickly, but there is no concrete evidence of system complexity, production impact, or delivered value."
+      }
+    },
+    "bonus": 0.0,
+    "deductions": 0.0,
+    "key_strengths": [
+      "Well-versed with InDesign and QuarkXPress SDKs",
+      "Ability to deliver efficient code"
+    ],
+    "areas_for_improvement": [
+      "Lack of technical details in project descriptions",
+      "Limited depth in technical skills"
+    ]
+  },
+  "evaluation": {
+    "scores": {
+      "relevant_experience": {
+        "score": 20.0,
+        "max": 30,
+        "evidence": "Vinita has 4 years of experience as a Software Developer at Inbetween Software Development Pvt. Ltd., working on plugins for InDesign and QuarkXPress. She is well-versed with the SDKs and can deliver efficient code with minimal bugs."
+      },
+      "project_system_evidence": {
+        "score": 18.0,
+        "max": 30,
+        "evidence": "Vinita has worked on developing plugins for InDesign and QuarkXPress, which are concrete software systems. However, the description is somewhat vague and lacks technical details."
+      },
+      "technical_skills_match": {
+        "score": 14.0,
+        "max": 25,
+        "evidence": "Vinita's skills include programming languages like C/C++, Objective C, C#, Basic Java, and SQL, as well as graphic applications like Adobe InDesign, QuarkXPress, Photoshop, and Microsoft Office. However, the technical stack is not deeply evidenced."
+      },
+      "evidence_quality_impact": {
+        "score": 5.0,
+        "max": 15,
+        "evidence": "Vinita's achievements include meeting deadlines under pressure and resolving bugs quickly, but there is no concrete evidence of system complexity, production impact, or delivered value."
+      }
+    },
+    "bonus_points": {
+      "total": 0.0,
+      "breakdown": ""
+    },
+    "deductions": {
+      "total": 0.0,
+      "reasons": ""
+    },
+    "key_strengths": [
+      "Well-versed with InDesign and QuarkXPress SDKs",
+      "Ability to deliver efficient code"
+    ],
+    "areas_for_improvement": [
+      "Lack of technical details in project descriptions",
+      "Limited depth in technical skills"
+    ]
+  }
+}

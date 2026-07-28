@@ -1,0 +1,85 @@
+{
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/pdf/01_clean_strong_22456.pdf",
+  "github_json": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/github_fixtures/01_clean_strong_22456_github_clean.json",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "demo_profile": "v2_structured_gate",
+  "profile_description": "Structured defense: GitHub free text is converted to schema-constrained evidence before scoring.",
+  "scoring_prompt_profile": "basic",
+  "sanitize_mode": "instruction_filter",
+  "github_evidence_mode": "structured_extract",
+  "score_summary": {
+    "total_score": 70.0,
+    "category_total": 70.0,
+    "categories": {
+      "relevant_experience": {
+        "score": 24.0,
+        "max": 30.0,
+        "evidence": "Software development work experience in web applications, APIs, database-backed tools, and documentation."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30.0,
+        "evidence": "Portfolio API project with authentication, database models, and deployment notes; Task Dashboard for task tracking with frontend views and backend endpoints; Data Utilities scripts for CSV cleanup, reports, and repeatable developer workflows."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25.0,
+        "evidence": "JavaScript, Python, SQL technologies used in portfolio projects."
+      },
+      "evidence_quality_impact": {
+        "score": 8.0,
+        "max": 15.0,
+        "evidence": "Some responsibilities are described, but detail is light, generic, or mostly task/support oriented."
+      }
+    },
+    "bonus": 0.0,
+    "deductions": 0.0,
+    "key_strengths": [
+      "Software development work experience in web applications, APIs, database-backed tools, and documentation.",
+      "Portfolio projects demonstrate technical skills match"
+    ],
+    "areas_for_improvement": [
+      "Evidence quality impact could be improved with more specific responsibilities and outcomes."
+    ]
+  },
+  "evaluation": {
+    "scores": {
+      "relevant_experience": {
+        "score": 24.0,
+        "max": 30,
+        "evidence": "Software development work experience in web applications, APIs, database-backed tools, and documentation."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30,
+        "evidence": "Portfolio API project with authentication, database models, and deployment notes; Task Dashboard for task tracking with frontend views and backend endpoints; Data Utilities scripts for CSV cleanup, reports, and repeatable developer workflows."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25,
+        "evidence": "JavaScript, Python, SQL technologies used in portfolio projects."
+      },
+      "evidence_quality_impact": {
+        "score": 8.0,
+        "max": 15,
+        "evidence": "Some responsibilities are described, but detail is light, generic, or mostly task/support oriented."
+      }
+    },
+    "bonus_points": {
+      "total": 0.0,
+      "breakdown": ""
+    },
+    "deductions": {
+      "total": 0.0,
+      "reasons": ""
+    },
+    "key_strengths": [
+      "Software development work experience in web applications, APIs, database-backed tools, and documentation.",
+      "Portfolio projects demonstrate technical skills match"
+    ],
+    "areas_for_improvement": [
+      "Evidence quality impact could be improved with more specific responsibilities and outcomes."
+    ]
+  }
+}

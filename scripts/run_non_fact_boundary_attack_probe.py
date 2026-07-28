@@ -274,7 +274,7 @@ def render_report(result: dict[str, Any]) -> str:
     lines.append("## 2. 设置")
     lines.append("")
     lines.append(f"- 模型：`{result['model']}`")
-    lines.append(f"- scoring prompt：`hardened`")
+    lines.append(f"- scoring prompt：`{result['prompt_mode']}`")
     lines.append(f"- GitHub sanitizer：`{result['sanitize_mode']}`")
     lines.append(f"- extraction schema：`{result['schema_mode']}`")
     lines.append("- PDF 简历先抽取为 JSONResume；攻击主要放入 final scorer 的 GitHub/context 输入层。")
@@ -371,6 +371,15 @@ def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
         default="off",
         choices=["off", "instruction_filter", "semantic_filter"],
     )
+    parser.add_argument(
+        "--scoring-prompt-profile",
+        default="basic",
+        choices=["weak", "basic", "semantic", "hardened", "current"],
+        help=(
+            "Scorer prompt boundary profile. Default basic matches the V1 "
+            "advanced-baseline attack target."
+        ),
+    )
     parser.add_argument("--timeout-sec", type=int, default=180)
     parser.add_argument("--verbose", action="store_true")
     return parser.parse_args(argv)
@@ -406,7 +415,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         "started_at": datetime.now(timezone.utc).isoformat(),
         "model": MODEL_NAME,
         "schema_mode": SCHEMA_MODE,
-        "prompt_mode": "hardened",
+        "prompt_mode": args.scoring_prompt_profile,
         "sanitize_mode": args.sanitize_mode,
         "github_evidence_mode": os.environ.get("GITHUB_EVIDENCE_MODE", "raw"),
         "candidate_ids": candidate_ids,
@@ -463,7 +472,7 @@ def main(argv: Iterable[str] | None = None) -> int:
                         resume_text=scorer_input,
                         model=MODEL_NAME,
                         model_params=model_params,
-                        prompt_mode="hardened",
+                        prompt_mode=args.scoring_prompt_profile,
                     )
                 score = score_total_and_details(evaluation)
                 row = {

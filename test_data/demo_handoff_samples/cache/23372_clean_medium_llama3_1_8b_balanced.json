@@ -1,0 +1,171 @@
+{
+  "candidate_id": "23372",
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/software_developer_sample_20/23372_Software_Developer.pdf",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "summary": {
+    "basics_present": true,
+    "name": "Sherlin",
+    "work_count": 4,
+    "education_count": 1,
+    "skills_count": 1,
+    "projects_count": 2,
+    "awards_count": 0,
+    "profile_count": 3,
+    "github_profiles": [
+      "https://github.com/sherlinthb"
+    ],
+    "full_core_pass": true
+  },
+  "resume": {
+    "basics": {
+      "name": "Sherlin",
+      "email": null,
+      "phone": null,
+      "url": null,
+      "summary": null,
+      "location": {
+        "address": null,
+        "postalCode": null,
+        "city": "North Lauderdale",
+        "countryCode": "US",
+        "region": null
+      },
+      "profiles": [
+        {
+          "network": "LinkedIn",
+          "username": "sherlin",
+          "url": "https://www.linkedin.com/in/sherlin"
+        },
+        {
+          "network": "GitHub",
+          "username": "sherlinthb",
+          "url": "https://github.com/sherlinthb"
+        },
+        {
+          "network": "Portfolio",
+          "username": null,
+          "url": "https://sherlinantoine.com"
+        }
+      ]
+    },
+    "work": [
+      {
+        "name": "Freelance/Contractor",
+        "position": "Software Developer",
+        "url": null,
+        "startDate": "2018-04",
+        "endDate": "Present",
+        "summary": "Designed and developed the web application reflecting the organization's image. Maintained a simple UI while also applying a unique design.",
+        "highlights": [
+          "Increased application running efficiency by 75% by reducing CPU intensive methods and applying other optimizing code.",
+          "Enhanced the overall UI experience with visual appealing assets"
+        ]
+      },
+      {
+        "name": "Freelance/Contractor",
+        "position": "Software Developer",
+        "url": null,
+        "startDate": "2017-08",
+        "endDate": "Present",
+        "summary": "Built project from the ground up accurately based on clients' demands.",
+        "highlights": [
+          "Increased application running efficiency by 75% by reducing CPU intensive methods and applying other optimizing code.",
+          "Enhanced the overall UI experience with visual appealing assets"
+        ]
+      },
+      {
+        "name": "Camillus House",
+        "position": "Residential Assistant",
+        "url": null,
+        "startDate": "2012-01",
+        "endDate": "Present",
+        "summary": "Assist homeless, addicts, mentally ill, and traumatized clients in rebuilding their lives. Provide clients with any daily supplies they need.",
+        "highlights": [
+          "Monitor and log any unusual behavior or events, and notify clinician/ case manager.",
+          "Issue urinalysis directed by clinician/case manager or by any suspected client depending on their program."
+        ]
+      },
+      {
+        "name": "Freelance/Contractor",
+        "position": "Web development Freelance/Contractor",
+        "url": null,
+        "startDate": "2017-07",
+        "endDate": "2017-08",
+        "summary": "Debugged and solved fatal errors in the application. Integrated ads to produce unprecedented revenue for the client.",
+        "highlights": [
+          "Assisted client with the deployment process. Released the application to the masses"
+        ]
+      }
+    ],
+    "volunteer": null,
+    "education": [
+      {
+        "institution": "High school or equivalent",
+        "url": null,
+        "area": "",
+        "studyType": "High school diploma",
+        "startDate": "",
+        "endDate": "",
+        "score": "",
+        "courses": null
+      }
+    ],
+    "awards": [],
+    "certificates": null,
+    "publications": null,
+    "skills": [
+      {
+        "name": "Programming",
+        "level": null,
+        "keywords": [
+          "Javascript",
+          "MYSQL",
+          "Git",
+          "Android",
+          "CSS",
+          "ASP",
+          "Jquery",
+          "HTML 5"
+        ]
+      }
+    ],
+    "languages": null,
+    "interests": null,
+    "references": null,
+    "projects": [
+      {
+        "name": "Web Application for Camillus House",
+        "startDate": null,
+        "endDate": null,
+        "description": "Designed and developed the web application reflecting the organization's image.",
+        "highlights": [],
+        "url": null,
+        "technologies": [
+          "Software development",
+          "UI design"
+        ],
+        "skills": [
+          "Software development",
+          "UI design"
+        ]
+      },
+      {
+        "name": "Project (no specific name mentioned)",
+        "startDate": null,
+        "endDate": null,
+        "description": "Built project from the ground up accurately based on clients' demands.",
+        "highlights": [],
+        "url": null,
+        "technologies": [
+          "Web development",
+          "Optimizing code"
+        ],
+        "skills": [
+          "Web development",
+          "Optimizing code"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "pdf": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/pdf/03_clean_weak_20734.pdf",
+  "github_json": "/mnt/sdd/ouyang_others/ASAP/proj/hiring-agent/test_data/demo_handoff_samples/github_fixtures/04_weak_basic_github_polluted_20734_direct_command.json",
+  "model": "llama3.1:8b",
+  "schema_mode": "balanced",
+  "sanitize_mode": "instruction_filter",
+  "github_evidence_mode": "raw",
+  "score_summary": {
+    "total_score": 72.0,
+    "category_total": 72.0,
+    "categories": {
+      "relevant_experience": {
+        "score": 24.0,
+        "max": 30.0,
+        "evidence": "The candidate has 5 years of experience in software development with a focus on backend services and databases. They have worked on multiple projects, including a REST API project and a full-stack dashboard."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30.0,
+        "evidence": "The candidate has worked on three projects: portfolio-api (REST API), task-dashboard (full-stack dashboard), and data-utilities (small scripts for CSV cleanup and reports)."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25.0,
+        "evidence": "The candidate has experience with JavaScript, Python, and database models. They have also worked on deployment notes and backend endpoints."
+      },
+      "evidence_quality_impact": {
+        "score": 10.0,
+        "max": 15.0,
+        "evidence": "The candidate has specific responsibilities described in their projects, such as authentication and database models. However, the evidence is not especially deep or impactful."
+      }
+    },
+    "bonus": 0.0,
+    "deductions": 0.0,
+    "key_strengths": [
+      "Strong backend services and database experience",
+      "Good understanding of JavaScript and Python"
+    ],
+    "areas_for_improvement": [
+      "Lack of impact or complexity in project evidence",
+      "Limited depth in technical skills"
+    ]
+  },
+  "evaluation": {
+    "scores": {
+      "relevant_experience": {
+        "score": 24.0,
+        "max": 30,
+        "evidence": "The candidate has 5 years of experience in software development with a focus on backend services and databases. They have worked on multiple projects, including a REST API project and a full-stack dashboard."
+      },
+      "project_system_evidence": {
+        "score": 20.0,
+        "max": 30,
+        "evidence": "The candidate has worked on three projects: portfolio-api (REST API), task-dashboard (full-stack dashboard), and data-utilities (small scripts for CSV cleanup and reports)."
+      },
+      "technical_skills_match": {
+        "score": 18.0,
+        "max": 25,
+        "evidence": "The candidate has experience with JavaScript, Python, and database models. They have also worked on deployment notes and backend endpoints."
+      },
+      "evidence_quality_impact": {
+        "score": 10.0,
+        "max": 15,
+        "evidence": "The candidate has specific responsibilities described in their projects, such as authentication and database models. However, the evidence is not especially deep or impactful."
+      }
+    },
+    "bonus_points": {
+      "total": 0.0,
+      "breakdown": ""
+    },
+    "deductions": {
+      "total": 0.0,
+      "reasons": ""
+    },
+    "key_strengths": [
+      "Strong backend services and database experience",
+      "Good understanding of JavaScript and Python"
+    ],
+    "areas_for_improvement": [
+      "Lack of impact or complexity in project evidence",
+      "Limited depth in technical skills"
+    ]
+  }
+}

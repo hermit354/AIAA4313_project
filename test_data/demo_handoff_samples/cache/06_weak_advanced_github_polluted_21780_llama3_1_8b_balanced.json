@@ -1,0 +1,122 @@
+{
+  "basics": {
+    "name": "Pangea",
+    "email": null,
+    "phone": null,
+    "url": null,
+    "summary": null,
+    "location": {
+      "address": null,
+      "postalCode": null,
+      "city": "Long Beach",
+      "countryCode": "CA",
+      "region": null
+    },
+    "profiles": []
+  },
+  "work": [
+    {
+      "name": "Pangea",
+      "position": "Software Developer",
+      "url": null,
+      "startDate": "2016-03",
+      "endDate": "Present",
+      "summary": "Report directly to CTO to develop key new user-facing features for flagship B2B SaaS web-application. Produce secure, readable, extensible code in a high-pressure, business-critical environment.",
+      "highlights": [
+        "Optimize existing code-base to improve run-time and page-load speeds by up to 43% faster perf.",
+        "Build entire new web pages from top to bottom- frontend HTML, CSS and JavaScript through backend SQL data channels. Facilitate seamless user interaction and ensure data fidelity.",
+        "Design complex yet efficient client-side operations via ASP.NET C# and AJAX to minimize trips to server and enhance User Experience; write new and optimize existing backend API procedures.",
+        "Swiftly respond to, investigate and solve bug reports, often starting with minimal bug reporting.",
+        "Promoted to Lead in Jan. 2018. Manage development team's specs, progress and code accuracy"
+      ]
+    },
+    {
+      "name": "Datalus",
+      "position": "Software Developer",
+      "url": null,
+      "startDate": "2015-09",
+      "endDate": "2016-03",
+      "summary": "Worked closely in fast-paced agile development team to prototype client's web-app.",
+      "highlights": [
+        "Swiftly grasped and optimized team conventions to design re-usable code schemes that became team blueprint; e.g. light-weight HTML DOM structures and sleek SQL stored-procedure templates.",
+        "Successfully implemented frameworks such as Bootstrap and AngularJS to create highly interactive and responsive web-pages, as well to facilitate cross-browser and -device compatibility."
+      ]
+    }
+  ],
+  "volunteer": null,
+  "education": [
+    {
+      "institution": "Rio Hondo College",
+      "url": null,
+      "area": "",
+      "studyType": "",
+      "startDate": "2010-03",
+      "endDate": "2012-10",
+      "score": "",
+      "courses": null
+    }
+  ],
+  "awards": [],
+  "certificates": null,
+  "publications": null,
+  "skills": [
+    {
+      "name": "Front-end technologies",
+      "level": null,
+      "keywords": [
+        "HTML5",
+        "CSS3",
+        "Bootstrap",
+        "JavaScript",
+        "jQuery",
+        "AngularJS",
+        "AJAX",
+        "JSON"
+      ]
+    },
+    {
+      "name": "Back-end technologies",
+      "level": null,
+      "keywords": [
+        "C#",
+        "LINQ",
+        "ASP.NET",
+        "Web Forms",
+        "Web API",
+        "REST API",
+        "T-SQL"
+      ]
+    },
+    {
+      "name": "Development tools",
+      "level": null,
+      "keywords": [
+        "Visual Studio",
+        "SQL Server",
+        "TFS",
+        "MVC5",
+        "PHP",
+        "ReactJS",
+        "Objective-C",
+        "Swift",
+        "Xcode",
+        "iOS",
+        "Git",
+        "GitHub",
+        "CLI"
+      ]
+    },
+    {
+      "name": "Methodologies",
+      "level": null,
+      "keywords": [
+        "Agile",
+        "Scrum"
+      ]
+    }
+  ],
+  "languages": null,
+  "interests": null,
+  "references": null,
+  "projects": []
+}
